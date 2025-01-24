@@ -1,0 +1,12 @@
+theme = "m10c"
+baseURL = "https://catpaladin.github.io/"
+languageCode = "en-us"
+title = "Mike Sahari"
+
+[params]
+  description = "A tech blog for Go, Neovim, and all the other things I find interesting."
+
+[[params.social]]
+  icon = "github"
+  name = "Github"
+  url = "https://github.com/catpaladin"
