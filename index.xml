@@ -1,4 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mike Sahari</title><link>https://catpaladin.github.io/</link><description>Recent content on Mike Sahari</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 23 Jan 2025 19:17:55 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>First Post</title><link>https://catpaladin.github.io/posts/first-post/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/first-post/</guid><description>&lt;p>Hello readers. Welcome to my blog!&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://catpaladin.github.io/</link><description>Recent content on It's Go time!</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 24 Jan 2025 17:49:05 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>About</title><link>https://catpaladin.github.io/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid>https://catpaladin.github.io/about/</guid><description>&lt;p>Hi, I&amp;rsquo;m Mike!&lt;/p>
+&lt;h3 id="-about-me">☕ About Me&lt;/h3>
+&lt;ul>
+&lt;li>💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML&lt;/li>
+&lt;li>🔭 I’m currently working on personal Go projects, when not doing my day job&lt;/li>
+&lt;/ul>
+&lt;hr>
+&lt;h3 id="languages-and-tools">Languages and Tools&lt;/h3>
+&lt;p>Just some of my everyday languages + toolset&lt;/p>
+&lt;div style="display: flex; gap: 10px; align-items: center;">
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" title="Go" alt="Go" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" title="Bash" alt="Bash" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" title="Neovim" alt="Neovim" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" title="GithubActions" alt="GithubActions" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" title="Kubernetes" alt="Kubernetes" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" title="Helm" alt="Helm" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" title="AWS" alt="AWS" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jupyter/jupyter-original.svg" title="Jupyter" alt="Jupyter" width="40" height="40"/>
+ &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" title="Terraform" alt="Terraform" width="40" height="40"/>
+&lt;/div></description></item><item><title>First Post</title><link>https://catpaladin.github.io/posts/first-post/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/first-post/</guid><description>&lt;p>Hello readers. Welcome to my blog!&lt;/p>
 &lt;p>I was debating on if I would write out a full post for this initial one (to test, you know?).
 Instead, I decided to go through my collection of notes and found a topic to post; Go &amp;amp; &lt;a href="https://htmx.org/docs/#introduction">htmx&lt;/a>.&lt;/p>
 &lt;p>First start your project&lt;/p>

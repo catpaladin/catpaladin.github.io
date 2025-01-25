@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Htmx on It's Go time!</title><link>https://catpaladin.github.io/tags/htmx/</link><description>Recent content in Htmx on It's Go time!</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Thu, 23 Jan 2025 19:17:55 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/tags/htmx/index.xml" rel="self" type="application/rss+xml"/><item><title>First Post</title><link>https://catpaladin.github.io/posts/first-post/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/first-post/</guid><description>&lt;p>Hello readers. Welcome to my blog!&lt;/p>
+&lt;p>I was debating on if I would write out a full post for this initial one (to test, you know?).
+Instead, I decided to go through my collection of notes and found a topic to post; Go &amp;amp; &lt;a href="https://htmx.org/docs/#introduction">htmx&lt;/a>.&lt;/p>
+&lt;p>First start your project&lt;/p>
+&lt;pre tabindex="0">&lt;code>go mod init &amp;lt;project&amp;gt;
+&lt;/code>&lt;/pre>&lt;p>You can use whatever http package you desire (even the base one!). For this example, I will use echo.&lt;/p></description></item></channel></rss>
