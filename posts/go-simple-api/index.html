@@ -1,0 +1,489 @@
+<!doctype html><html lang=en-us><head><title>Building a REST API with Go // It's Go time!</title>
+<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.142.0"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.426227a64976b038e30bc990bed663448db0c7819318f82711ab767671f9f58d.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Building a REST API with Go"><meta name=twitter:description content="Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we’ll explore building a secure REST API from the ground up using Go. Whether you’re new to Go or an experienced developer, you’ll learn how to create an API that handles user authentication.
+For those who need to see the whole code before diving in, you can find all of this on Github
+Technology Stack Overview Our API implementation uses three main technologies:"><meta property="og:url" content="https://blog.mikesahari.com/posts/go-simple-api/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Building a REST API with Go"><meta property="og:description" content="Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we’ll explore building a secure REST API from the ground up using Go. Whether you’re new to Go or an experienced developer, you’ll learn how to create an API that handles user authentication.
+For those who need to see the whole code before diving in, you can find all of this on Github
+Technology Stack Overview Our API implementation uses three main technologies:"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-01-25T12:05:27-08:00"><meta property="article:modified_time" content="2025-01-25T12:05:27-08:00"><meta property="article:tag" content="Go"><meta property="article:tag" content="Api"></head><body><header class=app-header><a href=/><img class=app-header-avatar src=/images/avatar.jpg alt="Mike Sahari"></a>
+<span class=app-header-title>It's Go time!</span><nav class=app-header-menu><a class=app-header-menu-item href=/>Home</a>
+-
+<a class=app-header-menu-item href=/tags/>Tags</a>
+-
+<a class=app-header-menu-item href=/about/>About</a></nav><p>A tech blog for Go, Neovim, and all the other things I find interesting.</p><div class=app-header-social><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg></a></div></header><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Building a REST API with Go</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Jan 25, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+10 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/go/>Go</a>
+<a class=tag href=/tags/api/>Api</a></div></div></header><div class=post-content><p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&rsquo;re new to Go or an experienced developer, you&rsquo;ll learn how to create an API that handles user authentication.</p><p>For those who need to see the whole code before diving in, you can find all of this on <a href=https://github.com/catpaladin/go-api-example>Github</a></p><h2 id=technology-stack-overview>Technology Stack Overview</h2><p>Our API implementation uses three main technologies:</p><ul><li><strong>Go</strong>: A programming language designed for building efficient, secure network services with built-in concurrency support (My language of choice).</li><li><strong>Gin</strong>: A high-performance web framework for Go that provides excellent routing capabilities and middleware support.</li><li><strong>SQLite</strong>: A lightweight database that&rsquo;s ideal for development and applications with moderate traffic requirements.</li></ul><h2 id=understanding-our-project-structure>Understanding Our Project Structure</h2><p>The project uses a standard Go application layout that separates concerns for maintainability:</p><pre tabindex=0><code>myapp/
+|-- main.go
+|-- db/
+|   |-- connection.go
+|   |-- user.go
+|-- handlers/
+|   |-- auth.go
+|   |-- signup.go
+|   |-- login.go
+|   |-- user.go
+|-- internal/
+|   |-- jwt/
+|   |   |-- token.go
+|   |   |-- middleware.go
+|-- models/
+|   |-- user.go
+|   |-- errors.go
+</code></pre><p>I like to separate domain specific logic. That way when another engineer starts exploring the repository, they have some general idea where logic exists.</p><p><code>db</code> -> database logic</p><p><code>handlers</code> -> api handlers</p><p><code>internal</code> -> contains repository specific packages (this is idiomatic Go)</p><p><code>models</code> -> contains my data models</p><blockquote><p>NOTE:
+I have opted to build out my models rather than use something like an ORM because this is a simple example. You can use something like <a href=https://github.com/ent/ent>ent</a> for bigger and more complex projects.</p></blockquote><h2 id=setting-up-your-development-environment>Setting Up Your Development Environment</h2><p>First, let&rsquo;s gather our ingredients (dependencies). Open your terminal and run:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Create a new Go project</span>
+</span></span><span style=display:flex><span>go mod init myapp
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Install our essential tools</span>
+</span></span><span style=display:flex><span>go get github.com/gin-gonic/gin         <span style=color:#75715e># Our web framework</span>
+</span></span><span style=display:flex><span>go get github.com/mattn/go-sqlite3      <span style=color:#75715e># Database driver</span>
+</span></span><span style=display:flex><span>go get github.com/golang-jwt/jwt/v4     <span style=color:#75715e># For secure user tokens</span>
+</span></span></code></pre></div><h2 id=define-the-model>Define the Model</h2><p>Create the <code>models</code> directory.</p><pre tabindex=0><code>mkdir -p models
+</code></pre><p>Next we will start creating go files under <code>models</code>. The user model will be defined in the <code>models/user.go</code>.</p><h3 id=modelsusergo><code>models/user.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>models</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;encoding/json&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>User</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ID</span>        <span style=color:#66d9ef>int64</span>     <span style=color:#e6db74>`json:&#34;id&#34; db:&#34;id&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Username</span>  <span style=color:#66d9ef>string</span>    <span style=color:#e6db74>`json:&#34;username&#34; db:&#34;username&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Password</span>  <span style=color:#66d9ef>string</span>    <span style=color:#e6db74>`json:&#34;-&#34; db:&#34;password&#34;`</span> <span style=color:#75715e>// The &#34;-&#34; tag prevents password from being included in JSON</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>CreatedAt</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span> <span style=color:#e6db74>`json:&#34;created_at&#34; db:&#34;created_at&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>UpdatedAt</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span> <span style=color:#e6db74>`json:&#34;updated_at&#34; db:&#34;updated_at&#34;`</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewUser creates a new user with the current timestamp</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewUser</span>(<span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>password</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>now</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>User</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Username</span>:  <span style=color:#a6e22e>username</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Password</span>:  <span style=color:#a6e22e>password</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>CreatedAt</span>: <span style=color:#a6e22e>now</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>UpdatedAt</span>: <span style=color:#a6e22e>now</span>,
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ValidateForCreation performs basic validation for user creation</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>u</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#a6e22e>ValidateForCreation</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>u</span>.<span style=color:#a6e22e>Username</span>) &lt; <span style=color:#ae81ff>3</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ErrUsernameTooShort</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>u</span>.<span style=color:#a6e22e>Password</span>) &lt; <span style=color:#ae81ff>8</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ErrPasswordTooWeak</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// BeforeCreate is called before inserting the user into the database</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>u</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#a6e22e>BeforeCreate</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>now</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>u</span>.<span style=color:#a6e22e>CreatedAt</span> = <span style=color:#a6e22e>now</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>u</span>.<span style=color:#a6e22e>UpdatedAt</span> = <span style=color:#a6e22e>now</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// BeforeUpdate is called before updating the user in the database</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>u</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#a6e22e>BeforeUpdate</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>u</span>.<span style=color:#a6e22e>UpdatedAt</span> = <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// MarshalJSON implements custom JSON marshaling</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>u</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#a6e22e>MarshalJSON</span>() ([]<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Alias</span> <span style=color:#a6e22e>User</span> <span style=color:#75715e>// Prevents recursive MarshalJSON calls</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>json</span>.<span style=color:#a6e22e>Marshal</span>(<span style=color:#f92672>&amp;</span><span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>		<span style=color:#f92672>*</span><span style=color:#a6e22e>Alias</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Password</span> <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;-&#34;`</span> <span style=color:#75715e>// Explicitly exclude password</span>
+</span></span><span style=display:flex><span>	}{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Alias</span>: (<span style=color:#f92672>*</span><span style=color:#a6e22e>Alias</span>)(<span style=color:#a6e22e>u</span>),
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>If you have an IDE or your language server complaining right now, fear not. We will be defining the missing error variables.</p><p>Define the errors in the <code>models/errors.go</code></p><h3 id=modelserrorsgo><code>models/errors.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>models</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;errors&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ErrUserNotFound</span>       = <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;user not found&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ErrUsernameTooShort</span>   = <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;username must be at least 3 characters&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ErrPasswordTooWeak</span>    = <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;password must be at least 8 characters&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ErrUsernameExists</span>     = <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;username already exists&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ErrInvalidCredentials</span> = <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;invalid credentials&#34;</span>)
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ValidationError represents a domain validation error</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ValidationError</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Field</span>   <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Message</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>e</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ValidationError</span>) <span style=color:#a6e22e>Error</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>e</span>.<span style=color:#a6e22e>Field</span> <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;: &#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>e</span>.<span style=color:#a6e22e>Message</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewValidationError creates a new validation error</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewValidationError</span>(<span style=color:#a6e22e>field</span>, <span style=color:#a6e22e>message</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>ValidationError</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>ValidationError</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Field</span>:   <span style=color:#a6e22e>field</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Message</span>: <span style=color:#a6e22e>message</span>,
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The models package provides several important features:</p><ol><li><strong>Structured Data</strong>: The User struct defines the shape of our user data with proper JSON and database tags.</li><li><strong>Data Validation</strong>: The ValidateForCreation method ensures data integrity before database operations.</li><li><strong>Lifecycle Hooks</strong>: BeforeCreate and BeforeUpdate methods handle timestamp management automatically.</li><li><strong>Security</strong>: The Password field is explicitly excluded from JSON serialization using the &ldquo;-&rdquo; tag.</li><li><strong>Domain Errors</strong>: Custom error types help with precise error handling throughout the application.</li></ol><h2 id=creating-the-database>Creating the Database</h2><p>Next create the <code>db</code> directory. We will put all the database domain logic here.</p><pre tabindex=0><code>mkdir -p db
+</code></pre><p>Starting with the <code>db/connection.go</code>, let&rsquo;s create our functions to create the database and table.</p><h3 id=dbconnectiongo><code>db/connection.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>db</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;database/sql&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>_</span> <span style=color:#e6db74>&#34;github.com/mattn/go-sqlite3&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>DB</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>sql</span>.<span style=color:#a6e22e>DB</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>InitDB</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>err</span> <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>DB</span>, <span style=color:#a6e22e>err</span> = <span style=color:#a6e22e>sql</span>.<span style=color:#a6e22e>Open</span>(<span style=color:#e6db74>&#34;sqlite3&#34;</span>, <span style=color:#e6db74>&#34;./myapp.db&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;database connection failed: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>createTables</span>(); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;failed to create tables: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>createTables</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>query</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>`CREATE TABLE IF NOT EXISTS users (
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        id INTEGER PRIMARY KEY AUTOINCREMENT,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        username TEXT NOT NULL UNIQUE,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        password TEXT NOT NULL,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        created_at DATETIME NOT NULL,
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>        updated_at DATETIME NOT NULL
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    );`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>DB</span>.<span style=color:#a6e22e>Exec</span>(<span style=color:#a6e22e>query</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>CloseDB</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>DB</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><blockquote><p>NOTE:
+This expects that you have sqlite3 on your machine.</p></blockquote><h2 id=define-database-operations>Define Database Operations</h2><p>Now define the database operations to be used by the handlers. These will be in <code>db/user.go</code>.</p><h3 id=dbusergo><code>db/user.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>db</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;database/sql&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;strings&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/models&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserStore</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>db</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>sql</span>.<span style=color:#a6e22e>DB</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewUserStore</span>(<span style=color:#a6e22e>db</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>sql</span>.<span style=color:#a6e22e>DB</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>UserStore</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>UserStore</span>{<span style=color:#a6e22e>db</span>: <span style=color:#a6e22e>db</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>UserStore</span>) <span style=color:#a6e22e>CreateUser</span>(<span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>hashedPassword</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>user</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>NewUser</span>(<span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>hashedPassword</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>ValidateForCreation</span>(); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>BeforeCreate</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>query</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>`INSERT INTO users (username, password, created_at, updated_at)
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>              VALUES (?, ?, ?, ?)`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>Exec</span>(<span style=color:#a6e22e>query</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Username</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Password</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>CreatedAt</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>UpdatedAt</span>,
+</span></span><span style=display:flex><span>	)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Check for unique constraint violation</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Contains</span>(<span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>(), <span style=color:#e6db74>&#34;UNIQUE constraint failed&#34;</span>) {
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>ErrUsernameExists</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>LastInsertId</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>ID</span> = <span style=color:#a6e22e>id</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>UserStore</span>) <span style=color:#a6e22e>GetUserByUsername</span>(<span style=color:#a6e22e>username</span> <span style=color:#66d9ef>string</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>User</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>user</span> <span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>User</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>query</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>&#34;SELECT id, username, password FROM users WHERE username = ?&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>QueryRow</span>(<span style=color:#a6e22e>query</span>, <span style=color:#a6e22e>username</span>).<span style=color:#a6e22e>Scan</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>ID</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Username</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Password</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=jwt-token>JWT Token</h2><p>The <code>jwt</code> internal package will contain all our jwt auth logic. Create the directory structure.</p><pre tabindex=0><code>mkdir -p internal/jwt
+</code></pre><p>The following is just quick and dirty logic for implementing it. Create the <code>internal/jwt/token.go</code> with the following contents.</p><h3 id=internaljwttokengo><code>internal/jwt/token.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>jwt</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/golang-jwt/jwt/v4&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> <span style=color:#a6e22e>JwtKey</span> = []byte(<span style=color:#e6db74>&#34;your-secret-key&#34;</span>) <span style=color:#75715e>// In production, use environment variables</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Claims</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Username</span> <span style=color:#66d9ef>string</span> <span style=color:#e6db74>`json:&#34;username&#34;`</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>StandardClaims</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>GenerateToken</span>(<span style=color:#a6e22e>username</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>string</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>expirationTime</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>().<span style=color:#a6e22e>Add</span>(<span style=color:#ae81ff>24</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Hour</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>claims</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Claims</span>{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>Username</span>: <span style=color:#a6e22e>username</span>,
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>StandardClaims</span>: <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>StandardClaims</span>{
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>ExpiresAt</span>: <span style=color:#a6e22e>expirationTime</span>.<span style=color:#a6e22e>Unix</span>(),
+</span></span><span style=display:flex><span>		},
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>token</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>NewWithClaims</span>(<span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>SigningMethodHS256</span>, <span style=color:#a6e22e>claims</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>token</span>.<span style=color:#a6e22e>SignedString</span>(<span style=color:#a6e22e>JwtKey</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ValidateToken</span>(<span style=color:#a6e22e>tokenStr</span> <span style=color:#66d9ef>string</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>Claims</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>claims</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Claims</span>{}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>token</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>ParseWithClaims</span>(<span style=color:#a6e22e>tokenStr</span>, <span style=color:#a6e22e>claims</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>token</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>Token</span>) (<span style=color:#66d9ef>interface</span>{}, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>JwtKey</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> <span style=color:#f92672>||</span> !<span style=color:#a6e22e>token</span>.<span style=color:#a6e22e>Valid</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>claims</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=jwt-middleware>JWT Middleware</h2><p>Now to add some Gin middleware for our auth. Create the <code>internal/jwt/middleware.go</code> with this function.</p><h3 id=internaljwtmiddlewarego><code>internal/jwt/middleware.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>jwt</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;strings&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>AuthMiddleware</span>() <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>HandlerFunc</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>authHeader</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>GetHeader</span>(<span style=color:#e6db74>&#34;Authorization&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>authHeader</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>AbortWithStatus</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusUnauthorized</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>tokenParts</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Split</span>(<span style=color:#a6e22e>authHeader</span>, <span style=color:#e6db74>&#34; &#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>tokenParts</span>) <span style=color:#f92672>!=</span> <span style=color:#ae81ff>2</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>tokenParts</span>[<span style=color:#ae81ff>0</span>] <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;Bearer&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>AbortWithStatus</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusUnauthorized</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>claims</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ValidateToken</span>(<span style=color:#a6e22e>tokenParts</span>[<span style=color:#ae81ff>1</span>])
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>AbortWithStatus</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusUnauthorized</span>)
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Set</span>(<span style=color:#e6db74>&#34;username&#34;</span>, <span style=color:#a6e22e>claims</span>.<span style=color:#a6e22e>Username</span>)
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Next</span>()
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=create-the-handlers-for-the-api>Create the handlers for the API</h2><p>Start by defining a struct to pass a db pointer (and future inputs) to the handlers. Create the <code>handlers</code> directory.</p><pre tabindex=0><code>mkdir -p handlers
+</code></pre><p>And start by creating <code>handlers/auth.go</code> with the following. <code>auth.go</code> will be used for the signup and login methods. Technically we could just put all this domain logic in a single go file. But as the application grows, you will start to notice that finding specific logic could start getting scattered and inconsistent.</p><h3 id=handlersauthgo><code>handlers/auth.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>handlers</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/db&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>AuthHandler</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>userStore</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>UserStore</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewAuthHandler</span>(<span style=color:#a6e22e>userStore</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>UserStore</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>AuthHandler</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>AuthHandler</span>{<span style=color:#a6e22e>userStore</span>: <span style=color:#a6e22e>userStore</span>}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In the <code>handlers/signup.go</code> we add our signup logic.</p><h3 id=handlerssignupgo><code>handlers/signup.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>handlers</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;golang.org/x/crypto/bcrypt&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/models&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>AuthHandler</span>) <span style=color:#a6e22e>Signup</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>user</span> <span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>User</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ShouldBindJSON</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>()})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>hashedPassword</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>bcrypt</span>.<span style=color:#a6e22e>GenerateFromPassword</span>(
+</span></span><span style=display:flex><span>		[]byte(<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Password</span>),
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>bcrypt</span>.<span style=color:#a6e22e>DefaultCost</span>,
+</span></span><span style=display:flex><span>	)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;Internal server error&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>h</span>.<span style=color:#a6e22e>userStore</span>.<span style=color:#a6e22e>CreateUser</span>(<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Username</span>, string(<span style=color:#a6e22e>hashedPassword</span>)); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;Failed to create user&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Status</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusCreated</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Now under <code>handlers/login.go</code> add the login function.</p><h3 id=handlerslogingo><code>handlers/login.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>handlers</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;golang.org/x/crypto/bcrypt&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/internal/jwt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/models&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>AuthHandler</span>) <span style=color:#a6e22e>Login</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>user</span> <span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>User</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>ShouldBindJSON</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#a6e22e>err</span>.<span style=color:#a6e22e>Error</span>()})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>storedUser</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>h</span>.<span style=color:#a6e22e>userStore</span>.<span style=color:#a6e22e>GetUserByUsername</span>(<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Username</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusUnauthorized</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;Invalid credentials&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>bcrypt</span>.<span style=color:#a6e22e>CompareHashAndPassword</span>(
+</span></span><span style=display:flex><span>		[]byte(<span style=color:#a6e22e>storedUser</span>.<span style=color:#a6e22e>Password</span>),
+</span></span><span style=display:flex><span>		[]byte(<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Password</span>),
+</span></span><span style=display:flex><span>	); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusUnauthorized</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;Invalid credentials&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>token</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>GenerateToken</span>(<span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Username</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;Failed to generate token&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;token&#34;</span>: <span style=color:#a6e22e>token</span>})
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Finally all the user logic under <code>handlers/user.go</code>. This contains the protected api logic for users.</p><h3 id=handlersusergo><code>handlers/user.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>handlers</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/db&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/models&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserHandler</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>userStore</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>UserStore</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewUserHandler</span>(<span style=color:#a6e22e>userStore</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>UserStore</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>UserHandler</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>UserHandler</span>{<span style=color:#a6e22e>userStore</span>: <span style=color:#a6e22e>userStore</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>UserHandler</span>) <span style=color:#a6e22e>GetUser</span>(<span style=color:#a6e22e>c</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Context</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Get username from the JWT claims that were set in the middleware</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>username</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#e6db74>&#34;username&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>exists</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;User context not found&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Fetch user details from the database</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>user</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>h</span>.<span style=color:#a6e22e>userStore</span>.<span style=color:#a6e22e>GetUserByUsername</span>(<span style=color:#a6e22e>username</span>.(<span style=color:#66d9ef>string</span>))
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>models</span>.<span style=color:#a6e22e>ErrUserNotFound</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusNotFound</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;User not found&#34;</span>})
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusInternalServerError</span>, <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>H</span>{<span style=color:#e6db74>&#34;error&#34;</span>: <span style=color:#e6db74>&#34;Failed to fetch user details&#34;</span>})
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Return user data (password will be automatically excluded by json:&#34;-&#34; tag)</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>c</span>.<span style=color:#a6e22e>JSON</span>(<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusOK</span>, <span style=color:#a6e22e>user</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=core-application-setup>Core Application Setup</h2><p>The <code>main.go</code> file initializes the server and configures routing. It separates public and authenticated routes.</p><h3 id=maingo><code>main.go</code></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/gin-gonic/gin&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/db&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/handlers&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;myapp/internal/jwt&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>InitDB</span>(); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Failed to initialize database: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>CloseDB</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>userStore</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>NewUserStore</span>(<span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>DB</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>authHandler</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>handlers</span>.<span style=color:#a6e22e>NewAuthHandler</span>(<span style=color:#a6e22e>userStore</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>gin</span>.<span style=color:#a6e22e>Default</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Public routes</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>POST</span>(<span style=color:#e6db74>&#34;/login&#34;</span>, <span style=color:#a6e22e>authHandler</span>.<span style=color:#a6e22e>Login</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>POST</span>(<span style=color:#e6db74>&#34;/signup&#34;</span>, <span style=color:#a6e22e>authHandler</span>.<span style=color:#a6e22e>Signup</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Initialize handlers</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>userHandler</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>handlers</span>.<span style=color:#a6e22e>NewUserHandler</span>(<span style=color:#a6e22e>userStore</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Protected routes</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>authorized</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Group</span>(<span style=color:#e6db74>&#34;/&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>authorized</span>.<span style=color:#a6e22e>Use</span>(<span style=color:#a6e22e>jwt</span>.<span style=color:#a6e22e>AuthMiddleware</span>())
+</span></span><span style=display:flex><span>	{
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>authorized</span>.<span style=color:#a6e22e>GET</span>(<span style=color:#e6db74>&#34;/user&#34;</span>, <span style=color:#a6e22e>userHandler</span>.<span style=color:#a6e22e>GetUser</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Run</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Failed to start server: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=running-your-api>Running Your API</h2><p>Simply tidy things up and run with</p><pre tabindex=0><code>go mod tidy
+go run main.go
+</code></pre><h2 id=testing-your-api>Testing Your API</h2><p>Now that everything&rsquo;s set up, you can test your API using curl or any API testing tool:</p><ol><li>Create a new user:</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl -X POST http://localhost:8080/signup <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>  -H <span style=color:#e6db74>&#34;Content-Type: application/json&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>  -d <span style=color:#e6db74>&#39;{&#34;username&#34;:&#34;testuser&#34;,&#34;password&#34;:&#34;securepass123&#34;}&#39;</span>
+</span></span></code></pre></div><ol start=2><li>Log in to get a token:</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl -X POST http://localhost:8080/login <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>  -H <span style=color:#e6db74>&#34;Content-Type: application/json&#34;</span> <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>  -d <span style=color:#e6db74>&#39;{&#34;username&#34;:&#34;testuser&#34;,&#34;password&#34;:&#34;securepass123&#34;}&#39;</span>
+</span></span></code></pre></div><ol start=3><li>Use the token to access protected routes:</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>curl http://localhost:8080/user <span style=color:#ae81ff>\
+</span></span></span><span style=display:flex><span><span style=color:#ae81ff></span>  -H <span style=color:#e6db74>&#34;Authorization: Bearer &lt;your-token-here&gt;&#34;</span>
+</span></span></code></pre></div><h2 id=summary>Summary</h2><p>Throughout this tutorial, we&rsquo;ve followed several security best practices:</p><ol><li>Password hashing using bcrypt</li><li>JWT-based authentication</li><li>Protected routes with middleware</li><li>No sensitive data exposure</li><li>Proper error handling without revealing system details</li><li>Input validation and sanitization</li></ol><p>These are just some basics. A lot more can be done (e.g. Add password complexity requirements, rate limiting, better logging, etc). In addition, there&rsquo;s the whole containerization and deployment to consider.</p><p>Again, you can find all this code on <a href=https://github.com/catpaladin/go-api-example>Github</a>.</p><p>Thanks for reading. Happy coding! 🚀</p></div><div class=post-footer></div></article></main></body></html>
