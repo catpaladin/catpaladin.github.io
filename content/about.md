@@ -9,7 +9,9 @@ Hi, I'm Mike!
 ### ☕ About Me
 
 - 💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML
-- 🔭 I’m currently working on personal Go projects, when not doing my day job
+- 🔭 I’m currently working on personal Go projects or learnings, when not doing my day job
+- Coffee Connoisseur
+- Blogging to help teach others about my interests
 
 ---
 
