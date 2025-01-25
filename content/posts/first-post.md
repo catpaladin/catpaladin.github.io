@@ -2,6 +2,7 @@
 date = '2025-01-23T19:17:55-08:00'
 draft = false
 title = 'First Post'
+tags = ["go", "htmx"]
 +++
 
 Hello readers. Welcome to my blog!
