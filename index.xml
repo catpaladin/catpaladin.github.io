@@ -5,7 +5,9 @@
 &lt;h3 id="-about-me">☕ About Me&lt;/h3>
 &lt;ul>
 &lt;li>💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML&lt;/li>
-&lt;li>🔭 I’m currently working on personal Go projects, when not doing my day job&lt;/li>
+&lt;li>🔭 I’m currently working on personal Go projects or learnings, when not doing my day job&lt;/li>
+&lt;li>Coffee Connoisseur&lt;/li>
+&lt;li>Blogging to help teach others about my interests&lt;/li>
 &lt;/ul>
 &lt;hr>
 &lt;h3 id="languages-and-tools">Languages and Tools&lt;/h3>
@@ -22,9 +24,9 @@
  &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" title="AWS" alt="AWS" width="40" height="40"/>
  &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jupyter/jupyter-original.svg" title="Jupyter" alt="Jupyter" width="40" height="40"/>
  &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" title="Terraform" alt="Terraform" width="40" height="40"/>
-&lt;/div></description></item><item><title>First Post</title><link>https://catpaladin.github.io/posts/first-post/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/first-post/</guid><description>&lt;p>Hello readers. Welcome to my blog!&lt;/p>
+&lt;/div></description></item><item><title>Introduction to Go and HTMX</title><link>https://catpaladin.github.io/posts/intro-to-go-htmx/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/intro-to-go-htmx/</guid><description>&lt;p>Hello readers. Welcome to my blog!&lt;/p>
 &lt;p>I was debating on if I would write out a full post for this initial one (to test, you know?).
 Instead, I decided to go through my collection of notes and found a topic to post; Go &amp;amp; &lt;a href="https://htmx.org/docs/#introduction">htmx&lt;/a>.&lt;/p>
-&lt;p>First start your project&lt;/p>
-&lt;pre tabindex="0">&lt;code>go mod init &amp;lt;project&amp;gt;
-&lt;/code>&lt;/pre>&lt;p>You can use whatever http package you desire (even the base one!). For this example, I will use echo.&lt;/p></description></item></channel></rss>
+&lt;p>However, if you&amp;rsquo;d like to learn more about me, check out my &lt;a href="https://blog.mikesahari.com/about/">about&lt;/a> page.&lt;/p>
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>When building modern web applications, we often seek solutions that combine the robustness of server-side programming with the interactivity of client-side applications. Today, I&amp;rsquo;m excited to share my experience working with Go and HTMX, a powerful combination that achieves exactly this balance.&lt;/p></description></item></channel></rss>
