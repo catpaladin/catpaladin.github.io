@@ -688,7 +688,7 @@ Throughout this tutorial, we've followed several security best practices:
 
 These are just some basics. A lot more can be done (e.g. Add password complexity requirements, rate limiting, better logging, etc). In addition, there's the whole containerization and deployment to consider.
 
-> Edit: Here are some further considerations that I forgot. Remember that this is a development example. Remember to enable TLS, rotate passwords, and properly handle JWT secrets. Also consider creating roles to create some RBAC to the API.
+> Edit: Here are some further considerations. Remember that this is a development example. Remember to enable TLS, rotate passwords, and properly handle JWT secrets. Also consider creating roles to create some RBAC to the API.
 
 Again, you can find all this code on [Github](https://github.com/catpaladin/go-api-example).
 
