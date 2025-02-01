@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on It's Go time!</title><link>https://catpaladin.github.io/tags/python/</link><description>Recent content in Python on It's Go time!</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 01 Feb 2025 10:00:12 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Go vs Python for Parallel Processing</title><link>https://catpaladin.github.io/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid>https://catpaladin.github.io/posts/parallel-processing/</guid><description>&lt;h1 id="go-vs-python-for-parallel-processing">Go vs Python for Parallel Processing&lt;/h1>
+&lt;p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&amp;rsquo;s strengths - it excels in machine learning and generative AI applications. However, I &lt;strong>prefer&lt;/strong> Go for several compelling reasons:&lt;/p>
+&lt;ul>
+&lt;li>Memory management with pointers&lt;/li>
+&lt;li>Elegant concurrency using channels and goroutines&lt;/li>
+&lt;li>Straightforward cross-compilation of binaries&lt;/li>
+&lt;li>Clean implementation of interfaces and structs&lt;/li>
+&lt;/ul>
+&lt;p>But preferences often face challenges. Some argue, &amp;ldquo;Python now has concurrency, so you should switch to Python.&amp;rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).&lt;/p></description></item></channel></rss>
