@@ -1,0 +1,120 @@
+<!doctype html><html lang=en-us><head><title>Managing Development Environments with Dotfiles // It's Go time!</title>
+<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.143.1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.426227a64976b038e30bc990bed663448db0c7819318f82711ab767671f9f58d.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Managing Development Environments with Dotfiles"><meta name=twitter:description content="Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.
+Let me walk you through how I’ve structured my dotfiles for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.
+The Core Structure First, let’s look at how everything is organized:
+./ ├── alacritty-darwin/ # MacOS terminal config │ └── .alacritty.yml ├── alacritty-linux/ # Linux terminal config │ └── .alacritty.yml ├── backgrounds/ # Personal touch with retrowave │ └── Pictures/ │ └── retrowave.jpg ├── nvim/ # Neovim as a submodule │ └── .config/ │ └── nvim/ ├── tmux/ # Terminal multiplexing │ └── .tmux.conf └── zsh/ # Shell configuration ├── .zsh.d/ │ ├── common_aliases.zsh │ ├── functions.zsh │ ├── paths.zsh │ └── prompt.zsh └── .zshrc Note: This directory structure is setup for stow (mentioned further below) to symlink configs."><meta property="og:url" content="https://catpaladin.github.io/posts/dev-with-dotfiles/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Managing Development Environments with Dotfiles"><meta property="og:description" content="Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.
+Let me walk you through how I’ve structured my dotfiles for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.
+The Core Structure First, let’s look at how everything is organized:
+./ ├── alacritty-darwin/ # MacOS terminal config │ └── .alacritty.yml ├── alacritty-linux/ # Linux terminal config │ └── .alacritty.yml ├── backgrounds/ # Personal touch with retrowave │ └── Pictures/ │ └── retrowave.jpg ├── nvim/ # Neovim as a submodule │ └── .config/ │ └── nvim/ ├── tmux/ # Terminal multiplexing │ └── .tmux.conf └── zsh/ # Shell configuration ├── .zsh.d/ │ ├── common_aliases.zsh │ ├── functions.zsh │ ├── paths.zsh │ └── prompt.zsh └── .zshrc Note: This directory structure is setup for stow (mentioned further below) to symlink configs."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-02-07T15:30:00-08:00"><meta property="article:modified_time" content="2025-02-07T15:30:00-08:00"><meta property="article:tag" content="Dev"><meta property="article:tag" content="Dotfiles"><meta property="article:tag" content="Neovim"></head><body><header class=app-header><a href=/><img class=app-header-avatar src=/images/avatar.jpg alt="Mike Sahari"></a>
+<span class=app-header-title>It's Go time!</span><nav class=app-header-menu><a class=app-header-menu-item href=/>Home</a>
+-
+<a class=app-header-menu-item href=/tags/>Tags</a>
+-
+<a class=app-header-menu-item href=/about/>About</a></nav><p>A tech blog for Go, Neovim, and all the other things I find interesting.</p><div class=app-header-social><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg></a></div></header><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Managing Development Environments with Dotfiles</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Feb 7, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+5 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/dev/>Dev</a>
+<a class=tag href=/tags/dotfiles/>Dotfiles</a>
+<a class=tag href=/tags/neovim/>Neovim</a></div></div></header><div class=post-content><p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.</p><p>Let me walk you through how I&rsquo;ve structured my <a href=https://github.com/catpaladin/dotfiles>dotfiles</a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.</p><h2 id=the-core-structure>The Core Structure</h2><p>First, let&rsquo;s look at how everything is organized:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>./
+</span></span><span style=display:flex><span>├── alacritty-darwin/        <span style=color:#75715e># MacOS terminal config</span>
+</span></span><span style=display:flex><span>│   └── .alacritty.yml
+</span></span><span style=display:flex><span>├── alacritty-linux/         <span style=color:#75715e># Linux terminal config</span>
+</span></span><span style=display:flex><span>│   └── .alacritty.yml
+</span></span><span style=display:flex><span>├── backgrounds/             <span style=color:#75715e># Personal touch with retrowave</span>
+</span></span><span style=display:flex><span>│   └── Pictures/
+</span></span><span style=display:flex><span>│       └── retrowave.jpg
+</span></span><span style=display:flex><span>├── nvim/                    <span style=color:#75715e># Neovim as a submodule</span>
+</span></span><span style=display:flex><span>│   └── .config/
+</span></span><span style=display:flex><span>│       └── nvim/
+</span></span><span style=display:flex><span>├── tmux/                    <span style=color:#75715e># Terminal multiplexing</span>
+</span></span><span style=display:flex><span>│   └── .tmux.conf
+</span></span><span style=display:flex><span>└── zsh/                     <span style=color:#75715e># Shell configuration</span>
+</span></span><span style=display:flex><span>    ├── .zsh.d/
+</span></span><span style=display:flex><span>    │   ├── common_aliases.zsh
+</span></span><span style=display:flex><span>    │   ├── functions.zsh
+</span></span><span style=display:flex><span>    │   ├── paths.zsh
+</span></span><span style=display:flex><span>    │   └── prompt.zsh
+</span></span><span style=display:flex><span>    └── .zshrc
+</span></span></code></pre></div><blockquote><p>Note:
+This directory structure is setup for <code>stow</code> (mentioned further below) to symlink configs.</p></blockquote><h2 id=neovim-the-development-environment>Neovim: The Development Environment</h2><p>The Neovim configuration is simple - it&rsquo;s structured as a clean, modular setup:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>./
+</span></span><span style=display:flex><span>├── init.lua                 <span style=color:#75715e># Entry point</span>
+</span></span><span style=display:flex><span>├── lazy-lock.json          <span style=color:#75715e># Plugin version locking</span>
+</span></span><span style=display:flex><span>├── lua/
+</span></span><span style=display:flex><span>│   ├── config/             <span style=color:#75715e># Core configuration</span>
+</span></span><span style=display:flex><span>│   │   └── keymaps.lua     <span style=color:#75715e># Key bindings</span>
+</span></span><span style=display:flex><span>│   └── plugins/            <span style=color:#75715e># Plugin configurations</span>
+</span></span><span style=display:flex><span>       ├── codeium.lua      <span style=color:#75715e># AI completion</span>
+</span></span><span style=display:flex><span>       ├── core.lua         <span style=color:#75715e># Essential plugins</span>
+</span></span><span style=display:flex><span>       ├── lsp.lua          <span style=color:#75715e># Language server config</span>
+</span></span><span style=display:flex><span>       └── telescope.lua    <span style=color:#75715e># Fuzzy finder setup</span>
+</span></span></code></pre></div><blockquote><p>Note:
+My actual config has more plugins. This tree is an example to show how I structure my Neovim config repo.</p></blockquote><h2 id=managing-multiple-environments-with-submodules>Managing Multiple Environments with Submodules</h2><p>Git submodules are one of those powerful features that, once mastered, completely change how you manage complex projects. Much like the satisfaction of mastering <code>git stash</code> (remember the first time you saved yourself from a messy branch switch?), understanding submodules opens up entirely new ways of structuring your repositories.</p><p>You can maintain separate Neovim configurations using submodules for work and personal use, even with private repositories. Here&rsquo;s how:</p><ol><li>Create separate repositories for your configurations</li><li>Add them as submodules:</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Personal config (public)</span>
+</span></span><span style=display:flex><span>git submodule add git@github.com:personal/nvim-config.git nvim-personal
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Work config (private)</span>
+</span></span><span style=display:flex><span>git submodule add git@github.com:your-org/private-nvim-config.git nvim-work
+</span></span></code></pre></div><p>You can maintain separate Neovim configurations by using Git submodules - your public dotfiles repo can reference a private Neovim config repository using SSH URLs (like <code>git@github.com:your-org/private-nvim-config.git</code>), and when users clone your dotfiles, only those with proper SSH authentication to the private repo (your-org) will be able to pull down that configuration.</p><p>This setup is perfect for keeping your work-specific Neovim configuration private while still maintaining a public dotfiles repository that others can learn from and use.</p><blockquote><p>Important Note:
+Do not version control your secrets or private keys in plaintext! (Even to a private repository!)</p></blockquote><p><em>The beauty of this approach is that it lets you share your dotfiles publicly while keeping sensitive configs completely separate.</em></p><h2 id=the-smart-setup-script>The Smart Setup Script</h2><p>The <code>setup.sh</code> script in the dotfiles is the orchestrator of this whole system. Here is an example of mine:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/usr/bin/env bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75715e># This script requires you have stow installed</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># make sure we have pulled in and updated any submodules</span>
+</span></span><span style=display:flex><span>git submodule init
+</span></span><span style=display:flex><span>git submodule update
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># OS-specific configuration</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> <span style=color:#66d9ef>$(</span>uname<span style=color:#66d9ef>)</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#39;Darwin&#39;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>  ALACRITTY<span style=color:#f92672>=</span>alacritty-darwin
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>  ALACRITTY<span style=color:#f92672>=</span>alacritty-linux
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Base packages for all environments</span>
+</span></span><span style=display:flex><span>base<span style=color:#f92672>=(</span>
+</span></span><span style=display:flex><span>    nvim
+</span></span><span style=display:flex><span>    tmux
+</span></span><span style=display:flex><span>    bash
+</span></span><span style=display:flex><span>    zsh
+</span></span><span style=display:flex><span>    $ALACRITTY
+</span></span><span style=display:flex><span>    backgrounds
+</span></span><span style=display:flex><span>    wezterm
+</span></span><span style=display:flex><span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Our stow function</span>
+</span></span><span style=display:flex><span>stowit<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+</span></span><span style=display:flex><span>    usr<span style=color:#f92672>=</span>$1
+</span></span><span style=display:flex><span>    app<span style=color:#f92672>=</span>$2
+</span></span><span style=display:flex><span>    stow -v -R -t <span style=color:#e6db74>${</span>usr<span style=color:#e6db74>}</span> <span style=color:#e6db74>${</span>app<span style=color:#e6db74>}</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;&#34;</span>
+</span></span><span style=display:flex><span>echo <span style=color:#e6db74>&#34;Stowing apps for user: </span><span style=color:#e6db74>${</span>whoami<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># install apps available to local users and root</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> app in <span style=color:#e6db74>${</span>base[@]<span style=color:#e6db74>}</span>; <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>    stowit <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>HOME<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> $app
+</span></span><span style=display:flex><span><span style=color:#66d9ef>done</span>
+</span></span></code></pre></div><p><em>Here&rsquo;s the deal with <code>stow</code> and how it fits into our dotfiles management&mldr;</em></p><p>Stow is the secret sauce in my setup script that handles all the symlinking of configuration files to their correct locations. Instead of manually creating symlinks or copying files around, my <code>setup.sh</code> script uses Stow to automatically create the necessary symlinks based on the directory structure.</p><p>When you look at my setup script, you&rsquo;ll see it&rsquo;s using the <code>stowit()</code> function that takes a target directory (like <code>$HOME</code>) and a package name (like <code>nvim</code> or <code>tmux</code>), then uses <code>stow -v -R -t</code> to recursively create all the required symlinks - this is what makes it so easy to handle OS-specific configurations like having separate Alacritty configs for Linux and MacOS while maintaining the same seamless installation process.</p><h2 id=setting-up-multiple-environment-configurations>Setting Up Multiple Environment Configurations</h2><p>Seeing as I made a conditional to handle Alacritty, the same can be done with Neovim configs.</p><p>To maintain separate configurations:</p><ol><li>First, adjust your setup script to detect the environment:</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -f ~/.work_machine <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span>
+</span></span><span style=display:flex><span>    NVIM_CONFIG<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;nvim-work&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>
+</span></span><span style=display:flex><span>    NVIM_CONFIG<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;nvim-personal&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>fi</span>
+</span></span></code></pre></div><ol start=2><li>Modify the base array to use the correct config:</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>base<span style=color:#f92672>=(</span>
+</span></span><span style=display:flex><span>    $NVIM_CONFIG    <span style=color:#75715e># This will be either nvim-work or nvim-personal</span>
+</span></span><span style=display:flex><span>    tmux
+</span></span><span style=display:flex><span>    bash
+</span></span><span style=display:flex><span>    zsh
+</span></span><span style=display:flex><span>    $ALACRITTY
+</span></span><span style=display:flex><span>    backgrounds
+</span></span><span style=display:flex><span>    wezterm
+</span></span><span style=display:flex><span><span style=color:#f92672>)</span>
+</span></span></code></pre></div><p><em>When working with private repositories, always use SSH URLs in your .gitmodules file - it makes authentication much smoother.</em></p><h3 id=getting-started>Getting Started</h3><p>To set up this environment on a new machine:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Clone with all submodules</span>
+</span></span><span style=display:flex><span>git clone --recurse-submodules YOUR_REPO_URL
+</span></span><span style=display:flex><span>cd dotfiles
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Mark as work machine if needed</span>
+</span></span><span style=display:flex><span>touch ~/.work_machine  <span style=color:#75715e># Only on work machines!</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Run the setup</span>
+</span></span><span style=display:flex><span>./setup.sh
+</span></span></code></pre></div><p>This approach gives you a clean separation between work and personal configurations while maintaining the flexibility to share common elements. The power of Git submodules combined with stow makes it seamless to manage multiple environments without sacrificing maintainability.</p><h2 id=wrapping-up>Wrapping Up</h2><p>Your dotfiles are more than just configurations - they&rsquo;re a reflection of how you work. By leveraging Git submodules for flexibility and stow for elegant symlink management, you create a development environment that feels like home on any machine. Whether you&rsquo;re keeping work configs private or sharing with the community, this setup grows with you while maintaining that consistent feel that makes terminal-based development such a joy.</p></div><div class=post-footer></div></article></main></body></html>

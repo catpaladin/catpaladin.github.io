@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Neovim on It's Go time!</title><link>https://catpaladin.github.io/tags/neovim/</link><description>Recent content in Neovim on It's Go time!</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 07 Feb 2025 15:30:00 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/tags/neovim/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Development Environments with Dotfiles</title><link>https://catpaladin.github.io/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/dev-with-dotfiles/</guid><description>&lt;p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.&lt;/p>
+&lt;p>Let me walk you through how I&amp;rsquo;ve structured my &lt;a href="https://github.com/catpaladin/dotfiles">dotfiles&lt;/a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.&lt;/p>
+&lt;h2 id="the-core-structure">The Core Structure&lt;/h2>
+&lt;p>First, let&amp;rsquo;s look at how everything is organized:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── alacritty-darwin/ &lt;span style="color:#75715e"># MacOS terminal config&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .alacritty.yml
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── alacritty-linux/ &lt;span style="color:#75715e"># Linux terminal config&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .alacritty.yml
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── backgrounds/ &lt;span style="color:#75715e"># Personal touch with retrowave&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── Pictures/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── retrowave.jpg
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── nvim/ &lt;span style="color:#75715e"># Neovim as a submodule&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .config/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── nvim/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── tmux/ &lt;span style="color:#75715e"># Terminal multiplexing&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .tmux.conf
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>└── zsh/ &lt;span style="color:#75715e"># Shell configuration&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ├── .zsh.d/
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── common_aliases.zsh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── functions.zsh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── paths.zsh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ └── prompt.zsh
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> └── .zshrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
+&lt;p>Note:
+This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/p></description></item></channel></rss>
