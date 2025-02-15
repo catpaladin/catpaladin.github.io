@@ -1,6 +1,6 @@
 +++
 date = '2025-02-15T09:00:54-08:00'
-draft = true
+draft = false
 title = 'Understanding Generic Type Aliases in Go 1.24'
 tags = ["go", "python", "typescript", "generics"]
 +++
