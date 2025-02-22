@@ -1,5 +1,5 @@
 <!doctype html><html lang=en-us><head><title>Understanding Generic Type Aliases in Go 1.24 // It's Go time!</title>
-<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.143.1"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.426227a64976b038e30bc990bed663448db0c7819318f82711ab767671f9f58d.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Understanding Generic Type Aliases in Go 1.24"><meta name=twitter:description content="After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let’s break down exactly what this means, how it works, and how it compares to other languages.
+<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.144.2"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.426227a64976b038e30bc990bed663448db0c7819318f82711ab767671f9f58d.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Understanding Generic Type Aliases in Go 1.24"><meta name=twitter:description content="After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let’s break down exactly what this means, how it works, and how it compares to other languages.
 Understanding Go’s Type System Evolution Type Aliases vs Type Definitions First, let’s clear up a fundamental concept in Go:
 // Type Definition - Creates a NEW type type MyInt int // MyInt is a different type than int // Type Alias - Creates a SYNONYM for existing type type AliasInt = int // AliasInt is exactly the same as int Here’s a practical example showing the difference:"><meta property="og:url" content="https://catpaladin.github.io/posts/type-aliases/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Understanding Generic Type Aliases in Go 1.24"><meta property="og:description" content="After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let’s break down exactly what this means, how it works, and how it compares to other languages.
 Understanding Go’s Type System Evolution Type Aliases vs Type Definitions First, let’s clear up a fundamental concept in Go:
@@ -34,7 +34,30 @@ Feb 15, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="no
 </span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>otherNumber</span> <span style=color:#66d9ef>int</span> = <span style=color:#ae81ff>2</span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>reqID</span> = <span style=color:#a6e22e>otherNumber</span>  <span style=color:#75715e>// This works! Same type</span>
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=understanding-generic-type-aliases>Understanding Generic Type Aliases</h2><p><img src=/images/20250215-mermaid1.png alt="Type Aliases"></p><p>Generic type aliases allow us to create type synonyms that can work with different data types while maintaining Go&rsquo;s strong type safety.
+</span></span></code></pre></div><h2 id=understanding-generic-type-aliases>Understanding Generic Type Aliases</h2><pre class=mermaid>graph TD
+    A[Define Generic Type Alias] --&gt; B{Choose Constraint}
+    B --&gt;|any| C[No Constraints]
+    B --&gt;|comparable| D[Must Support ==]
+    B --&gt;|Custom| E[User Defined]
+
+    C --&gt; F[Implementation]
+    D --&gt; F
+    E --&gt; F
+
+    F --&gt; G[Usage]
+    G --&gt; H[With Strings]
+    G --&gt; I[With Numbers]
+    G --&gt; J[With Custom Types]
+
+    style A fill:#1B5E20,stroke:#90EE90,stroke-width:2px,color:#fff
+    style C fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style D fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style E fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style F fill:#1B5E20,stroke:#90EE90,stroke-width:2px,color:#fff
+    style H fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style I fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style J fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+</pre><p>Generic type aliases allow us to create type synonyms that can work with different data types while maintaining Go&rsquo;s strong type safety.
 Think of it as creating flexible building blocks that can adapt to different data types without sacrificing compile-time safety.</p><h3 id=basic-examples-result-and-set-types>Basic Examples: Result and Set Types</h3><p>Let&rsquo;s break down some fundamental patterns that you&rsquo;ll use constantly:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Result represents a common pattern in Go:</span>
 </span></span><span style=display:flex><span><span style=color:#75715e>// handling both successful operations and errors</span>
 </span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Result</span>[<span style=color:#a6e22e>T</span> <span style=color:#66d9ef>any</span>] = <span style=color:#66d9ef>struct</span> {
@@ -292,4 +315,32 @@ Think of it as creating flexible building blocks that can adapt to different dat
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>Status</span>  <span style=color:#66d9ef>int</span>
 </span></span><span style=display:flex><span>    <span style=color:#a6e22e>Message</span> <span style=color:#66d9ef>string</span>
 </span></span><span style=display:flex><span>}
-</span></span></code></pre></div><h2 id=closing>Closing</h2><p>Remember: Generic type aliases in Go provide a powerful way to create reusable, type-safe code while maintaining Go&rsquo;s simplicity and explicitness. Choose them when they make your code clearer and more maintainable.</p></div><div class=post-footer></div></article></main></body></html>
+</span></span></code></pre></div><h2 id=closing>Closing</h2><p>Remember: Generic type aliases in Go provide a powerful way to create reusable, type-safe code while maintaining Go&rsquo;s simplicity and explicitness. Choose them when they make your code clearer and more maintainable.</p></div><div class=post-footer></div></article></main><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script></body></html>
