@@ -42,7 +42,32 @@ func main() {
 
 ## Understanding Generic Type Aliases
 
-![Type Aliases](/images/20250215-mermaid1.png)
+```mermaid
+graph TD
+    A[Define Generic Type Alias] --> B{Choose Constraint}
+    B -->|any| C[No Constraints]
+    B -->|comparable| D[Must Support ==]
+    B -->|Custom| E[User Defined]
+
+    C --> F[Implementation]
+    D --> F
+    E --> F
+
+    F --> G[Usage]
+    G --> H[With Strings]
+    G --> I[With Numbers]
+    G --> J[With Custom Types]
+
+    style A fill:#1B5E20,stroke:#90EE90,stroke-width:2px,color:#fff
+    style C fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style D fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style E fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style F fill:#1B5E20,stroke:#90EE90,stroke-width:2px,color:#fff
+    style H fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style I fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+    style J fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
+```
+<!-- ![Type Aliases](/images/20250215-mermaid1.png) -->
 
 Generic type aliases allow us to create type synonyms that can work with different data types while maintaining Go's strong type safety.
 Think of it as creating flexible building blocks that can adapt to different data types without sacrificing compile-time safety.

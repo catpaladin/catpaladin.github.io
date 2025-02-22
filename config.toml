@@ -49,5 +49,8 @@ title = "It's Go time!"
 [markup.goldmark.renderer]
   unsafe = true
 
+[security]
+  enableInlineShortcodes = true
+
 [taxonomies]
   tag = "tags"
