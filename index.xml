@@ -41,9 +41,51 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── paths.zsh
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ └── prompt.zsh
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> └── .zshrc
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;blockquote>
-&lt;p>Note:
-This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/p></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://catpaladin.github.io/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid>https://catpaladin.github.io/posts/parallel-processing/</guid><description>&lt;p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&amp;rsquo;s strengths - it excels in machine learning and generative AI applications. However, I &lt;strong>prefer&lt;/strong> Go for several compelling reasons:&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
+
+&lt;style>
+ 
+ .admonition{
+ border-radius: 5px;
+ padding: 0px;
+ border-left: 5px solid #00bcf6;
+ box-shadow: 0 0 .5rem .2rem #00000025;
+ }
+ .admonition-title-container{
+ background-color: #00bcf6;
+ border-top-right-radius: 5px;
+ }
+ .admonition-title {
+ font-weight: bolder;
+ font-size: large;
+ backdrop-filter: grayscale(50%) brightness(150%);
+ -webkit-backdrop-filter: grayscale(50%) brightness(150%);
+ padding: 5px 0 5px 30px;
+ border-top-right-radius: 5px;
+ }
+ @media (prefers-color-scheme: dark) {
+ .admonition-title {
+ backdrop-filter: grayscale(40%) brightness(40%);
+ -webkit-backdrop-filter: grayscale(40%) brightness(40%);
+ }
+ }
+ .admonition-content{
+ padding: 10px 0 10px 15px
+ }
+&lt;/style>
+
+
+&lt;div class="admonition" style="border-left: 5px solid #283593;">
+ &lt;div class="admonition-title-container" style="background-color: #283593;">
+ &lt;div class="admonition-title">
+ 📝 NOTE
+ &lt;/div>
+ &lt;/div>
+ &lt;div class="admonition-content">This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/div>
+&lt;/div>
+
+&lt;h2 id="neovim-the-development-environment">Neovim: The Development Environment&lt;/h2>
+&lt;p>The Neovim configuration is simple - it&amp;rsquo;s structured as a clean, modular setup:&lt;/p></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://catpaladin.github.io/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid>https://catpaladin.github.io/posts/parallel-processing/</guid><description>&lt;p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&amp;rsquo;s strengths - it excels in machine learning and generative AI applications. However, I &lt;strong>prefer&lt;/strong> Go for several compelling reasons:&lt;/p>
 &lt;ul>
 &lt;li>Memory management with pointers&lt;/li>
 &lt;li>Elegant concurrency using channels and goroutines&lt;/li>
