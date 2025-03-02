@@ -79,7 +79,9 @@ flowchart TD
 
 Pointers are variables that store memory addresses. Instead of storing values directly, they point to where those values live in memory. This seemingly simple concept unlocks powerful programming patterns and performance optimizations.
 
-> **TIP:** Pointers provide both indirection (accessing a value through its address) and the ability to modify values across function boundaries.
+{{<admonition title="💡 TIP" bg-color="#004D40">}}
+Pointers provide both indirection (accessing a value through its address) and the ability to modify values across function boundaries.
+{{</admonition>}}
 
 Here's what a pointer looks like in Go code:
 
@@ -156,8 +158,9 @@ touch main.go
 
 This creates a minimal Go module where you can experiment with the code examples that follow. We will be editing and running `main.go` throughout.
 
-> **IMPORTANT:**
-> Remember to run each example with `go run main.go`
+{{<admonition title="📌 IMPORTANT" bg-color="#01579B">}}
+Remember to run each example with `go run main.go`
+{{</admonition>}}
 
 ## Basic Pointer Examples
 
@@ -557,7 +560,9 @@ flowchart TD
     q3 -->|"No"| useValue
 ```
 
-> **TIP:** Use pointers when you need to modify a value, when working with large data structures, or when you need to represent the absence of a value with `nil`.
+{{<admonition title="💡 TIP" bg-color="#004D40">}}
+Use pointers when you need to modify a value, when working with large data structures, or when you need to represent the absence of a value with `nil`.
+{{</admonition>}}
 
 ## Common Pitfalls with Pointers
 

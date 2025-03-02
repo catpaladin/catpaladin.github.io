@@ -63,7 +63,9 @@ Analogy out of the way, this blog post is full of material because I have tons o
 
 A **channel** in Go is a typed communication conduit that connects concurrent goroutines. Channels implement the "don't communicate by sharing memory; share memory by communicating" philosophy that makes Go concurrency effective and safe.
 
-> **Note:** Channels ensure type-safe communication between goroutines and provide built-in synchronization.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+Channels ensure type-safe communication between goroutines and provide built-in synchronization.
+{{</admonition>}}
 
 Channels come in two varieties:
 

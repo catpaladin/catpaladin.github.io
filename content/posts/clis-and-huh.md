@@ -82,8 +82,9 @@ func interactiveDig() {
     )
 }
 ```
-
-> *Note:* That validation function isn't just error checking - it's about guiding users to success.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+That validation function isn't just error checking - it's about guiding users to success.
+{{</admonition>}}
 
 ### The IP Command: Elegant Selection
 
@@ -110,8 +111,10 @@ func interactiveIP() {
 
 ![you hardcoded..](/images/20250207-meme1.png)
 
-> Note:
-> This section is a little advanced and requires some knowledge on generics. I thought I would share because I couldn't find much documentation online about this.
+
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+This section is a little advanced and requires some knowledge on generics. I thought I would share because I couldn't find much documentation online about this.
+{{</admonition>}}
 
 My example above is simple and hardcoded. Let's face it; not every situation can handle the options being known and hardcoded. Let's make our forms more dynamic and reusable. I've developed a couple of utility functions (outside this project) that have saved me countless hours when dealing with dynamic select options.
 

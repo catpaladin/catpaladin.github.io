@@ -36,8 +36,9 @@ First, let's look at how everything is organized:
     └── .zshrc
 ```
 
-> Note:
-> This directory structure is setup for `stow` (mentioned further below) to symlink configs.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+This directory structure is setup for `stow` (mentioned further below) to symlink configs.
+{{</admonition>}}
 
 ## Neovim: The Development Environment
 
@@ -57,8 +58,9 @@ The Neovim configuration is simple - it's structured as a clean, modular setup:
        └── telescope.lua    # Fuzzy finder setup
 ```
 
-> Note:
-> My actual config has more plugins. This tree is an example to show how I structure my Neovim config repo.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+My actual config has more plugins. This tree is an example to show how I structure my Neovim config repo.
+{{</admonition>}}
 
 ## Managing Multiple Environments with Submodules
 
@@ -81,8 +83,9 @@ You can maintain separate Neovim configurations by using Git submodules - your p
 
 This setup is perfect for keeping your work-specific Neovim configuration private while still maintaining a public dotfiles repository that others can learn from and use.
 
-> Important Note:
-> Do not version control your secrets or private keys in plaintext! (Even to a private repository!)
+{{<admonition title="📌 IMPORTANT" bg-color="#01579B">}}
+Do not version control your secrets or private keys in plaintext! (Even to a private repository!)
+{{</admonition>}}
 
 *The beauty of this approach is that it lets you share your dotfiles publicly while keeping sensitive configs completely separate.*
 

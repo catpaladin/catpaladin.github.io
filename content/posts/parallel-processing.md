@@ -38,7 +38,9 @@ go doTaskB()  // Runs independently
 ### **Parallelism Example (Python)**
 Python uses **multiple processes** to achieve parallelism, where each process runs on a different CPU core.
 
-> Note: This is true of traditional Python. 3.13 lets you disable the setting that produces this behavior. I will explain that in the next section below.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+This is true of traditional Python. 3.13 lets you disable the setting that produces this behavior. I will explain that in the next section below.
+{{</admonition>}}
 
 ```python
 from multiprocessing import Pool
@@ -70,7 +72,9 @@ Starting with Python 3.13, there are two significant approaches to parallel exec
 
 Let's perform a benchmark to show average time with GIL-Based Threading vs GIL-Free Execution. And then after that, I'll show you that Go still beats it.
 
-> Note: Turning off the GIL requires that you either compile it with flags or download it. I just installed it using [pyenv](https://github.com/pyenv/pyenv) and appending `t` to the version.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+Turning off the GIL requires that you either compile it with flags or download it. I just installed it using [pyenv](https://github.com/pyenv/pyenv) and appending `t` to the version.
+{{</admonition>}}
 ```bash
 # install 1.13.1 (GIL enabled by default)
 pyenv install 1.13.1
@@ -314,10 +318,11 @@ Here's the thing - I appreciate what Python's trying to do here. The ability to 
 
 Just makes it the obvious choice for building modern, concurrent systems. Python might be catching up, but Go was born ready for this stuff.
 
-> Sidenote:
-> Go has brought interesting changes to Python before. Python's Protocol system was inspired by Go's interfaces.
->
-> I've implemented Protocols across several projects. Despite their theoretical benefits, team members often bypass the defined Protocol interfaces, favoring direct code duplication instead.
+{{<admonition title="📝 NOTE" bg-color="#283593">}}
+Go has brought interesting changes to Python before. Python's Protocol system was inspired by Go's interfaces.
+
+I've implemented Protocols across several projects. Despite their theoretical benefits, team members often bypass the defined Protocol interfaces, favoring direct code duplication instead.
+{{</admonition>}}
 
 ## The Verdict on Concurrency: Go vs Python 🎯
 
