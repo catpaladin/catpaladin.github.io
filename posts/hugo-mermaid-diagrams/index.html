@@ -1,0 +1,283 @@
+<!doctype html><html lang=en-us><head><title>Getting Mermaid Diagrams Working in Hugo // It's Go time!</title>
+<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.145.0"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.426227a64976b038e30bc990bed663448db0c7819318f82711ab767671f9f58d.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Getting Mermaid Diagrams Working in Hugo"><meta name=twitter:description content="Let’s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it’s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.
+After spending way too many hours banging my head against this particular wall with the m10c theme, I’m documenting the actual working solution so you don’t have to suffer through the same pain.
+An Intro to Mermaid Through Examples If you’re coming to this blog post and don’t know what Mermaid diagrams are, they’re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid."><meta property="og:url" content="https://catpaladin.github.io/posts/hugo-mermaid-diagrams/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Getting Mermaid Diagrams Working in Hugo"><meta property="og:description" content="Let’s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it’s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.
+After spending way too many hours banging my head against this particular wall with the m10c theme, I’m documenting the actual working solution so you don’t have to suffer through the same pain.
+An Intro to Mermaid Through Examples If you’re coming to this blog post and don’t know what Mermaid diagrams are, they’re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-03-01T19:48:53-08:00"><meta property="article:modified_time" content="2025-03-01T19:48:53-08:00"><meta property="article:tag" content="Hugo"><meta property="article:tag" content="Mermaid"><meta property="article:tag" content="Blogging"></head><body><header class=app-header><a href=/><img class=app-header-avatar src=/images/avatar.jpg alt="Mike Sahari"></a>
+<span class=app-header-title>It's Go time!</span><nav class=app-header-menu><a class=app-header-menu-item href=/>Home</a>
+-
+<a class=app-header-menu-item href=/tags/>Tags</a>
+-
+<a class=app-header-menu-item href=/about/>About</a></nav><p>A tech blog for Go, Neovim, and all the other things I find interesting.</p><div class=app-header-social><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg></a></div></header><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Getting Mermaid Diagrams Working in Hugo</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Mar 1, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+7 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/hugo/>Hugo</a>
+<a class=tag href=/tags/mermaid/>Mermaid</a>
+<a class=tag href=/tags/blogging/>Blogging</a></div></div></header><div class=post-content><p>Let&rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.</p><p>After spending way too many hours banging my head against this particular wall with the m10c theme, I&rsquo;m documenting the actual working solution so you don&rsquo;t have to suffer through the same pain.</p><h2 id=an-intro-to-mermaid-through-examples>An Intro to Mermaid Through Examples</h2><p>If you&rsquo;re coming to this blog post and don&rsquo;t know what Mermaid diagrams are, they&rsquo;re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.</p><h3 id=sankey-diagrams>Sankey Diagrams</h3><pre class=mermaid>sankey-beta
+
+Traffic Sources, Social Media, 20
+Traffic Sources, Direct, 40
+Traffic Sources, Search, 40
+
+Social Media, Facebook, 8
+Social Media, Twitter, 7
+Social Media, LinkedIn, 5
+
+Direct, Homepage, 25
+Direct, Blog, 15
+
+Search, Homepage, 20
+Search, Blog, 15
+Search, Products, 5
+</pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>sankey-beta
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Traffic Sources, Social Media, 20
+</span></span><span style=display:flex><span>Traffic Sources, Direct, 40
+</span></span><span style=display:flex><span>Traffic Sources, Search, 40
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Social Media, Facebook, 8
+</span></span><span style=display:flex><span>Social Media, Twitter, 7
+</span></span><span style=display:flex><span>Social Media, LinkedIn, 5
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Direct, Homepage, 25
+</span></span><span style=display:flex><span>Direct, Blog, 15
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Search, Homepage, 20
+</span></span><span style=display:flex><span>Search, Blog, 15
+</span></span><span style=display:flex><span>Search, Products, 5
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><h3 id=sequence-diagrams>Sequence Diagrams</h3><pre class=mermaid>sequenceDiagram
+    participant Client
+    participant API
+    participant DB
+
+    Client-&gt;&gt;+API: GET /users
+    API-&gt;&gt;+DB: SELECT * FROM users
+    DB--&gt;&gt;-API: Return user data
+    API--&gt;&gt;-Client: 200 OK (JSON)
+
+    Note over Client,API: Normal flow
+
+    Client-&gt;&gt;+API: GET /invalid
+    API--&gt;&gt;-Client: 404 Not Found
+</pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>sequenceDiagram
+</span></span><span style=display:flex><span>    participant Client
+</span></span><span style=display:flex><span>    participant API
+</span></span><span style=display:flex><span>    participant DB
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Client-&gt;&gt;+API: GET /users
+</span></span><span style=display:flex><span>    API-&gt;&gt;+DB: SELECT * FROM users
+</span></span><span style=display:flex><span>    DB--&gt;&gt;-API: Return user data
+</span></span><span style=display:flex><span>    API--&gt;&gt;-Client: 200 OK (JSON)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Note over Client,API: Normal flow
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Client-&gt;&gt;+API: GET /invalid
+</span></span><span style=display:flex><span>    API--&gt;&gt;-Client: 404 Not Found
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><h3 id=class-diagrams>Class Diagrams</h3><pre class=mermaid>classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +bark()
+    }
+    class Cat {
+        +bool hasNineLives
+        +meow()
+    }
+
+    Animal &lt;|-- Dog
+    Animal &lt;|-- Cat
+</pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>classDiagram
+</span></span><span style=display:flex><span>    class Animal {
+</span></span><span style=display:flex><span>        +String name
+</span></span><span style=display:flex><span>        +int age
+</span></span><span style=display:flex><span>        +makeSound()
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    class Dog {
+</span></span><span style=display:flex><span>        +String breed
+</span></span><span style=display:flex><span>        +bark()
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    class Cat {
+</span></span><span style=display:flex><span>        +bool hasNineLives
+</span></span><span style=display:flex><span>        +meow()
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    Animal &lt;|-- Dog
+</span></span><span style=display:flex><span>    Animal &lt;|-- Cat
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><h3 id=state-diagrams>State Diagrams</h3><pre class=mermaid>stateDiagram-v2
+    [*] --&gt; Pending
+    Pending --&gt; Processing: Payment received
+    Processing --&gt; Shipped: Item in stock
+    Processing --&gt; Backordered: Out of stock
+    Backordered --&gt; Shipped: Restock
+    Shipped --&gt; Delivered
+    Shipped --&gt; Returned: Customer returns
+    Delivered --&gt; [*]
+    Returned --&gt; [*]
+</pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>stateDiagram-v2
+</span></span><span style=display:flex><span>    [*] --&gt; Pending
+</span></span><span style=display:flex><span>    Pending --&gt; Processing: Payment received
+</span></span><span style=display:flex><span>    Processing --&gt; Shipped: Item in stock
+</span></span><span style=display:flex><span>    Processing --&gt; Backordered: Out of stock
+</span></span><span style=display:flex><span>    Backordered --&gt; Shipped: Restock
+</span></span><span style=display:flex><span>    Shipped --&gt; Delivered
+</span></span><span style=display:flex><span>    Shipped --&gt; Returned: Customer returns
+</span></span><span style=display:flex><span>    Delivered --&gt; [*]
+</span></span><span style=display:flex><span>    Returned --&gt; [*]
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><h3 id=entity-relationship-diagrams>Entity Relationship Diagrams</h3><pre class=mermaid>erDiagram
+    USER ||--o{ POST : writes
+    USER {
+        int id
+        string email
+        string name
+    }
+    POST ||--o{ COMMENT : has
+    POST {
+        int id
+        string title
+        string content
+        date created_at
+    }
+    COMMENT {
+        int id
+        string content
+        int user_id
+    }
+</pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>erDiagram
+</span></span><span style=display:flex><span>    USER ||--o{ POST : writes
+</span></span><span style=display:flex><span>    USER {
+</span></span><span style=display:flex><span>        int id
+</span></span><span style=display:flex><span>        string email
+</span></span><span style=display:flex><span>        string name
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    POST ||--o{ COMMENT : has
+</span></span><span style=display:flex><span>    POST {
+</span></span><span style=display:flex><span>        int id
+</span></span><span style=display:flex><span>        string title
+</span></span><span style=display:flex><span>        string content
+</span></span><span style=display:flex><span>        date created_at
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    COMMENT {
+</span></span><span style=display:flex><span>        int id
+</span></span><span style=display:flex><span>        string content
+</span></span><span style=display:flex><span>        int user_id
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><h3 id=gantt-chart-diagrams>Gantt Chart Diagrams</h3><pre class=mermaid>gantt
+    title Project Timeline
+    dateFormat  YYYY-MM-DD
+    section Planning
+    Requirements    :a1, 2024-01-01, 30d
+    Design         :after a1, 20d
+    section Development
+    Coding         :2024-02-15, 45d
+    Testing        :2024-03-01, 30d
+    section Launch
+    Deployment     :2024-04-01, 10d
+</pre><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>gantt
+</span></span><span style=display:flex><span>    title Project Timeline
+</span></span><span style=display:flex><span>    dateFormat  YYYY-MM-DD
+</span></span><span style=display:flex><span>    section Planning
+</span></span><span style=display:flex><span>    Requirements    :a1, 2024-01-01, 30d
+</span></span><span style=display:flex><span>    Design         :after a1, 20d
+</span></span><span style=display:flex><span>    section Development
+</span></span><span style=display:flex><span>    Coding         :2024-02-15, 45d
+</span></span><span style=display:flex><span>    Testing        :2024-03-01, 30d
+</span></span><span style=display:flex><span>    section Launch
+</span></span><span style=display:flex><span>    Deployment     :2024-04-01, 10d
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><p>Nice, huh? Diagrams make it easier for some readers to understand concepts. Through the work in this blog, I was able to implement the same Mermaid codeblocks as in my Obsidian notes.</p><h2 id=the-problem-with-standard-hugo-mermaid-tutorials>The Problem with Standard Hugo Mermaid Tutorials</h2><p>The <a href=https://gohugo.io/content-management/diagrams/#mermaid-diagrams>official Hugo documentation</a> provides a basic implementation that works great&mldr; if you&rsquo;re using the default theme with no customizations. But let&rsquo;s be real - who does that?</p><p>Most of us are using custom themes (like m10c in my case), and that&rsquo;s where things break down. The standard implementation doesn&rsquo;t account for how themes structure their templates and load JavaScript.</p><style>.admonition{border-radius:5px;padding:0;border-left:5px solid #00bcf6;box-shadow:0 0 .5rem .2rem #00000025}.admonition-title-container{background-color:#00bcf6;border-top-right-radius:5px}.admonition-title{font-weight:bolder;font-size:large;backdrop-filter:grayscale(50%)brightness(150%);-webkit-backdrop-filter:grayscale(50%)brightness(150%);padding:5px 0 5px 30px;border-top-right-radius:5px}@media(prefers-color-scheme:dark){.admonition-title{backdrop-filter:grayscale(40%)brightness(40%);-webkit-backdrop-filter:grayscale(40%)brightness(40%)}}.admonition-content{padding:10px 0 10px 15px}</style><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 TIP</div></div><div class=admonition-content>The key insight: You need to override your theme&rsquo;s base template, not just add the render hook.</div></div><h2 id=the-solution-theme-specific-implementation>The Solution: Theme-Specific Implementation</h2><p>Here&rsquo;s my working implementation for the m10c theme, with explanations of why each part matters:</p><h3 id=step-1-create-the-base-template-override>Step 1: Create the Base Template Override</h3><p>First, you need to override your theme&rsquo;s base template. For m10c, that means:</p><ol><li>Identify the original template: <code>themes/m10c/layouts/_default/baseof.html</code></li><li>Create your override at: <code>layouts/_default/baseof.html</code></li><li>Copy the content from the theme&rsquo;s template to your override</li></ol><h3 id=step-2-add-mermaid-support-to-the-base-template>Step 2: Add Mermaid Support to the Base Template</h3><p>Next, modify your override to include the Mermaid library. Add this code just before the closing <code>&lt;/body></code> tag:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#75715e>&lt;!-- Add Mermaid support - must be placed before closing body tag --&gt;</span>
+</span></span><span style=display:flex><span>{{ if .Store.Get &#34;hasMermaid&#34; }}
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>script</span> <span style=color:#a6e22e>type</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;module&#34;</span>&gt;
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>import</span> <span style=color:#a6e22e>mermaid</span> <span style=color:#a6e22e>from</span> <span style=color:#e6db74>&#39;https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs&#39;</span>;
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>mermaid</span>.<span style=color:#a6e22e>initialize</span>({
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>startOnLoad</span><span style=color:#f92672>:</span> <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>theme</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;dark&#39;</span>,  <span style=color:#75715e>// Options: default, forest, dark, neutral
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>securityLevel</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;loose&#39;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// Add custom theme properties
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>themeVariables</span><span style=color:#f92672>:</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Primary colors
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#a6e22e>primaryColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#BB2528&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>primaryTextColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#fff&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>primaryBorderColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#7C0000&#39;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Secondary colors
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#a6e22e>secondaryColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#006100&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>secondaryTextColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#fff&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>secondaryBorderColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#004d00&#39;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Other colors as needed
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#a6e22e>mainBkg</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#1f2020&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>textColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#ddd&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>lineColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#999&#39;</span>,
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Specific diagram colors
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#a6e22e>nodeBorder</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#777&#39;</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>titleColor</span><span style=color:#f92672>:</span> <span style=color:#e6db74>&#39;#F8F8F8&#39;</span>
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    });
+</span></span><span style=display:flex><span>  &lt;/<span style=color:#f92672>script</span>&gt;
+</span></span><span style=display:flex><span>{{ end }}
+</span></span></code></pre></div><p>This code checks if the page has Mermaid content (using Hugo&rsquo;s Store) and only loads the Mermaid library when needed. The custom theme variables ensure your diagrams match your site&rsquo;s dark theme.</p><h3 id=step-3-create-the-render-hook>Step 3: Create the Render Hook</h3><p>Now create a file at <code>layouts/_default/_markup/render-codeblock-mermaid.html</code> with the following content:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span>&lt;<span style=color:#f92672>pre</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;mermaid&#34;</span>&gt;
+</span></span><span style=display:flex><span>  {{- .Inner | htmlEscape | safeHTML }}
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>pre</span>&gt;
+</span></span><span style=display:flex><span>{{ .Page.Store.Set &#34;hasMermaid&#34; true }}
+</span></span></code></pre></div><p>This render hook does two critical things:</p><ol><li>Wraps your Mermaid code in the correct HTML structure</li><li>Sets a flag in the page&rsquo;s Store so the base template knows to load the Mermaid library</li></ol><h2 id=how-this-actually-works>How This Actually Works</h2><p>Let me explain the process flow with a Mermaid diagram:</p><pre class=mermaid>flowchart TD
+    A[Write Markdown with Mermaid Code] --&gt; B[Hugo Processes Markdown]
+    B --&gt; C[Render Hook Processes Mermaid Blocks]
+    C --&gt; D[Sets hasMermaid Flag in Page Store]
+    D --&gt; E[Base Template Checks for hasMermaid Flag]
+    E --&gt; F[Mermaid Library Loads if Flag is True]
+    F --&gt; G[Mermaid Library Renders Diagrams]
+
+    style A fill:#222,stroke:#BB2528,color:#ddd
+    style G fill:#006100,stroke:#004d00,color:#ddd
+</pre><p>The key insight here is that the render hook and base template work together through Hugo&rsquo;s Store mechanism. Without either piece, the system breaks down.</p><h2 id=using-mermaid-in-your-content>Using Mermaid in Your Content</h2><p>With this implementation in place, you can now add Mermaid diagrams to your Markdown content like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span><span style=color:#e6db74>```mermaid
+</span></span></span><span style=display:flex><span><span style=color:#e6db74></span>flowchart LR
+</span></span><span style=display:flex><span>    A[Start] --&gt; B{Decision}
+</span></span><span style=display:flex><span>    B --&gt;|Yes| C[Action 1]
+</span></span><span style=display:flex><span>    B --&gt;|No| D[Action 2]
+</span></span><span style=display:flex><span><span style=color:#e6db74>```</span>
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 TIP</div></div><div class=admonition-content>Always use the explicit <code>mermaid</code> language identifier for your code blocks, not just triple backticks.</div></div><h2 id=why-your-theme-matters>Why Your Theme Matters</h2><p>Different Hugo themes structure their templates differently. The approach I&rsquo;ve outlined works for m10c, but you might need to adjust it for other themes. The general principles remain the same:</p><ol><li>Override the base template that controls your HTML output</li><li>Add conditional loading of the Mermaid library based on content</li><li>Create a render hook that flags pages containing Mermaid code</li></ol><h2 id=common-pitfalls-to-avoid>Common Pitfalls to Avoid</h2><p>Here are some issues I encountered that aren&rsquo;t mentioned in most tutorials:</p><ol><li><strong>Missing the theme override</strong>: Just adding the render hook isn&rsquo;t enough</li><li><strong>Incorrect script loading</strong>: Modern Mermaid uses ES modules, requiring the type=&ldquo;module&rdquo; attribute</li><li><strong>Theme incompatibility</strong>: Dark-themed sites need custom Mermaid styling</li><li><strong>Resource loading order</strong>: The Mermaid library must load after your content is ready</li></ol><h2 id=conclusion>Conclusion</h2><p>Getting Mermaid diagrams working in Hugo requires understanding how your specific theme handles templates and JavaScript. The solution I&rsquo;ve outlined for m10c addresses these theme-specific concerns and provides a robust implementation that works reliably.</p><p>By overriding the appropriate templates and leveraging Hugo&rsquo;s Store mechanism, you can seamlessly integrate Mermaid diagrams into your content without fighting with your theme.</p></div><div class=post-footer></div></article></main><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
