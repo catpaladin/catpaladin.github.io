@@ -1,13 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://catpaladin.github.io/</link><description>Recent content on It's Go time!</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Sat, 01 Mar 2025 19:48:53 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting Mermaid Diagrams Working in Hugo</title><link>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</guid><description>&lt;p>Let&amp;rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&amp;rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://catpaladin.github.io/</link><description>Recent content on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 01 Mar 2025 19:48:53 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting Mermaid Diagrams Working in Hugo</title><link>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</guid><description>
+&lt;p>Let&amp;rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&amp;rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.&lt;/p>
 &lt;p>After spending way too many hours banging my head against this particular wall with the m10c theme, I&amp;rsquo;m documenting the actual working solution so you don&amp;rsquo;t have to suffer through the same pain.&lt;/p>
 &lt;h2 id="an-intro-to-mermaid-through-examples">An Intro to Mermaid Through Examples&lt;/h2>
-&lt;p>If you&amp;rsquo;re coming to this blog post and don&amp;rsquo;t know what Mermaid diagrams are, they&amp;rsquo;re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.&lt;/p></description></item><item><title>A Guide to Pointers in Go</title><link>https://catpaladin.github.io/posts/go-pointers/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-pointers/</guid><description>&lt;p>Let&amp;rsquo;s get real about pointers in Go—they&amp;rsquo;re not the scary beasts you might remember from C (if you came from that CS background). Go&amp;rsquo;s pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.&lt;/p>
+&lt;p>If you&amp;rsquo;re coming to this blog post and don&amp;rsquo;t know what Mermaid diagrams are, they&amp;rsquo;re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.&lt;/p></description></item><item><title>A Guide to Pointers in Go</title><link>https://catpaladin.github.io/posts/go-pointers/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-pointers/</guid><description>
+&lt;p>Let&amp;rsquo;s get real about pointers in Go—they&amp;rsquo;re not the scary beasts you might remember from C (if you came from that CS background). Go&amp;rsquo;s pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.&lt;/p>
 &lt;h2 id="for-python-developers-why-care-about-pointers">For Python Developers: Why Care About Pointers?&lt;/h2>
-&lt;p>This blog introduces pointers, a fundamental programming concept many developers struggle with. Having worked with numerous senior Cloud Engineers, SREs, and Platform Engineers who, despite years of industry experience, have only Python knowledge and limited exposure to memory management concepts, I&amp;rsquo;ve crafted this primer to establish essential context before diving into the main teachings.&lt;/p></description></item><item><title>Go Channels: A Concurrency Guide</title><link>https://catpaladin.github.io/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-channels/</guid><description>&lt;p>Hello fellow Gophers!&lt;/p>
+&lt;p>This blog introduces pointers, a fundamental programming concept many developers struggle with. Having worked with numerous senior Cloud Engineers, SREs, and Platform Engineers who, despite years of industry experience, have only Python knowledge and limited exposure to memory management concepts, I&amp;rsquo;ve crafted this primer to establish essential context before diving into the main teachings.&lt;/p></description></item><item><title>Go Channels: A Concurrency Guide</title><link>https://catpaladin.github.io/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-channels/</guid><description>
+&lt;p>Hello fellow Gophers!&lt;/p>
 &lt;img src="https://catpaladin.github.io/images/go-connect.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
 &lt;p>I&amp;rsquo;m absolutely thrilled to dive deep into one of Go&amp;rsquo;s most elegant features: &lt;strong>Channels&lt;/strong>! If you&amp;rsquo;re just starting your Go journey or looking to level up your concurrency game, you&amp;rsquo;re in for a treat.&lt;/p>
 &lt;p>Channels are the communication mechanism that makes goroutines work together efficiently and safely. They enable goroutines to exchange data without shared memory, reducing the risk of race conditions.&lt;/p>
-&lt;p>I hate to use an analogy here, but imagine you have a team of engineers working on some big company project.. let&amp;rsquo;s call it Kilonova.&lt;/p></description></item><item><title>Understanding Generic Type Aliases in Go 1.24</title><link>https://catpaladin.github.io/posts/type-aliases/</link><pubDate>Sat, 15 Feb 2025 09:00:54 -0800</pubDate><guid>https://catpaladin.github.io/posts/type-aliases/</guid><description>&lt;p>After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let&amp;rsquo;s break down exactly what this means, how it works, and how it compares to other languages.&lt;/p>
+&lt;p>I hate to use an analogy here, but imagine you have a team of engineers working on some big company project.. let&amp;rsquo;s call it Kilonova.&lt;/p></description></item><item><title>Understanding Generic Type Aliases in Go 1.24</title><link>https://catpaladin.github.io/posts/type-aliases/</link><pubDate>Sat, 15 Feb 2025 09:00:54 -0800</pubDate><guid>https://catpaladin.github.io/posts/type-aliases/</guid><description>
+&lt;p>After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let&amp;rsquo;s break down exactly what this means, how it works, and how it compares to other languages.&lt;/p>
 &lt;h2 id="understanding-gos-type-system-evolution">Understanding Go&amp;rsquo;s Type System Evolution&lt;/h2>
 &lt;h3 id="type-aliases-vs-type-definitions">Type Aliases vs Type Definitions&lt;/h3>
 &lt;p>First, let&amp;rsquo;s clear up a fundamental concept in Go:&lt;/p>
@@ -16,11 +20,13 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Type Alias - Creates a SYNONYM for existing type&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">AliasInt&lt;/span> = &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#75715e">// AliasInt is exactly the same as int&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s a practical example showing the difference:&lt;/p></description></item><item><title>Building Beautiful CLIs with Huh</title><link>https://catpaladin.github.io/posts/clis-and-huh/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/clis-and-huh/</guid><description>&lt;p>&lt;em>Hey there, fellow Go enthusiasts! Today, I&amp;rsquo;m going to share something that completely changed my CLI development game. Buckle up – we&amp;rsquo;re diving deep into making CLIs that users will actually enjoy using!&lt;/em>&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s a practical example showing the difference:&lt;/p></description></item><item><title>Building Beautiful CLIs with Huh</title><link>https://catpaladin.github.io/posts/clis-and-huh/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/clis-and-huh/</guid><description>
+&lt;p>&lt;em>Hey there, fellow Go enthusiasts! Today, I&amp;rsquo;m going to share something that completely changed my CLI development game. Buckle up – we&amp;rsquo;re diving deep into making CLIs that users will actually enjoy using!&lt;/em>&lt;/p>
 &lt;h2 id="the-cli-development-evolution">The CLI Development Evolution&lt;/h2>
 &lt;p>You know how we all instinctively reach for &lt;a href="https://github.com/spf13/cobra">cobra&lt;/a> when building command-line tools in Go? Well, here is the perfect companion that&amp;rsquo;s transformed how I think about CLI interactions: &lt;a href="https://github.com/charmbracelet/huh">huh&lt;/a> by Charmbracelet.&lt;/p>
 &lt;p>&lt;img src="https://catpaladin.github.io/images/huh-cat.gif" alt="huh" title="huh">&lt;/p>
-&lt;p>&lt;em>Here&amp;rsquo;s the thing that got me excited:&lt;/em> While &lt;code>cobra&lt;/code> handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), &lt;code>huh&lt;/code> brings something entirely different to the table. It&amp;rsquo;s all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.&lt;/p></description></item><item><title>Managing Development Environments with Dotfiles</title><link>https://catpaladin.github.io/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/dev-with-dotfiles/</guid><description>&lt;p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.&lt;/p>
+&lt;p>&lt;em>Here&amp;rsquo;s the thing that got me excited:&lt;/em> While &lt;code>cobra&lt;/code> handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), &lt;code>huh&lt;/code> brings something entirely different to the table. It&amp;rsquo;s all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.&lt;/p></description></item><item><title>Managing Development Environments with Dotfiles</title><link>https://catpaladin.github.io/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/dev-with-dotfiles/</guid><description>
+&lt;p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.&lt;/p>
 &lt;p>Let me walk you through how I&amp;rsquo;ve structured my &lt;a href="https://github.com/catpaladin/dotfiles">dotfiles&lt;/a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.&lt;/p>
 &lt;h2 id="the-core-structure">The Core Structure&lt;/h2>
 &lt;p>First, let&amp;rsquo;s look at how everything is organized:&lt;/p>
@@ -45,60 +51,58 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ └── prompt.zsh
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> └── .zshrc
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
-
 &lt;style>
- 
- .admonition{
- border-radius: 5px;
- padding: 0px;
- border-left: 5px solid #00bcf6;
- box-shadow: 0 0 .5rem .2rem #00000025;
- }
- .admonition-title-container{
- background-color: #00bcf6;
- border-top-right-radius: 5px;
- }
- .admonition-title {
- font-weight: bolder;
- font-size: large;
- backdrop-filter: grayscale(50%) brightness(150%);
- -webkit-backdrop-filter: grayscale(50%) brightness(150%);
- padding: 5px 0 5px 30px;
- border-top-right-radius: 5px;
- }
- @media (prefers-color-scheme: dark) {
- .admonition-title {
- backdrop-filter: grayscale(40%) brightness(40%);
- -webkit-backdrop-filter: grayscale(40%) brightness(40%);
- }
- }
- .admonition-content{
- padding: 10px 0 10px 15px
- }
+.admonition{
+border-radius: 5px;
+padding: 0px;
+border-left: 5px solid #00bcf6;
+box-shadow: 0 0 .5rem .2rem #00000025;
+}
+.admonition-title-container{
+background-color: #00bcf6;
+border-top-right-radius: 5px;
+}
+.admonition-title {
+font-weight: bolder;
+font-size: large;
+backdrop-filter: grayscale(50%) brightness(150%);
+-webkit-backdrop-filter: grayscale(50%) brightness(150%);
+padding: 5px 0 5px 30px;
+border-top-right-radius: 5px;
+}
+@media (prefers-color-scheme: dark) {
+.admonition-title {
+backdrop-filter: grayscale(40%) brightness(40%);
+-webkit-backdrop-filter: grayscale(40%) brightness(40%);
+}
+}
+.admonition-content{
+padding: 10px 0 10px 15px
+}
 &lt;/style>
-
-
 &lt;div class="admonition" style="border-left: 5px solid #283593;">
- &lt;div class="admonition-title-container" style="background-color: #283593;">
- &lt;div class="admonition-title">
- 📝 NOTE
- &lt;/div>
- &lt;/div>
- &lt;div class="admonition-content">This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/div>
+&lt;div class="admonition-title-container" style="background-color: #283593;">
+&lt;div class="admonition-title">
+📝 NOTE
 &lt;/div>
-
+&lt;/div>
+&lt;div class="admonition-content">This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/div>
+&lt;/div>
 &lt;h2 id="neovim-the-development-environment">Neovim: The Development Environment&lt;/h2>
-&lt;p>The Neovim configuration is simple - it&amp;rsquo;s structured as a clean, modular setup:&lt;/p></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://catpaladin.github.io/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid>https://catpaladin.github.io/posts/parallel-processing/</guid><description>&lt;p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&amp;rsquo;s strengths - it excels in machine learning and generative AI applications. However, I &lt;strong>prefer&lt;/strong> Go for several compelling reasons:&lt;/p>
+&lt;p>The Neovim configuration is simple - it&amp;rsquo;s structured as a clean, modular setup:&lt;/p></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://catpaladin.github.io/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid>https://catpaladin.github.io/posts/parallel-processing/</guid><description>
+&lt;p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&amp;rsquo;s strengths - it excels in machine learning and generative AI applications. However, I &lt;strong>prefer&lt;/strong> Go for several compelling reasons:&lt;/p>
 &lt;ul>
 &lt;li>Memory management with pointers&lt;/li>
 &lt;li>Elegant concurrency using channels and goroutines&lt;/li>
 &lt;li>Straightforward cross-compilation of binaries&lt;/li>
 &lt;li>Clean implementation of interfaces and structs&lt;/li>
 &lt;/ul>
-&lt;p>But preferences often face challenges. Some argue, &amp;ldquo;Python now has concurrency, so you should switch to Python.&amp;rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).&lt;/p></description></item><item><title>Building a REST API with Go</title><link>https://catpaladin.github.io/posts/go-simple-api/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-simple-api/</guid><description>&lt;p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&amp;rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&amp;rsquo;re new to Go or an experienced developer, you&amp;rsquo;ll learn how to create an API that handles user authentication.&lt;/p>
+&lt;p>But preferences often face challenges. Some argue, &amp;ldquo;Python now has concurrency, so you should switch to Python.&amp;rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).&lt;/p></description></item><item><title>Building a REST API with Go</title><link>https://catpaladin.github.io/posts/go-simple-api/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-simple-api/</guid><description>
+&lt;p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&amp;rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&amp;rsquo;re new to Go or an experienced developer, you&amp;rsquo;ll learn how to create an API that handles user authentication.&lt;/p>
 &lt;p>For those who need to see the whole code before diving in, you can find all of this on &lt;a href="https://github.com/catpaladin/go-api-example">Github&lt;/a>&lt;/p>
 &lt;h2 id="technology-stack-overview">Technology Stack Overview&lt;/h2>
-&lt;p>Our API implementation uses three main technologies:&lt;/p></description></item><item><title>About</title><link>https://catpaladin.github.io/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid>https://catpaladin.github.io/about/</guid><description>&lt;p>Hi, I&amp;rsquo;m Mike!&lt;/p>
+&lt;p>Our API implementation uses three main technologies:&lt;/p></description></item><item><title>About</title><link>https://catpaladin.github.io/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid>https://catpaladin.github.io/about/</guid><description>
+&lt;p>Hi, I&amp;rsquo;m Mike!&lt;/p>
 &lt;h3 id="-about-me">☕ About Me&lt;/h3>
 &lt;ul>
 &lt;li>💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML&lt;/li>
@@ -110,18 +114,19 @@
 &lt;h3 id="languages-and-tools">Languages and Tools&lt;/h3>
 &lt;p>Just some of my everyday languages + toolset&lt;/p>
 &lt;div style="display: flex; gap: 10px; align-items: center;">
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" title="Go" alt="Go" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" title="Bash" alt="Bash" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" title="Neovim" alt="Neovim" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" title="GithubActions" alt="GithubActions" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" title="Kubernetes" alt="Kubernetes" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" title="Helm" alt="Helm" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" title="AWS" alt="AWS" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jupyter/jupyter-original.svg" title="Jupyter" alt="Jupyter" width="40" height="40"/>
- &lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" title="Terraform" alt="Terraform" width="40" height="40"/>
-&lt;/div></description></item><item><title>Introduction to Go and HTMX</title><link>https://catpaladin.github.io/posts/intro-to-go-htmx/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/intro-to-go-htmx/</guid><description>&lt;p>Hello readers. Welcome to my blog!&lt;/p>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" title="Go" alt="Go" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" title="Bash" alt="Bash" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" title="Neovim" alt="Neovim" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" title="GithubActions" alt="GithubActions" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" title="Kubernetes" alt="Kubernetes" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" title="Helm" alt="Helm" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" title="AWS" alt="AWS" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jupyter/jupyter-original.svg" title="Jupyter" alt="Jupyter" width="40" height="40"/>
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" title="Terraform" alt="Terraform" width="40" height="40"/>
+&lt;/div></description></item><item><title>Introduction to Go and HTMX</title><link>https://catpaladin.github.io/posts/intro-to-go-htmx/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/intro-to-go-htmx/</guid><description>
+&lt;p>Hello readers. Welcome to my blog!&lt;/p>
 &lt;p>I was debating on if I would write out a full post for this initial one (to test, you know?).
 Instead, I decided to go through my collection of notes and found a topic to post; Go &amp;amp; &lt;a href="https://htmx.org/docs/#introduction">htmx&lt;/a>.&lt;/p>
 &lt;p>However, if you&amp;rsquo;d like to learn more about me, check out my &lt;a href="https://blog.mikesahari.com/about/">about&lt;/a> page.&lt;/p>

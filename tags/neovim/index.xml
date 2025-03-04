@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Neovim on It's Go time!</title><link>https://catpaladin.github.io/tags/neovim/</link><description>Recent content in Neovim on It's Go time!</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Fri, 07 Feb 2025 15:30:00 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/tags/neovim/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Development Environments with Dotfiles</title><link>https://catpaladin.github.io/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/dev-with-dotfiles/</guid><description>&lt;p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Neovim on It's Go time!</title><link>https://catpaladin.github.io/tags/neovim/</link><description>Recent content in Neovim on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 07 Feb 2025 15:30:00 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/tags/neovim/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Development Environments with Dotfiles</title><link>https://catpaladin.github.io/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/dev-with-dotfiles/</guid><description>
+&lt;p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.&lt;/p>
 &lt;p>Let me walk you through how I&amp;rsquo;ve structured my &lt;a href="https://github.com/catpaladin/dotfiles">dotfiles&lt;/a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.&lt;/p>
 &lt;h2 id="the-core-structure">The Core Structure&lt;/h2>
 &lt;p>First, let&amp;rsquo;s look at how everything is organized:&lt;/p>
@@ -23,47 +24,42 @@
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ └── prompt.zsh
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> └── .zshrc
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
-
 &lt;style>
- 
- .admonition{
- border-radius: 5px;
- padding: 0px;
- border-left: 5px solid #00bcf6;
- box-shadow: 0 0 .5rem .2rem #00000025;
- }
- .admonition-title-container{
- background-color: #00bcf6;
- border-top-right-radius: 5px;
- }
- .admonition-title {
- font-weight: bolder;
- font-size: large;
- backdrop-filter: grayscale(50%) brightness(150%);
- -webkit-backdrop-filter: grayscale(50%) brightness(150%);
- padding: 5px 0 5px 30px;
- border-top-right-radius: 5px;
- }
- @media (prefers-color-scheme: dark) {
- .admonition-title {
- backdrop-filter: grayscale(40%) brightness(40%);
- -webkit-backdrop-filter: grayscale(40%) brightness(40%);
- }
- }
- .admonition-content{
- padding: 10px 0 10px 15px
- }
+.admonition{
+border-radius: 5px;
+padding: 0px;
+border-left: 5px solid #00bcf6;
+box-shadow: 0 0 .5rem .2rem #00000025;
+}
+.admonition-title-container{
+background-color: #00bcf6;
+border-top-right-radius: 5px;
+}
+.admonition-title {
+font-weight: bolder;
+font-size: large;
+backdrop-filter: grayscale(50%) brightness(150%);
+-webkit-backdrop-filter: grayscale(50%) brightness(150%);
+padding: 5px 0 5px 30px;
+border-top-right-radius: 5px;
+}
+@media (prefers-color-scheme: dark) {
+.admonition-title {
+backdrop-filter: grayscale(40%) brightness(40%);
+-webkit-backdrop-filter: grayscale(40%) brightness(40%);
+}
+}
+.admonition-content{
+padding: 10px 0 10px 15px
+}
 &lt;/style>
-
-
 &lt;div class="admonition" style="border-left: 5px solid #283593;">
- &lt;div class="admonition-title-container" style="background-color: #283593;">
- &lt;div class="admonition-title">
- 📝 NOTE
- &lt;/div>
- &lt;/div>
- &lt;div class="admonition-content">This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/div>
+&lt;div class="admonition-title-container" style="background-color: #283593;">
+&lt;div class="admonition-title">
+📝 NOTE
 &lt;/div>
-
+&lt;/div>
+&lt;div class="admonition-content">This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/div>
+&lt;/div>
 &lt;h2 id="neovim-the-development-environment">Neovim: The Development Environment&lt;/h2>
 &lt;p>The Neovim configuration is simple - it&amp;rsquo;s structured as a clean, modular setup:&lt;/p></description></item></channel></rss>
