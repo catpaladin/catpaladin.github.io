@@ -22,12 +22,22 @@ title = "It's Go time!"
     name = "About"
     url = "/about/"
     weight = 3
+  [[menu.main]]
+    identifier = "rss"
+    name = "RSS"
+    url = "/index.xml"
+    weight = 4
 
 [params]
   author = "Mike Sahari"
   description = "A tech blog for Go, Neovim, and all the other things I find interesting."
   menu_item_separator = " - "
   avatar = "images/avatar.jpg"
+
+  [[params.social]]
+    icon = "brand-linkedin"
+    name = "LinkedIn"
+    url = "https://linkedin.com/in/mike-sahari"
 
   [[params.social]]
     icon = "brand-github"
@@ -54,3 +64,6 @@ title = "It's Go time!"
 
 [taxonomies]
   tag = "tags"
+
+[outputs]
+  home = ["HTML", "RSS"]
