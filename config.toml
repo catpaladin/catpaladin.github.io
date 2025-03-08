@@ -50,11 +50,11 @@ title = "It's Go time!"
     url = "https://mastodon.social/@ineedmorecoffee"
 
   [params.style]
-    darkestColor = "#315659"
-    darkColor = "#253031"
+    darkestColor = "#253031"
+    darkColor = "#263238"
     lightColor = "#afbac4"
     lightestColor = "#ffffff"
-    primaryColor = "#57cc8a"
+    primaryColor = "#00B0FF"
 
 [markup.goldmark.renderer]
   unsafe = true
