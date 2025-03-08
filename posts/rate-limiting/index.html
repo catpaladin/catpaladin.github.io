@@ -1,0 +1,462 @@
+<!doctype html><html lang=en-us><head><title>Building a Rate-Limiter in Go // It's Go time!</title>
+<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.145.0"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.db66328085bc875509ae5c6a470d28b57dad9ed1219e1b1bc97ae6197a02bdd8.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Building a Rate-Limiter in Go"><meta name=twitter:description content="Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!
+In this post, we’re building a configurable rate-limiting reverse proxy. And by the end of this blog, you’ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes."><meta property="og:url" content="https://catpaladin.github.io/posts/rate-limiting/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Building a Rate-Limiter in Go"><meta property="og:description" content="Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!
+In this post, we’re building a configurable rate-limiting reverse proxy. And by the end of this blog, you’ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-03-07T18:52:37-08:00"><meta property="article:modified_time" content="2025-03-07T18:52:37-08:00"><meta property="article:tag" content="Go"><meta property="article:tag" content="Api"><meta property="article:tag" content="Reverse-Proxy"><meta property="article:tag" content="Rate-Limiting"></head><body><header class=app-header><a href=/><img class=app-header-avatar src=/images/avatar.jpg alt="Mike Sahari"></a>
+<span class=app-header-title>It's Go time!</span><nav class=app-header-menu><a class=app-header-menu-item href=/>Home</a>
+-
+<a class=app-header-menu-item href=/tags/>Tags</a>
+-
+<a class=app-header-menu-item href=/about/>About</a>
+-
+<a class=app-header-menu-item href=/index.xml>RSS</a></nav><p>A tech blog for Go, Neovim, and all the other things I find interesting.</p><div class=app-header-social><a href=https://linkedin.com/in/mike-sahari target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentcolor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853.0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601.0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144.0-2.063-.926-2.063-2.065.0-1.138.92-2.063 2.063-2.063 1.14.0 2.064.925 2.064 2.063.0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225.0H1.771C.792.0.0.774.0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2.0 22.222.0h.003z"/></svg>
+</a><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg></a></div></header><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Building a Rate-Limiter in Go</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Mar 7, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+12 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/go/>Go</a>
+<a class=tag href=/tags/api/>Api</a>
+<a class=tag href=/tags/reverse-proxy/>Reverse-Proxy</a>
+<a class=tag href=/tags/rate-limiting/>Rate-Limiting</a></div></div></header><div class=post-content><p>Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!</p><p>In this post, we&rsquo;re building a configurable rate-limiting reverse proxy. And by the end of this blog, you&rsquo;ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes.</p><h2 id=what-exactly-are-we-building>What Exactly Are We Building?</h2><p>A reverse proxy acts as a middleman between clients and your actual service. Our proxy will add a critical feature: <strong>rate limiting</strong> to control how many requests per second (RPS) each client can make.</p><pre class=mermaid>flowchart LR
+    classDef client fill:#8884d8,color:#fff
+    classDef proxy fill:#82ca9d,color:#000
+    classDef service fill:#ffc658,color:#000
+
+    A[Client] --&gt;|Request| B[Rate-Limiting Proxy]
+    B --&gt;|Under Limit| C[Your Service]
+    B --&gt;|Over Limit| D[429 Too Many Requests]
+
+    class A client
+    class B proxy
+    class C,D service
+</pre><p>Our proxy will be configurable via environment variables:</p><ul><li><code>TARGET_URL</code>: The API we&rsquo;re protecting (i.e. <code>localhost:8080</code>)</li><li><code>PROXY_PORT</code>: The port our proxy runs on (i.e. <code>8000</code>)</li><li><code>RPS</code>: Requests per second allowed</li><li><code>BURST</code>: Maximum capacity and how many requests can temporarily exceed the rate limit</li></ul><p>For this example, we will be building our rate-limiting reverse proxy using the <a href=https://en.wikipedia.org/wiki/Token_bucket>Token Bucket Algorithm</a>. But before we jump into things, I wanted to break down the concepts.</p><p>The Token Bucket Algorithm is fundamentally a traffic cop for your API. It works on a deceptively simple principle:</p><ol><li>You have a bucket that holds tokens</li><li>Tokens are added to the bucket at a constant rate</li><li>Each API request requires one or more tokens</li><li>If there are enough tokens, the request goes through and tokens are consumed</li><li>If not, the request is rejected (usually with a 429 Too Many Requests)</li></ol><p>RPS (Requests Per Second) is your token generation rate - it defines how many new request permits you&rsquo;re issuing every second. This is your system&rsquo;s sustainable throughput.</p><style>.admonition{border-radius:5px;padding:0;border-left:5px solid #00bcf6;box-shadow:0 0 .5rem .2rem #00000025}.admonition-title-container{background-color:#00bcf6;border-top-right-radius:5px}.admonition-title{font-weight:bolder;font-size:large;backdrop-filter:grayscale(50%)brightness(150%);-webkit-backdrop-filter:grayscale(50%)brightness(150%);padding:5px 0 5px 30px;border-top-right-radius:5px}@media(prefers-color-scheme:dark){.admonition-title{backdrop-filter:grayscale(40%)brightness(40%);-webkit-backdrop-filter:grayscale(40%)brightness(40%)}}.admonition-content{padding:10px 0 10px 15px}</style><div class=admonition style="border-left:5px solid #69f0ae"><div class=admonition-title-container style=background-color:#69f0ae><div class=admonition-title>🗨️ Example</div></div><div class=admonition-content><p>If your RPS is set to 10:</p><ul><li>Your bucket gets 10 new tokens every second</li><li>That&rsquo;s one new token every 0.1 seconds</li><li>This is your long-term, guaranteed throughput capacity</li></ul></div></div><p>The following charts visualize this:</p><pre class=mermaid>graph LR
+    subgraph &#34;Tokens (RPS = 10)&#34;
+    A[Start] --&gt;|t=0s| B[10 tokens]
+    B --&gt;|t=1s| C[20 tokens]
+    C --&gt;|t=2s| D[30 tokens]
+    D --&gt;|t=3s| E[30 tokens]
+    style A fill:#1A237E,color:#fff
+    style B fill:#303F9F,color:#fff
+    style C fill:#3949AB,color:#fff
+    style D fill:#3F51B5,color:#fff,stroke:#FF5722,stroke-width:2px
+    style E fill:#3F51B5,color:#fff,stroke:#FF5722,stroke-width:2px
+    end
+    subgraph &#34;Token Generation Rate&#34;
+    F[Token Rate: 10 per second] --&gt;|&#34;Steady drip into bucket&#34;| G[(&#34;Max capacity: 30 tokens&#34;)]
+    style F fill:#D32F2F,color:#fff
+    style G fill:#7CB342,color:#fff
+    end
+</pre><p>Burst capacity is like your API&rsquo;s turbo button - the maximum number of requests you&rsquo;ll allow all at once, even if it exceeds your sustainable rate. It&rsquo;s your buffer against traffic spikes.</p><div class=admonition style="border-left:5px solid #69f0ae"><div class=admonition-title-container style=background-color:#69f0ae><div class=admonition-title>🗨️ Example</div></div><div class=admonition-content><p>If your burst is 30:</p><ul><li>Your bucket has a maximum capacity of 30 tokens</li><li>A client can make up to 30 requests immediately</li><li>After burst capacity is exhausted, they&rsquo;re throttled to your RPS</li></ul></div></div><p>The following visualization describes this:</p><pre class=mermaid>graph TD
+    subgraph &#34;(RPS=10, Burst=30)&#34;
+    A[Initial State: Bucket Full] --&gt;|&#34;Client makes 30 requests instantly&#34;| B[Bucket Empty]
+    B --&gt;|&#34;After 1 second: +10 tokens&#34;| C[10 Tokens]
+    B --&gt;|&#34;Immediate new requests rejected&#34;| D[429 Too Many Requests]
+    C --&gt;|&#34;After 2 more seconds: +20&#34;| E[30 Tokens]
+    style A fill:#388E3C,color:#fff
+    style B fill:#D32F2F,color:#fff
+    style C fill:#FFA000,color:#000
+    style D fill:#C2185B,color:#fff
+    style E fill:#388E3C,color:#fff
+    end
+</pre><p>Start to make sense? Let&rsquo;s jump into the project to see this in action.</p><h2 id=project-setup>Project Setup</h2><p>Let&rsquo;s start by creating our project structure. I&rsquo;m assuming you already have Go 1.24 installed.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir rate-limit-proxy
+</span></span><span style=display:flex><span>cd rate-limit-proxy
+</span></span><span style=display:flex><span>go mod init github.com/yourusername/rate-limit-proxy
+</span></span><span style=display:flex><span>touch cmd/rate-limit-proxy/main.go
+</span></span></code></pre></div><p>Now let&rsquo;s install the packages we&rsquo;ll need:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>go get golang.org/x/time/rate
+</span></span></code></pre></div><p>This package provides Go&rsquo;s excellent token bucket rate limiter, which we&rsquo;ll be using extensively.</p><h2 id=building-our-rate-limiting-proxy>Building Our Rate-Limiting Proxy</h2><p>Let&rsquo;s start by creating the overall structure of our application in <code>cmd/rate-limit-proxy/main.go</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http/httputil&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/url&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;os&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;strconv&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;sync&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;golang.org/x/time/rate&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ClientLimiter tracks rate limits for each client</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ClientLimiter</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>limiter</span>  <span style=color:#f92672>*</span><span style=color:#a6e22e>rate</span>.<span style=color:#a6e22e>Limiter</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>lastSeen</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Global map to store limiters for each client IP</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> (
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>clients</span>    = make(<span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#f92672>*</span><span style=color:#a6e22e>ClientLimiter</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>mu</span>         <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Mutex</span> <span style=color:#75715e>// protects clients map</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>cleanupInt</span> = <span style=color:#ae81ff>5</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Minute</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Configuration from environment variables</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>targetURL</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getEnv</span>(<span style=color:#e6db74>&#34;TARGET_URL&#34;</span>, <span style=color:#e6db74>&#34;http://localhost:8080&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>proxyPort</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getEnv</span>(<span style=color:#e6db74>&#34;PROXY_PORT&#34;</span>, <span style=color:#e6db74>&#34;8000&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>rpsStr</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getEnv</span>(<span style=color:#e6db74>&#34;RPS&#34;</span>, <span style=color:#e6db74>&#34;10&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>burstStr</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getEnv</span>(<span style=color:#e6db74>&#34;BURST&#34;</span>, <span style=color:#e6db74>&#34;20&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Parse numeric configs</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>rps</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strconv</span>.<span style=color:#a6e22e>ParseFloat</span>(<span style=color:#a6e22e>rpsStr</span>, <span style=color:#ae81ff>64</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Invalid RPS value: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>burst</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strconv</span>.<span style=color:#a6e22e>Atoi</span>(<span style=color:#a6e22e>burstStr</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Invalid BURST value: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Setup the reverse proxy</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>url</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>url</span>.<span style=color:#a6e22e>Parse</span>(<span style=color:#a6e22e>targetURL</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Invalid target URL: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>proxy</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>httputil</span>.<span style=color:#a6e22e>NewSingleHostReverseProxy</span>(<span style=color:#a6e22e>url</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Start cleanup routine for inactive clients</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>go</span> <span style=color:#a6e22e>cleanupOldClients</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Set up the HTTP server with our custom handler</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#a6e22e>createRateLimitHandler</span>(<span style=color:#a6e22e>proxy</span>, <span style=color:#a6e22e>rps</span>, <span style=color:#a6e22e>burst</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Starting rate-limiting proxy server on :%s\n&#34;</span>, <span style=color:#a6e22e>proxyPort</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Forwarding to: %s\n&#34;</span>, <span style=color:#a6e22e>targetURL</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Rate limit: %.1f requests/second with burst of %d\n&#34;</span>, <span style=color:#a6e22e>rps</span>, <span style=color:#a6e22e>burst</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:&#34;</span><span style=color:#f92672>+</span><span style=color:#a6e22e>proxyPort</span>, <span style=color:#66d9ef>nil</span>); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Failed to start server: %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Helper function to get env variable with fallback</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>getEnv</span>(<span style=color:#a6e22e>key</span>, <span style=color:#a6e22e>fallback</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>value</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>LookupEnv</span>(<span style=color:#a6e22e>key</span>); <span style=color:#a6e22e>exists</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fallback</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Now let&rsquo;s implement the rate limiting handler and cleanup function:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Create our rate-limiting handler function</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>createRateLimitHandler</span>(<span style=color:#a6e22e>proxy</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>httputil</span>.<span style=color:#a6e22e>ReverseProxy</span>, <span style=color:#a6e22e>rps</span> <span style=color:#66d9ef>float64</span>, <span style=color:#a6e22e>burst</span> <span style=color:#66d9ef>int</span>) <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Get client IP</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>clientIP</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>RemoteAddr</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Get or create rate limiter for this client</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>limiter</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getClientLimiter</span>(<span style=color:#a6e22e>clientIP</span>, <span style=color:#a6e22e>rps</span>, <span style=color:#a6e22e>burst</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Check if request is allowed</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>limiter</span>.<span style=color:#a6e22e>limiter</span>.<span style=color:#a6e22e>Allow</span>() {
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// Forward the request to the target service</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>proxy</span>.<span style=color:#a6e22e>ServeHTTP</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>r</span>)
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;429 Too Many Requests&#34;</span>, <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusTooManyRequests</span>)
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Rate limit exceeded for client %s&#34;</span>, <span style=color:#a6e22e>clientIP</span>)
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Get a rate limiter for a client</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>getClientLimiter</span>(<span style=color:#a6e22e>clientIP</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>rps</span> <span style=color:#66d9ef>float64</span>, <span style=color:#a6e22e>burst</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>ClientLimiter</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>mu</span>.<span style=color:#a6e22e>Lock</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>mu</span>.<span style=color:#a6e22e>Unlock</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>limiter</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>clients</span>[<span style=color:#a6e22e>clientIP</span>]
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>exists</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Create a new rate limiter for this client</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>limiter</span> = <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>ClientLimiter</span>{
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>limiter</span>:  <span style=color:#a6e22e>rate</span>.<span style=color:#a6e22e>NewLimiter</span>(<span style=color:#a6e22e>rate</span>.<span style=color:#a6e22e>Limit</span>(<span style=color:#a6e22e>rps</span>), <span style=color:#a6e22e>burst</span>),
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>lastSeen</span>: <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>(),
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>clients</span>[<span style=color:#a6e22e>clientIP</span>] = <span style=color:#a6e22e>limiter</span>
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>limiter</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Update the last seen time</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>limiter</span>.<span style=color:#a6e22e>lastSeen</span> = <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>limiter</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Cleanup routine to remove inactive clients</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>cleanupOldClients</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Sleep</span>(<span style=color:#a6e22e>cleanupInt</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>mu</span>.<span style=color:#a6e22e>Lock</span>()
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>now</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>ip</span>, <span style=color:#a6e22e>client</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>clients</span> {
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>now</span>.<span style=color:#a6e22e>Sub</span>(<span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>lastSeen</span>) &gt; <span style=color:#ae81ff>1</span><span style=color:#f92672>*</span><span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Hour</span> {
+</span></span><span style=display:flex><span>				delete(<span style=color:#a6e22e>clients</span>, <span style=color:#a6e22e>ip</span>)
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Cleaned up limiter for inactive client: %s&#34;</span>, <span style=color:#a6e22e>ip</span>)
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>mu</span>.<span style=color:#a6e22e>Unlock</span>()
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Let&rsquo;s break down what&rsquo;s happening in this code:</p><ol><li>We set up a reverse proxy using Go&rsquo;s <code>httputil</code> package</li><li>For each client (identified by IP), we create a rate limiter using Go&rsquo;s token bucket implementation</li><li>When a request comes in, we check if the client has exceeded their rate limit</li><li>If they have, we return a 429 Too Many Requests status</li><li>If not, we forward the request to the target service</li><li>We also have a background goroutine that cleans up rate limiters for clients that haven&rsquo;t been seen in a while</li></ol><div class=admonition style="border-left:5px solid #283593"><div class=admonition-title-container style=background-color:#283593><div class=admonition-title>📝 NOTE</div></div><div class=admonition-content><p>The token bucket algorithm allows for brief bursts of traffic while still maintaining a consistent average rate limit. This makes it more forgiving than strict per-second limits.</p><p>The <code>rate.Limiter.Allow()</code> method consumes a single token when it&rsquo;s called, but it doesn&rsquo;t actually block or delay execution! It simply returns <code>false</code> if no tokens are available.</p></div></div><h2 id=handling-x-forwarded-for-headers>Handling X-Forwarded-For Headers</h2><p>One issue with our current implementation is that it uses <code>RemoteAddr</code> to identify clients. In production environments with load balancers, you&rsquo;ll typically want to respect the <code>X-Forwarded-For</code> header. Let&rsquo;s enhance our code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Get client&#39;s real IP, respecting X-Forwarded-For header</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>getRealIP</span>(<span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Check for X-Forwarded-For header</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>forwarded</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Header</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#e6db74>&#34;X-Forwarded-For&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>forwarded</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// X-Forwarded-For can contain multiple IPs; use the first one</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>ips</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Split</span>(<span style=color:#a6e22e>forwarded</span>, <span style=color:#e6db74>&#34;,&#34;</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>TrimSpace</span>(<span style=color:#a6e22e>ips</span>[<span style=color:#ae81ff>0</span>])
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Fall back to RemoteAddr if X-Forwarded-For is not present</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ip</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>RemoteAddr</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Strip port number if present</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>host</span>, <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>net</span>.<span style=color:#a6e22e>SplitHostPort</span>(<span style=color:#a6e22e>ip</span>)
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Successfully split host and port, use just the host</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>ip</span> = <span style=color:#a6e22e>host</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#a6e22e>ip</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #01579b"><div class=admonition-title-container style=background-color:#01579b><div class=admonition-title>📌 IMPORTANT</div></div><div class=admonition-content>Don&rsquo;t forget to add <code>strings</code> and <code>net</code> to your imports!</div></div><p>Now, update the <code>createRateLimitHandler</code> function to use this instead:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Create our rate-limiting handler function</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>createRateLimitHandler</span>(<span style=color:#a6e22e>proxy</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>httputil</span>.<span style=color:#a6e22e>ReverseProxy</span>, <span style=color:#a6e22e>rps</span> <span style=color:#66d9ef>float64</span>, <span style=color:#a6e22e>burst</span> <span style=color:#66d9ef>int</span>) <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span> {
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>return</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Get client IP</span>
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>clientIP</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>getRealIP</span>(<span style=color:#a6e22e>r</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// Rest of the function remains the same</span>
+</span></span><span style=display:flex><span>		<span style=color:#75715e>// ...</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=testing-our-rate-limiter>Testing Our Rate Limiter</h2><p>Now that we have our rate-limiting proxy, let&rsquo;s test it. First, make sure you have a test service running. For this example, I&rsquo;ll use a simple echo server. We can create this under <code>cmd/echo-server/main.go</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Fprintf</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Hello from the test service! Path: %s\n&#34;</span>, <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>URL</span>.<span style=color:#a6e22e>Path</span>)
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Starting test service on :8080&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In a separate terminal, start our echo server:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Start a simple test service</span>
+</span></span><span style=display:flex><span>go run cmd/echo-server/main.go
+</span></span></code></pre></div><p>Now, in another terminal, set the environment variables and start our rate-limiting proxy:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>export TARGET_URL<span style=color:#f92672>=</span>http://localhost:8080
+</span></span><span style=display:flex><span>export PROXY_PORT<span style=color:#f92672>=</span><span style=color:#ae81ff>8000</span>
+</span></span><span style=display:flex><span>export RPS<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span>export BURST<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span>go run cmd/rate-limit-proxy/main.go
+</span></span></code></pre></div><p>This configures our proxy to allow an average of 2 requests per second, with a burst of 3 at most.</p><p>Let&rsquo;s test it with a more aggressive approach - we&rsquo;ll use Go itself to hammer the endpoint with concurrent requests!</p><p>We&rsquo;ll create a simple go script under <code>cmd/test-rate-limit/main.go</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;io&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;sync&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Number of concurrent requests to send</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>concurrency</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>totalRequests</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>20</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Sending %d requests with %d concurrent workers...\n&#34;</span>, <span style=color:#a6e22e>totalRequests</span>, <span style=color:#a6e22e>concurrency</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Use a WaitGroup to wait for all goroutines to finish</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>wg</span> <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>WaitGroup</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Add</span>(<span style=color:#a6e22e>concurrency</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Channel to distribute work</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>jobs</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>chan</span> <span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>totalRequests</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Fill the jobs channel</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>1</span>; <span style=color:#a6e22e>i</span> <span style=color:#f92672>&lt;=</span> <span style=color:#a6e22e>totalRequests</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>jobs</span> <span style=color:#f92672>&lt;-</span> <span style=color:#a6e22e>i</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	close(<span style=color:#a6e22e>jobs</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Start time for benchmarking</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>startTime</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Launch workers</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#a6e22e>concurrency</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>go</span> <span style=color:#66d9ef>func</span>() {
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Done</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>jobID</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>jobs</span> {
+</span></span><span style=display:flex><span>				<span style=color:#75715e>// Make the request</span>
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>resp</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Get</span>(<span style=color:#e6db74>&#34;http://localhost:8000/&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Request %d: ERROR - %v\n&#34;</span>, <span style=color:#a6e22e>jobID</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>					<span style=color:#66d9ef>continue</span>
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>				<span style=color:#75715e>// Read and discard body to free connection</span>
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>body</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadAll</span>(<span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>status</span> <span style=color:#f92672>:=</span> <span style=color:#e6db74>&#34;SUCCESS&#34;</span>
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>StatusCode</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>200</span> {
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>status</span> = <span style=color:#e6db74>&#34;RATE LIMITED&#34;</span>
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>				<span style=color:#75715e>// Print result with timestamp</span>
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>elapsed</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Since</span>(<span style=color:#a6e22e>startTime</span>).<span style=color:#a6e22e>Seconds</span>()
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;[%.3fs] Request %d: %s (Status: %d)\n&#34;</span>,
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>elapsed</span>, <span style=color:#a6e22e>jobID</span>, <span style=color:#a6e22e>status</span>, <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>StatusCode</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>				<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>resp</span>.<span style=color:#a6e22e>StatusCode</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>200</span> {
+</span></span><span style=display:flex><span>					<span style=color:#75715e>// Show a bit of the body for successful requests</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>bodyPreview</span> <span style=color:#f92672>:=</span> string(<span style=color:#a6e22e>body</span>)
+</span></span><span style=display:flex><span>					<span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>bodyPreview</span>) &gt; <span style=color:#ae81ff>30</span> {
+</span></span><span style=display:flex><span>						<span style=color:#a6e22e>bodyPreview</span> = <span style=color:#a6e22e>bodyPreview</span>[:<span style=color:#ae81ff>30</span>] <span style=color:#f92672>+</span> <span style=color:#e6db74>&#34;...&#34;</span>
+</span></span><span style=display:flex><span>					}
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;  Response: %s\n&#34;</span>, <span style=color:#a6e22e>bodyPreview</span>)
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>		}()
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Wait for all workers to finish</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>wg</span>.<span style=color:#a6e22e>Wait</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Show summary</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>elapsed</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Since</span>(<span style=color:#a6e22e>startTime</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;\nCompleted in %.2f seconds\n&#34;</span>, <span style=color:#a6e22e>elapsed</span>.<span style=color:#a6e22e>Seconds</span>())
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Average RPS attempted: %.1f\n&#34;</span>, float64(<span style=color:#a6e22e>totalRequests</span>)<span style=color:#f92672>/</span><span style=color:#a6e22e>elapsed</span>.<span style=color:#a6e22e>Seconds</span>())
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>You should see something like:</p><div class=admonition style="border-left:5px solid #00897b"><div class=admonition-title-container style=background-color:#00897b><div class=admonition-title>🧪 Test Results</div></div><div class=admonition-content><pre tabindex=0><code>Sending 20 requests with 10 concurrent workers...
+[0.010s] Request 2: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.010s] Request 3: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.010s] Request 1: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.011s] Request 8: RATE LIMITED (Status: 429)
+[0.011s] Request 4: RATE LIMITED (Status: 429)
+[0.011s] Request 9: RATE LIMITED (Status: 429)
+[0.011s] Request 5: RATE LIMITED (Status: 429)
+[0.011s] Request 7: RATE LIMITED (Status: 429)
+[0.011s] Request 6: RATE LIMITED (Status: 429)
+[0.011s] Request 10: RATE LIMITED (Status: 429)
+[0.011s] Request 11: RATE LIMITED (Status: 429)
+[0.011s] Request 12: RATE LIMITED (Status: 429)
+[0.011s] Request 13: RATE LIMITED (Status: 429)
+[0.011s] Request 15: RATE LIMITED (Status: 429)
+[0.011s] Request 14: RATE LIMITED (Status: 429)
+[0.011s] Request 17: RATE LIMITED (Status: 429)
+[0.011s] Request 16: RATE LIMITED (Status: 429)
+[0.011s] Request 18: RATE LIMITED (Status: 429)
+[0.011s] Request 19: RATE LIMITED (Status: 429)
+[0.011s] Request 20: RATE LIMITED (Status: 429)
+
+Completed in 0.01 seconds
+Average RPS attempted: 1757.1
+</code></pre></div></div><p>The first nine requests should succeed and then you&rsquo;ll start seeing 429 errors as the rate limit kicks in.</p><p><img src=/images/20250308-meme1.png alt="rate limiting"></p><p>If we were to do the following,</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=display:flex><span>export BURST<span style=color:#f92672>=</span><span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span>go run cmd/rate-limit-proxy/main.go
+</span></span></code></pre></div><p>And then re-run our tests, we would get an output like:</p><div class=admonition style="border-left:5px solid #00897b"><div class=admonition-title-container style=background-color:#00897b><div class=admonition-title>🧪 Test Results</div></div><div class=admonition-content><pre tabindex=0><code>Sending 20 requests with 10 concurrent workers...
+[0.199s] Request 6: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 8: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 3: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 11: RATE LIMITED (Status: 429)
+[0.199s] Request 12: RATE LIMITED (Status: 429)
+[0.199s] Request 10: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 5: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 2: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 4: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.199s] Request 15: RATE LIMITED (Status: 429)
+[0.199s] Request 9: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.200s] Request 14: RATE LIMITED (Status: 429)
+[0.200s] Request 16: RATE LIMITED (Status: 429)
+[0.200s] Request 1: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.200s] Request 13: RATE LIMITED (Status: 429)
+[0.200s] Request 19: RATE LIMITED (Status: 429)
+[0.200s] Request 17: RATE LIMITED (Status: 429)
+[0.200s] Request 20: RATE LIMITED (Status: 429)
+[0.200s] Request 7: SUCCESS (Status: 200)
+  Response: Hello from the test service! P...
+[0.200s] Request 18: RATE LIMITED (Status: 429)
+
+Completed in 0.20 seconds
+Average RPS attempted: 100.1
+</code></pre></div></div></br><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 TIP</div></div><div class=admonition-content>In production, you might want to add headers like <code>X-RateLimit-Limit</code> and <code>X-RateLimit-Remaining</code> to give clients more information about their rate limit status.</div></div><h2 id=rate-limiting-visualization>Rate Limiting Visualization</h2><p>Let&rsquo;s visualize what&rsquo;s happening with our token bucket algorithm:</p><pre class=mermaid>sequenceDiagram
+    participant Client
+    participant Bucket as &#34;Token Bucket&#34;
+    participant Proxy as &#34;Rate-Limiting Proxy&#34;
+    participant Service as &#34;Target Service&#34;
+
+    Note over Bucket: Initially full with tokens (BURST value)
+
+    loop Every 1/RPS seconds
+        Bucket-&gt;&gt;Bucket: Add new token (up to BURST)
+    end
+
+    Client-&gt;&gt;Proxy: Request 1
+    Proxy-&gt;&gt;Bucket: Take 1 token
+    Bucket--&gt;&gt;Proxy: Token available
+    Proxy-&gt;&gt;Service: Forward request
+    Service--&gt;&gt;Proxy: Response
+    Proxy--&gt;&gt;Client: Response
+
+    Client-&gt;&gt;Proxy: Request 2
+    Proxy-&gt;&gt;Bucket: Take 1 token
+    Bucket--&gt;&gt;Proxy: Token available
+    Proxy-&gt;&gt;Service: Forward request
+    Service--&gt;&gt;Proxy: Response
+    Proxy--&gt;&gt;Client: Response
+
+    Client-&gt;&gt;Proxy: Request 3
+    Proxy-&gt;&gt;Bucket: Take 1 token
+    Bucket--&gt;&gt;Proxy: Token available
+    Proxy-&gt;&gt;Service: Forward request
+    Service--&gt;&gt;Proxy: Response
+    Proxy--&gt;&gt;Client: Response
+
+    Client-&gt;&gt;Proxy: Request 4
+    Proxy-&gt;&gt;Bucket: Take 1 token
+    Bucket--&gt;&gt;Proxy: No tokens available!
+    Proxy--&gt;&gt;Client: 429 Too Many Requests
+</pre><h2 id=wrap-up>Wrap Up</h2><p>We&rsquo;ve built a configurable, efficient rate-limiting reverse proxy in Go. This proxy can protect your services from traffic spikes, malicious clients, or simply overzealous integrations.</p><p>Some key points about our implementation:</p><ol><li><strong>Per-client rate limiting</strong>: Each client gets their own rate limiter</li><li><strong>Token bucket algorithm</strong>: Allows for bursts while maintaining average limits</li><li><strong>Configurable via environment variables</strong>: Easy to adjust for different services</li><li><strong>Real IP detection</strong>: Works correctly even behind load balancers</li><li><strong>Memory efficient</strong>: Automatically cleans up inactive client limiters</li></ol><p>With minimal code, we&rsquo;ve created a powerful piece of infrastructure that can be deployed in front of any HTTP service. This is the beauty of Go - it comes with so many useful packages out of the box that you can build production-ready components with very little code.</p><p>The full source code is available <a href=https://github.com/catpaladin/rate-limit-proxy>here</a>.</p><p>Happy coding, Gophers!</p></div><div class=post-footer></div></article></main><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
