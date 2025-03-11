@@ -28,12 +28,18 @@ code {
 
 pre {
   border-radius: 8px; // Adjust this value to control the roundness
-  overflow: hidden; // This ensures content doesn't spill outside the rounded corners
+  overflow-x: auto;
+  white-space: pre;
+  word-wrap: normal;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  padding: 1rem;
 }
 
 pre code {
   color: inherit; // Keeps the color from the theme
   background-color: transparent;
+  word-wrap: normal;
 }
 
 .post-title {
