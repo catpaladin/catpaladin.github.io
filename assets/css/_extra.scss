@@ -1,0 +1,49 @@
+// Import Google Fonts
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Merriweather:wght@400;700&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif; // Change to your preferred body font
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $primary-color;
+  font-family: 'Merriweather', serif; // Change to your preferred heading font
+  font-weight: 700;
+}
+
+.content {
+  p {
+    font-family: 'Montserrat', sans-serif;
+  }
+}
+
+code {
+  color: #FF8C00; // This is a dark orange color
+  // background-color: rgba(255, 140, 0, 0.1);
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+pre {
+  border-radius: 8px; // Adjust this value to control the roundness
+  overflow: hidden; // This ensures content doesn't spill outside the rounded corners
+}
+
+pre code {
+  color: inherit; // Keeps the color from the theme
+  background-color: transparent;
+}
+
+.post-title {
+  color: $primary-color;
+  font-size: 2.5rem; // Adjust this value as needed
+  line-height: 1.2; // Adjust line height for better spacing
+  font-weight: 700; // Optional: make the font weight bolder
+}
+
+strong, b {
+  color: $primary-color;
+  font-weight: 700;
+}

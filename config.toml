@@ -8,8 +8,8 @@ title = "It's Go time!"
 
 [menu]
   [[menu.main]]
-    identifier = "home"
-    name = "Home"
+    identifier = "blogs"
+    name = "Blogs"
     url = "/"
     weight = 1
   [[menu.main]]
