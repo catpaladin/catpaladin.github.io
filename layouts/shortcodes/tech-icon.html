@@ -1,0 +1,7 @@
+{{ $name := .Get "name" }}
+{{ $src := .Get "src" }}
+
+<div class="tech-icon">
+  <img src="{{ $src }}" alt="{{ $name }}" />
+  <span>{{ $name }}</span>
+</div>
