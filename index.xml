@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://catpaladin.github.io/</link><description>Recent content on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 07 Mar 2025 18:52:37 -0800</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Rate-Limiter in Go</title><link>https://catpaladin.github.io/posts/rate-limiting/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid>https://catpaladin.github.io/posts/rate-limiting/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://catpaladin.github.io/</link><description>Recent content on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 14 Mar 2025 21:49:18 -0700</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Rate-Limiter in Go</title><link>https://catpaladin.github.io/posts/rate-limiting/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid>https://catpaladin.github.io/posts/rate-limiting/</guid><description>
 &lt;p>Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!&lt;/p>
 &lt;p>In this post, we&amp;rsquo;re building a configurable rate-limiting reverse proxy. And by the end of this blog, you&amp;rsquo;ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes.&lt;/p></description></item><item><title>Getting Mermaid Diagrams Working in Hugo</title><link>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</guid><description>
 &lt;p>Let&amp;rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&amp;rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.&lt;/p>
@@ -103,30 +103,344 @@ padding: 10px 0 10px 15px
 &lt;p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&amp;rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&amp;rsquo;re new to Go or an experienced developer, you&amp;rsquo;ll learn how to create an API that handles user authentication.&lt;/p>
 &lt;p>For those who need to see the whole code before diving in, you can find all of this on &lt;a href="https://github.com/catpaladin/go-api-example">Github&lt;/a>&lt;/p>
 &lt;h2 id="technology-stack-overview">Technology Stack Overview&lt;/h2>
-&lt;p>Our API implementation uses three main technologies:&lt;/p></description></item><item><title>About</title><link>https://catpaladin.github.io/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid>https://catpaladin.github.io/about/</guid><description>
+&lt;p>Our API implementation uses three main technologies:&lt;/p></description></item><item><title>About Me</title><link>https://catpaladin.github.io/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid>https://catpaladin.github.io/about/</guid><description>
 &lt;p>Hi, I&amp;rsquo;m Mike!&lt;/p>
-&lt;h3 id="-about-me">☕ About Me&lt;/h3>
 &lt;ul>
 &lt;li>💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML&lt;/li>
 &lt;li>🔭 I’m currently working on personal Go projects or learnings, when not doing my day job&lt;/li>
-&lt;li>Coffee Connoisseur&lt;/li>
+&lt;li>☕ Coffee Connoisseur&lt;/li>
 &lt;li>Blogging to help teach others about my interests&lt;/li>
 &lt;/ul>
 &lt;hr>
-&lt;h3 id="languages-and-tools">Languages and Tools&lt;/h3>
-&lt;p>Just some of my everyday languages + toolset&lt;/p>
-&lt;div style="display: flex; gap: 10px; align-items: center;">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" title="Go" alt="Go" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" title="Bash" alt="Bash" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" title="Neovim" alt="Neovim" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" title="GithubActions" alt="GithubActions" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" title="Kubernetes" alt="Kubernetes" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" title="Helm" alt="Helm" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" title="Docker" alt="Docker" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" title="AWS" alt="AWS" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/jupyter/jupyter-original.svg" title="Jupyter" alt="Jupyter" width="40" height="40"/>
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" title="Terraform" alt="Terraform" width="40" height="40"/>
+&lt;style>
+.tech-stack-container-languages-i-work-with {
+background: #40C4FF;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+margin: 20px 0;
+}
+.tech-stack-title {
+text-align: center;
+margin-top: 0;
+margin-bottom: 16px;
+color: #333;
+}
+.tech-stack-icons {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+justify-content: center;
+}
+.tech-icon {
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+}
+.tech-icon:hover {
+transform: translateY(-5px);
+}
+.tech-icon img {
+width: 48px;
+height: 48px;
+}
+.tech-icon span {
+font-size: 12px;
+margin-top: 5px;
+color: #444;
+}
+&lt;/style>
+&lt;div class="tech-stack-container-languages-i-work-with">
+&lt;h3 class="tech-stack-title">Languages I Work With&lt;/h3>
+&lt;div class="tech-stack-icons">
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" alt="Go" />
+&lt;span>Go&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" />
+&lt;span>Python&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" alt="Bash" />
+&lt;span>Bash&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="TypeScript" />
+&lt;span>TypeScript&lt;/span>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;style>
+.tech-stack-container-dev-environment-of-choice {
+background: #69F0AE;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+margin: 20px 0;
+}
+.tech-stack-title {
+text-align: center;
+margin-top: 0;
+margin-bottom: 16px;
+color: #333;
+}
+.tech-stack-icons {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+justify-content: center;
+}
+.tech-icon {
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+}
+.tech-icon:hover {
+transform: translateY(-5px);
+}
+.tech-icon img {
+width: 48px;
+height: 48px;
+}
+.tech-icon span {
+font-size: 12px;
+margin-top: 5px;
+color: #444;
+}
+&lt;/style>
+&lt;div class="tech-stack-container-dev-environment-of-choice">
+&lt;h3 class="tech-stack-title">Dev Environment of Choice&lt;/h3>
+&lt;div class="tech-stack-icons">
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" alt="Neovim" />
+&lt;span>Neovim&lt;/span>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;style>
+.tech-stack-container-the-clouds {
+background: #00B0FF;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+margin: 20px 0;
+}
+.tech-stack-title {
+text-align: center;
+margin-top: 0;
+margin-bottom: 16px;
+color: #333;
+}
+.tech-stack-icons {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+justify-content: center;
+}
+.tech-icon {
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+}
+.tech-icon:hover {
+transform: translateY(-5px);
+}
+.tech-icon img {
+width: 48px;
+height: 48px;
+}
+.tech-icon span {
+font-size: 12px;
+margin-top: 5px;
+color: #444;
+}
+&lt;/style>
+&lt;div class="tech-stack-container-the-clouds">
+&lt;h3 class="tech-stack-title">The Clouds&lt;/h3>
+&lt;div class="tech-stack-icons">
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" />
+&lt;span>AWS&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/googlecloud/googlecloud-original.svg" alt="GCP" />
+&lt;span>GCP&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/digitalocean/digitalocean-original.svg" alt="Digitalocean" />
+&lt;span>Digitalocean&lt;/span>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;style>
+.tech-stack-container-containers {
+background: #00B8D4;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+margin: 20px 0;
+}
+.tech-stack-title {
+text-align: center;
+margin-top: 0;
+margin-bottom: 16px;
+color: #333;
+}
+.tech-stack-icons {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+justify-content: center;
+}
+.tech-icon {
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+}
+.tech-icon:hover {
+transform: translateY(-5px);
+}
+.tech-icon img {
+width: 48px;
+height: 48px;
+}
+.tech-icon span {
+font-size: 12px;
+margin-top: 5px;
+color: #444;
+}
+&lt;/style>
+&lt;div class="tech-stack-container-containers">
+&lt;h3 class="tech-stack-title">Containers!&lt;/h3>
+&lt;div class="tech-stack-icons">
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" alt="Kubernetes" />
+&lt;span>Kubernetes&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker" />
+&lt;span>Docker&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" alt="Helm" />
+&lt;span>Helm&lt;/span>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;style>
+.tech-stack-container-cicd {
+background: #18FFFF;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+margin: 20px 0;
+}
+.tech-stack-title {
+text-align: center;
+margin-top: 0;
+margin-bottom: 16px;
+color: #333;
+}
+.tech-stack-icons {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+justify-content: center;
+}
+.tech-icon {
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+}
+.tech-icon:hover {
+transform: translateY(-5px);
+}
+.tech-icon img {
+width: 48px;
+height: 48px;
+}
+.tech-icon span {
+font-size: 12px;
+margin-top: 5px;
+color: #444;
+}
+&lt;/style>
+&lt;div class="tech-stack-container-cicd">
+&lt;h3 class="tech-stack-title">CI/CD&lt;/h3>
+&lt;div class="tech-stack-icons">
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" alt="Github Actions" />
+&lt;span>Github Actions&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gitlab/gitlab-original.svg" alt="Gitlab CI" />
+&lt;span>Gitlab CI&lt;/span>
+&lt;/div>
+&lt;/div>
+&lt;/div>
+&lt;style>
+.tech-stack-container-iac-and-config-management {
+background: #64FFDA;
+border-radius: 12px;
+padding: 20px;
+box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+margin: 20px 0;
+}
+.tech-stack-title {
+text-align: center;
+margin-top: 0;
+margin-bottom: 16px;
+color: #333;
+}
+.tech-stack-icons {
+display: flex;
+flex-wrap: wrap;
+gap: 16px;
+align-items: center;
+justify-content: center;
+}
+.tech-icon {
+display: flex;
+flex-direction: column;
+align-items: center;
+transition: transform 0.2s ease;
+}
+.tech-icon:hover {
+transform: translateY(-5px);
+}
+.tech-icon img {
+width: 48px;
+height: 48px;
+}
+.tech-icon span {
+font-size: 12px;
+margin-top: 5px;
+color: #444;
+}
+&lt;/style>
+&lt;div class="tech-stack-container-iac-and-config-management">
+&lt;h3 class="tech-stack-title">IaC and Config Management&lt;/h3>
+&lt;div class="tech-stack-icons">
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" alt="Terraform" />
+&lt;span>Terraform&lt;/span>
+&lt;/div>
+&lt;div class="tech-icon">
+&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/ansible/ansible-original.svg" alt="Ansible" />
+&lt;span>Ansible&lt;/span>
+&lt;/div>
+&lt;/div>
 &lt;/div></description></item><item><title>Introduction to Go and HTMX</title><link>https://catpaladin.github.io/posts/intro-to-go-htmx/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/intro-to-go-htmx/</guid><description>
 &lt;p>Hello readers. Welcome to my blog!&lt;/p>
 &lt;p>I was debating on if I would write out a full post for this initial one (to test, you know?).
