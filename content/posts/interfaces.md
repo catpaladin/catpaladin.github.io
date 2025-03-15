@@ -1,6 +1,6 @@
 +++
 date = '2025-03-14T21:49:18-07:00'
-draft = true
+draft = false
 title = 'Understanding Go Interfaces'
 tags = ["go", "interfaces", "python", "typescript", "mocks", "aws"]
 +++
