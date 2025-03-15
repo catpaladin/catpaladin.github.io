@@ -23,7 +23,7 @@ Let's look at how interfaces work across TypeScript, Python, and Go. This should
 
 ### TypeScript: Interfaces as Contracts
 
-TypeScript's interfaces are explicit contracts that types must adhere to:
+TypeScript's interfaces can be done multiple ways. Here is an example of using object literals:
 
 ```typescript
 // Define an interface
@@ -32,16 +32,17 @@ interface Logger {
   error(message: string): void;
 }
 
-// Explicitly implement the interface
-class ConsoleLogger implements Logger {
-  log(message: string): void {
-    console.log(`[INFO] ${message}`);
+// Using an object literal
+const fileLogger = {
+  log(message: string) {
+    // Write to file: info.log
+    console.log(`[FILE-INFO] ${message}`);
+  },
+  error(message: string) {
+    // Write to file: error.log
+    console.error(`[FILE-ERROR] ${message}`);
   }
-
-  error(message: string): void {
-    console.error(`[ERROR] ${message}`);
-  }
-}
+};
 
 // The function demands a Logger
 function processData(data: string, logger: Logger): void {
@@ -52,6 +53,9 @@ function processData(data: string, logger: Logger): void {
     logger.error(`Failed to process data: ${e.message}`);
   }
 }
+
+// This works! TypeScript uses duck typing to verify that fileLogger matches the Logger interface
+processData("some data", fileLogger);
 ```
 
 In TypeScript land, you're constantly dealing with:
@@ -76,6 +80,67 @@ flowchart TD
     style TS_I fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
     style TS_LIB fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
     style TS_APP fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+```
+
+Alternatively, you can use the `satisfies` operator for implicit interfacing:
+
+```typescript
+// Define an interface
+interface Logger {
+  log(message: string): void;
+  error(message: string): void;
+}
+
+// Using satisfies to explicitly verify the object is compatible with Logger
+const customLogger = {
+  log(message: string) {
+    // Custom implementation
+    console.log(`[CUSTOM] ${message}`);
+  },
+  error(message: string) {
+    // Custom implementation
+    console.error(`[CUSTOM-ERROR] ${message}`);
+  },
+  // We can have additional methods not in the interface
+  warn(message: string) {
+    console.warn(`[CUSTOM-WARN] ${message}`);
+  }
+} satisfies Logger;
+
+// The function demands a Logger
+function processData(data: string, logger: Logger): void {
+  try {
+    // Process data...
+    logger.log("Data processed successfully");
+  } catch (e) {
+    logger.error(`Failed to process data: ${e.message}`);
+  }
+}
+
+// Works with our custom logger
+processData("some data", customLogger);
+
+// We can also still access the extra methods
+customLogger.warn("This is a warning"); // This works!
+```
+
+Which looks like:
+
+```mermaid
+flowchart TD
+    subgraph "TypeScript with satisfies"
+        TS_LIB[Library Code] -->|defines| TS_I[Interface]
+        TS_APP[Object Literal] -->|satisfies| TS_I
+        TS_I -->|validates against| TS_APP
+        TS_APP -->|retains original<br>literal type| TS_ORIG[Original Type]
+        TS_ORIG -->|enables access to<br>additional methods| TS_EXTRA[Extra Methods]
+    end
+
+    style TS_I fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_LIB fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_APP fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_ORIG fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_EXTRA fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
 ```
 
 ### Python: Duck Typing with Protocols
@@ -231,7 +296,7 @@ flowchart TD
 
 The fundamental difference is in who defines the interfaces and how they're connected to implementations:
 
-1. **TypeScript**: Library authors define interfaces, application developers implement them. ↔️ _Tight coupling_
+1. **TypeScript**: Library authors define interfaces, application developers implement them. Alternatively, you can use satisfies for looser coupling. ↔️ _Flexibe coupling_
 2. **Python**: Library authors expect method signatures, application developers provide matching objects. Type checkers optionally verify. ↔️ _Loose coupling with optional checking_
 3. **Go**: Application developers define interfaces based on what they need, and any library that happens to have matching methods automatically works. ↔️ _Perfect decoupling_
 
@@ -252,7 +317,7 @@ Let's dive deeper into why Go's interfaces are so incredible and how you can lev
 
 ## What Makes Go Interfaces Special?
 
-Unlike most languages where interfaces are explicitly implemented, Go takes a completely different approach: **implicit implementation**. This seemingly small design decision has massive implications for how we structure our code.
+Unlike languages, like C#, where interfaces are explicitly implemented, Go takes a completely different approach: **implicit implementation**. This seemingly small design decision has massive implications for how we structure our code.
 
 ```go
 // This is all it takes to define an interface in Go
