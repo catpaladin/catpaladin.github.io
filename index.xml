@@ -1,453 +1,619 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://catpaladin.github.io/</link><description>Recent content on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 14 Mar 2025 21:49:18 -0700</lastBuildDate><atom:link href="https://catpaladin.github.io/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding Go Interfaces</title><link>https://catpaladin.github.io/posts/interfaces/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid>https://catpaladin.github.io/posts/interfaces/</guid><description>
-&lt;img src="https://catpaladin.github.io/images/go-learn.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
-&lt;p>I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (&lt;em>weekend project&lt;/em>) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go&amp;rsquo;s interface system hit me like a revelation.&lt;/p>
-&lt;p>It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.&lt;/p></description></item><item><title>Building a Rate-Limiter in Go</title><link>https://catpaladin.github.io/posts/rate-limiting/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid>https://catpaladin.github.io/posts/rate-limiting/</guid><description>
-&lt;p>Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!&lt;/p>
-&lt;p>In this post, we&amp;rsquo;re building a configurable rate-limiting reverse proxy. And by the end of this blog, you&amp;rsquo;ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes.&lt;/p></description></item><item><title>Getting Mermaid Diagrams Working in Hugo</title><link>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid>https://catpaladin.github.io/posts/hugo-mermaid-diagrams/</guid><description>
-&lt;p>Let&amp;rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&amp;rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.&lt;/p>
-&lt;p>After spending way too many hours banging my head against this particular wall with the m10c theme, I&amp;rsquo;m documenting the actual working solution so you don&amp;rsquo;t have to suffer through the same pain.&lt;/p>
-&lt;h2 id="an-intro-to-mermaid-through-examples">An Intro to Mermaid Through Examples&lt;/h2>
-&lt;p>If you&amp;rsquo;re coming to this blog post and don&amp;rsquo;t know what Mermaid diagrams are, they&amp;rsquo;re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.&lt;/p></description></item><item><title>A Guide to Pointers in Go</title><link>https://catpaladin.github.io/posts/go-pointers/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-pointers/</guid><description>
-&lt;p>Let&amp;rsquo;s get real about pointers in Go—they&amp;rsquo;re not the scary beasts you might remember from C (if you came from that CS background). Go&amp;rsquo;s pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.&lt;/p>
-&lt;h2 id="for-python-developers-why-care-about-pointers">For Python Developers: Why Care About Pointers?&lt;/h2>
-&lt;p>This blog introduces pointers, a fundamental programming concept many developers struggle with. Having worked with numerous senior Cloud Engineers, SREs, and Platform Engineers who, despite years of industry experience, have only Python knowledge and limited exposure to memory management concepts, I&amp;rsquo;ve crafted this primer to establish essential context before diving into the main teachings.&lt;/p></description></item><item><title>Go Channels: A Concurrency Guide</title><link>https://catpaladin.github.io/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-channels/</guid><description>
-&lt;p>Hello fellow Gophers!&lt;/p>
-&lt;img src="https://catpaladin.github.io/images/go-connect.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
-&lt;p>I&amp;rsquo;m absolutely thrilled to dive deep into one of Go&amp;rsquo;s most elegant features: &lt;strong>Channels&lt;/strong>! If you&amp;rsquo;re just starting your Go journey or looking to level up your concurrency game, you&amp;rsquo;re in for a treat.&lt;/p>
-&lt;p>Channels are the communication mechanism that makes goroutines work together efficiently and safely. They enable goroutines to exchange data without shared memory, reducing the risk of race conditions.&lt;/p>
-&lt;p>I hate to use an analogy here, but imagine you have a team of engineers working on some big company project.. let&amp;rsquo;s call it Kilonova.&lt;/p></description></item><item><title>Understanding Generic Type Aliases in Go 1.24</title><link>https://catpaladin.github.io/posts/type-aliases/</link><pubDate>Sat, 15 Feb 2025 09:00:54 -0800</pubDate><guid>https://catpaladin.github.io/posts/type-aliases/</guid><description>
-&lt;p>After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let&amp;rsquo;s break down exactly what this means, how it works, and how it compares to other languages.&lt;/p>
-&lt;h2 id="understanding-gos-type-system-evolution">Understanding Go&amp;rsquo;s Type System Evolution&lt;/h2>
-&lt;h3 id="type-aliases-vs-type-definitions">Type Aliases vs Type Definitions&lt;/h3>
-&lt;p>First, let&amp;rsquo;s clear up a fundamental concept in Go:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-go" data-lang="go">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Type Definition - Creates a NEW type&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">MyInt&lt;/span> &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#75715e">// MyInt is a different type than int&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#75715e">// Type Alias - Creates a SYNONYM for existing type&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#66d9ef">type&lt;/span> &lt;span style="color:#a6e22e">AliasInt&lt;/span> = &lt;span style="color:#66d9ef">int&lt;/span> &lt;span style="color:#75715e">// AliasInt is exactly the same as int&lt;/span>
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Here&amp;rsquo;s a practical example showing the difference:&lt;/p></description></item><item><title>Building Beautiful CLIs with Huh</title><link>https://catpaladin.github.io/posts/clis-and-huh/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/clis-and-huh/</guid><description>
-&lt;p>&lt;em>Hey there, fellow Go enthusiasts! Today, I&amp;rsquo;m going to share something that completely changed my CLI development game. Buckle up – we&amp;rsquo;re diving deep into making CLIs that users will actually enjoy using!&lt;/em>&lt;/p>
-&lt;h2 id="the-cli-development-evolution">The CLI Development Evolution&lt;/h2>
-&lt;p>You know how we all instinctively reach for &lt;a href="https://github.com/spf13/cobra">cobra&lt;/a> when building command-line tools in Go? Well, here is the perfect companion that&amp;rsquo;s transformed how I think about CLI interactions: &lt;a href="https://github.com/charmbracelet/huh">huh&lt;/a> by Charmbracelet.&lt;/p>
-&lt;p>&lt;img src="https://catpaladin.github.io/images/huh-cat.gif" alt="huh" title="huh">&lt;/p>
-&lt;p>&lt;em>Here&amp;rsquo;s the thing that got me excited:&lt;/em> While &lt;code>cobra&lt;/code> handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), &lt;code>huh&lt;/code> brings something entirely different to the table. It&amp;rsquo;s all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.&lt;/p></description></item><item><title>Managing Development Environments with Dotfiles</title><link>https://catpaladin.github.io/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid>https://catpaladin.github.io/posts/dev-with-dotfiles/</guid><description>
-&lt;p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.&lt;/p>
-&lt;p>Let me walk you through how I&amp;rsquo;ve structured my &lt;a href="https://github.com/catpaladin/dotfiles">dotfiles&lt;/a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.&lt;/p>
-&lt;h2 id="the-core-structure">The Core Structure&lt;/h2>
-&lt;p>First, let&amp;rsquo;s look at how everything is organized:&lt;/p>
-&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>./
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── alacritty-darwin/ &lt;span style="color:#75715e"># MacOS terminal config&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .alacritty.yml
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── alacritty-linux/ &lt;span style="color:#75715e"># Linux terminal config&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .alacritty.yml
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── backgrounds/ &lt;span style="color:#75715e"># Personal touch with retrowave&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── Pictures/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── retrowave.jpg
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── nvim/ &lt;span style="color:#75715e"># Neovim as a submodule&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .config/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── nvim/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>├── tmux/ &lt;span style="color:#75715e"># Terminal multiplexing&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>│ └── .tmux.conf
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>└── zsh/ &lt;span style="color:#75715e"># Shell configuration&lt;/span>
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> ├── .zsh.d/
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── common_aliases.zsh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── functions.zsh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ ├── paths.zsh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> │ └── prompt.zsh
-&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> └── .zshrc
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>
-&lt;style>
-.admonition{
-border-radius: 5px;
-padding: 0px;
-border-left: 5px solid #00bcf6;
-box-shadow: 0 0 .5rem .2rem #00000025;
-}
-.admonition-title-container{
-background-color: #00bcf6;
-border-top-right-radius: 5px;
-}
-.admonition-title {
-font-weight: bolder;
-font-size: large;
-backdrop-filter: grayscale(50%) brightness(150%);
--webkit-backdrop-filter: grayscale(50%) brightness(150%);
-padding: 5px 0 5px 30px;
-border-top-right-radius: 5px;
-}
-@media (prefers-color-scheme: dark) {
-.admonition-title {
-backdrop-filter: grayscale(40%) brightness(40%);
--webkit-backdrop-filter: grayscale(40%) brightness(40%);
-}
-}
-.admonition-content{
-padding: 10px 0 10px 15px
-}
-&lt;/style>
-&lt;div class="admonition" style="border-left: 5px solid #283593;">
-&lt;div class="admonition-title-container" style="background-color: #283593;">
-&lt;div class="admonition-title">
-📝 NOTE
-&lt;/div>
-&lt;/div>
-&lt;div class="admonition-content">This directory structure is setup for &lt;code>stow&lt;/code> (mentioned further below) to symlink configs.&lt;/div>
-&lt;/div>
-&lt;h2 id="neovim-the-development-environment">Neovim: The Development Environment&lt;/h2>
-&lt;p>The Neovim configuration is simple - it&amp;rsquo;s structured as a clean, modular setup:&lt;/p></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://catpaladin.github.io/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid>https://catpaladin.github.io/posts/parallel-processing/</guid><description>
-&lt;p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&amp;rsquo;s strengths - it excels in machine learning and generative AI applications. However, I &lt;strong>prefer&lt;/strong> Go for several compelling reasons:&lt;/p>
-&lt;ul>
-&lt;li>Memory management with pointers&lt;/li>
-&lt;li>Elegant concurrency using channels and goroutines&lt;/li>
-&lt;li>Straightforward cross-compilation of binaries&lt;/li>
-&lt;li>Clean implementation of interfaces and structs&lt;/li>
-&lt;/ul>
-&lt;p>But preferences often face challenges. Some argue, &amp;ldquo;Python now has concurrency, so you should switch to Python.&amp;rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).&lt;/p></description></item><item><title>Building a REST API with Go</title><link>https://catpaladin.github.io/posts/go-simple-api/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid>https://catpaladin.github.io/posts/go-simple-api/</guid><description>
-&lt;p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&amp;rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&amp;rsquo;re new to Go or an experienced developer, you&amp;rsquo;ll learn how to create an API that handles user authentication.&lt;/p>
-&lt;p>For those who need to see the whole code before diving in, you can find all of this on &lt;a href="https://github.com/catpaladin/go-api-example">Github&lt;/a>&lt;/p>
-&lt;h2 id="technology-stack-overview">Technology Stack Overview&lt;/h2>
-&lt;p>Our API implementation uses three main technologies:&lt;/p></description></item><item><title>About Me</title><link>https://catpaladin.github.io/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid>https://catpaladin.github.io/about/</guid><description>
-&lt;p>Hi, I&amp;rsquo;m Mike!&lt;/p>
-&lt;ul>
-&lt;li>💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML&lt;/li>
-&lt;li>🔭 I’m currently working on personal Go projects or learnings, when not doing my day job&lt;/li>
-&lt;li>☕ Coffee Connoisseur&lt;/li>
-&lt;li>Blogging to help teach others about my interests&lt;/li>
-&lt;/ul>
-&lt;hr>
-&lt;style>
-.tech-stack-container-languages-i-work-with {
-background: #40C4FF;
-border-radius: 12px;
-padding: 20px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-margin: 20px 0;
-}
-.tech-stack-title {
-text-align: center;
-margin-top: 0;
-margin-bottom: 16px;
-color: #333;
-}
-.tech-stack-icons {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
-justify-content: center;
-}
-.tech-icon {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-}
-.tech-icon:hover {
-transform: translateY(-5px);
-}
-.tech-icon img {
-width: 48px;
-height: 48px;
-}
-.tech-icon span {
-font-size: 12px;
-margin-top: 5px;
-color: #444;
-}
-&lt;/style>
-&lt;div class="tech-stack-container-languages-i-work-with">
-&lt;h3 class="tech-stack-title">Languages I Work With&lt;/h3>
-&lt;div class="tech-stack-icons">
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" alt="Go" />
-&lt;span>Go&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" />
-&lt;span>Python&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" alt="Bash" />
-&lt;span>Bash&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="TypeScript" />
-&lt;span>TypeScript&lt;/span>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;style>
-.tech-stack-container-dev-environment-of-choice {
-background: #69F0AE;
-border-radius: 12px;
-padding: 20px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-margin: 20px 0;
-}
-.tech-stack-title {
-text-align: center;
-margin-top: 0;
-margin-bottom: 16px;
-color: #333;
-}
-.tech-stack-icons {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
-justify-content: center;
-}
-.tech-icon {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-}
-.tech-icon:hover {
-transform: translateY(-5px);
-}
-.tech-icon img {
-width: 48px;
-height: 48px;
-}
-.tech-icon span {
-font-size: 12px;
-margin-top: 5px;
-color: #444;
-}
-&lt;/style>
-&lt;div class="tech-stack-container-dev-environment-of-choice">
-&lt;h3 class="tech-stack-title">Dev Environment of Choice&lt;/h3>
-&lt;div class="tech-stack-icons">
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" alt="Neovim" />
-&lt;span>Neovim&lt;/span>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;style>
-.tech-stack-container-the-clouds {
-background: #00B0FF;
-border-radius: 12px;
-padding: 20px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-margin: 20px 0;
-}
-.tech-stack-title {
-text-align: center;
-margin-top: 0;
-margin-bottom: 16px;
-color: #333;
-}
-.tech-stack-icons {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
-justify-content: center;
-}
-.tech-icon {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-}
-.tech-icon:hover {
-transform: translateY(-5px);
-}
-.tech-icon img {
-width: 48px;
-height: 48px;
-}
-.tech-icon span {
-font-size: 12px;
-margin-top: 5px;
-color: #444;
-}
-&lt;/style>
-&lt;div class="tech-stack-container-the-clouds">
-&lt;h3 class="tech-stack-title">The Clouds&lt;/h3>
-&lt;div class="tech-stack-icons">
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" />
-&lt;span>AWS&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/googlecloud/googlecloud-original.svg" alt="GCP" />
-&lt;span>GCP&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/digitalocean/digitalocean-original.svg" alt="Digitalocean" />
-&lt;span>Digitalocean&lt;/span>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;style>
-.tech-stack-container-containers {
-background: #00B8D4;
-border-radius: 12px;
-padding: 20px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-margin: 20px 0;
-}
-.tech-stack-title {
-text-align: center;
-margin-top: 0;
-margin-bottom: 16px;
-color: #333;
-}
-.tech-stack-icons {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
-justify-content: center;
-}
-.tech-icon {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-}
-.tech-icon:hover {
-transform: translateY(-5px);
-}
-.tech-icon img {
-width: 48px;
-height: 48px;
-}
-.tech-icon span {
-font-size: 12px;
-margin-top: 5px;
-color: #444;
-}
-&lt;/style>
-&lt;div class="tech-stack-container-containers">
-&lt;h3 class="tech-stack-title">Containers!&lt;/h3>
-&lt;div class="tech-stack-icons">
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" alt="Kubernetes" />
-&lt;span>Kubernetes&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker" />
-&lt;span>Docker&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" alt="Helm" />
-&lt;span>Helm&lt;/span>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;style>
-.tech-stack-container-cicd {
-background: #18FFFF;
-border-radius: 12px;
-padding: 20px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-margin: 20px 0;
-}
-.tech-stack-title {
-text-align: center;
-margin-top: 0;
-margin-bottom: 16px;
-color: #333;
-}
-.tech-stack-icons {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
-justify-content: center;
-}
-.tech-icon {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-}
-.tech-icon:hover {
-transform: translateY(-5px);
-}
-.tech-icon img {
-width: 48px;
-height: 48px;
-}
-.tech-icon span {
-font-size: 12px;
-margin-top: 5px;
-color: #444;
-}
-&lt;/style>
-&lt;div class="tech-stack-container-cicd">
-&lt;h3 class="tech-stack-title">CI/CD&lt;/h3>
-&lt;div class="tech-stack-icons">
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" alt="Github Actions" />
-&lt;span>Github Actions&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gitlab/gitlab-original.svg" alt="Gitlab CI" />
-&lt;span>Gitlab CI&lt;/span>
-&lt;/div>
-&lt;/div>
-&lt;/div>
-&lt;style>
-.tech-stack-container-iac-and-config-management {
-background: #64FFDA;
-border-radius: 12px;
-padding: 20px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-margin: 20px 0;
-}
-.tech-stack-title {
-text-align: center;
-margin-top: 0;
-margin-bottom: 16px;
-color: #333;
-}
-.tech-stack-icons {
-display: flex;
-flex-wrap: wrap;
-gap: 16px;
-align-items: center;
-justify-content: center;
-}
-.tech-icon {
-display: flex;
-flex-direction: column;
-align-items: center;
-transition: transform 0.2s ease;
-}
-.tech-icon:hover {
-transform: translateY(-5px);
-}
-.tech-icon img {
-width: 48px;
-height: 48px;
-}
-.tech-icon span {
-font-size: 12px;
-margin-top: 5px;
-color: #444;
-}
-&lt;/style>
-&lt;div class="tech-stack-container-iac-and-config-management">
-&lt;h3 class="tech-stack-title">IaC and Config Management&lt;/h3>
-&lt;div class="tech-stack-icons">
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" alt="Terraform" />
-&lt;span>Terraform&lt;/span>
-&lt;/div>
-&lt;div class="tech-icon">
-&lt;img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/ansible/ansible-original.svg" alt="Ansible" />
-&lt;span>Ansible&lt;/span>
-&lt;/div>
-&lt;/div>
-&lt;/div></description></item><item><title>Introduction to Go and HTMX</title><link>https://catpaladin.github.io/posts/intro-to-go-htmx/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid>https://catpaladin.github.io/posts/intro-to-go-htmx/</guid><description>
-&lt;p>Hello readers. Welcome to my blog!&lt;/p>
-&lt;p>I was debating on if I would write out a full post for this initial one (to test, you know?).
-Instead, I decided to go through my collection of notes and found a topic to post; Go &amp;amp; &lt;a href="https://htmx.org/docs/#introduction">htmx&lt;/a>.&lt;/p>
-&lt;p>However, if you&amp;rsquo;d like to learn more about me, check out my &lt;a href="https://blog.mikesahari.com/about/">about&lt;/a> page.&lt;/p>
-&lt;h2 id="introduction">Introduction&lt;/h2>
-&lt;p>When building modern web applications, we often seek solutions that combine the robustness of server-side programming with the interactivity of client-side applications. Today, I&amp;rsquo;m excited to share my experience working with Go and HTMX, a powerful combination that achieves exactly this balance.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>It's Go time!</title><link>https://blog.mikesahari.com/</link><description>Recent content on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 14 Mar 2025 21:49:18 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding Go Interfaces</title><link>https://blog.mikesahari.com/posts/interfaces/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/interfaces/</guid><description><![CDATA[
+        
+        <img src="/images/go-learn.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
+<p>I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (<em>weekend project</em>) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go&rsquo;s interface system hit me like a revelation.</p>
+<p>It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.</p>
+      ]]></description></item><item><title>Building a Rate-Limiter in Go</title><link>https://blog.mikesahari.com/posts/rate-limiting/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/rate-limiting/</guid><description><![CDATA[
+        
+        <p>Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!</p>
+<p>In this post, we&rsquo;re building a configurable rate-limiting reverse proxy. And by the end of this blog, you&rsquo;ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes.</p>
+      ]]></description></item><item><title>Getting Mermaid Diagrams Working in Hugo</title><link>https://blog.mikesahari.com/posts/hugo-mermaid-diagrams/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/hugo-mermaid-diagrams/</guid><description><![CDATA[
+        
+        <p>Let&rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.</p>
+<p>After spending way too many hours banging my head against this particular wall with the m10c theme, I&rsquo;m documenting the actual working solution so you don&rsquo;t have to suffer through the same pain.</p>
+<h2 id="an-intro-to-mermaid-through-examples">An Intro to Mermaid Through Examples</h2>
+<p>If you&rsquo;re coming to this blog post and don&rsquo;t know what Mermaid diagrams are, they&rsquo;re a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.</p>
+      ]]></description></item><item><title>A Guide to Pointers in Go</title><link>https://blog.mikesahari.com/posts/go-pointers/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-pointers/</guid><description><![CDATA[
+        
+        <p>Let&rsquo;s get real about pointers in Go—they&rsquo;re not the scary beasts you might remember from C (if you came from that CS background). Go&rsquo;s pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.</p>
+<h2 id="for-python-developers-why-care-about-pointers">For Python Developers: Why Care About Pointers?</h2>
+<p>This blog introduces pointers, a fundamental programming concept many developers struggle with. Having worked with numerous senior Cloud Engineers, SREs, and Platform Engineers who, despite years of industry experience, have only Python knowledge and limited exposure to memory management concepts, I&rsquo;ve crafted this primer to establish essential context before diving into the main teachings.</p>
+      ]]></description></item><item><title>Go Channels: A Concurrency Guide</title><link>https://blog.mikesahari.com/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-channels/</guid><description><![CDATA[
+        
+        <p>Hello fellow Gophers!</p>
+<img src="/images/go-connect.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
+<p>I&rsquo;m absolutely thrilled to dive deep into one of Go&rsquo;s most elegant features: <strong>Channels</strong>! If you&rsquo;re just starting your Go journey or looking to level up your concurrency game, you&rsquo;re in for a treat.</p>
+<p>Channels are the communication mechanism that makes goroutines work together efficiently and safely. They enable goroutines to exchange data without shared memory, reducing the risk of race conditions.</p>
+<p>I hate to use an analogy here, but imagine you have a team of engineers working on some big company project.. let&rsquo;s call it Kilonova.</p>
+      ]]></description></item><item><title>Understanding Generic Type Aliases in Go 1.24</title><link>https://blog.mikesahari.com/posts/type-aliases/</link><pubDate>Sat, 15 Feb 2025 09:00:54 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/type-aliases/</guid><description><![CDATA[
+        
+        <p>After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let&rsquo;s break down exactly what this means, how it works, and how it compares to other languages.</p>
+<h2 id="understanding-gos-type-system-evolution">Understanding Go&rsquo;s Type System Evolution</h2>
+<h3 id="type-aliases-vs-type-definitions">Type Aliases vs Type Definitions</h3>
+<p>First, let&rsquo;s clear up a fundamental concept in Go:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// Type Definition - Creates a NEW type</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">MyInt</span> <span style="color:#66d9ef">int</span>     <span style="color:#75715e">// MyInt is a different type than int</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Type Alias - Creates a SYNONYM for existing type</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">AliasInt</span> = <span style="color:#66d9ef">int</span> <span style="color:#75715e">// AliasInt is exactly the same as int</span>
+</span></span></code></pre></div><p>Here&rsquo;s a practical example showing the difference:</p>
+      ]]></description></item><item><title>Building Beautiful CLIs with Huh</title><link>https://blog.mikesahari.com/posts/clis-and-huh/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/clis-and-huh/</guid><description><![CDATA[
+        
+        <p><em>Hey there, fellow Go enthusiasts! Today, I&rsquo;m going to share something that completely changed my CLI development game. Buckle up – we&rsquo;re diving deep into making CLIs that users will actually enjoy using!</em></p>
+<h2 id="the-cli-development-evolution">The CLI Development Evolution</h2>
+<p>You know how we all instinctively reach for <a href="https://github.com/spf13/cobra">cobra</a> when building command-line tools in Go? Well, here is the perfect companion that&rsquo;s transformed how I think about CLI interactions: <a href="https://github.com/charmbracelet/huh">huh</a> by Charmbracelet.</p>
+<p><img src="/images/huh-cat.gif" alt="huh" title="huh"></p>
+<p><em>Here&rsquo;s the thing that got me excited:</em> While <code>cobra</code> handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), <code>huh</code> brings something entirely different to the table. It&rsquo;s all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.</p>
+      ]]></description></item><item><title>Managing Development Environments with Dotfiles</title><link>https://blog.mikesahari.com/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/dev-with-dotfiles/</guid><description><![CDATA[
+        
+        <p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.</p>
+<p>Let me walk you through how I&rsquo;ve structured my <a href="https://github.com/catpaladin/dotfiles">dotfiles</a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.</p>
+<h2 id="the-core-structure">The Core Structure</h2>
+<p>First, let&rsquo;s look at how everything is organized:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./
+</span></span><span style="display:flex;"><span>├── alacritty-darwin/        <span style="color:#75715e"># MacOS terminal config</span>
+</span></span><span style="display:flex;"><span>│   └── .alacritty.yml
+</span></span><span style="display:flex;"><span>├── alacritty-linux/         <span style="color:#75715e"># Linux terminal config</span>
+</span></span><span style="display:flex;"><span>│   └── .alacritty.yml
+</span></span><span style="display:flex;"><span>├── backgrounds/             <span style="color:#75715e"># Personal touch with retrowave</span>
+</span></span><span style="display:flex;"><span>│   └── Pictures/
+</span></span><span style="display:flex;"><span>│       └── retrowave.jpg
+</span></span><span style="display:flex;"><span>├── nvim/                    <span style="color:#75715e"># Neovim as a submodule</span>
+</span></span><span style="display:flex;"><span>│   └── .config/
+</span></span><span style="display:flex;"><span>│       └── nvim/
+</span></span><span style="display:flex;"><span>├── tmux/                    <span style="color:#75715e"># Terminal multiplexing</span>
+</span></span><span style="display:flex;"><span>│   └── .tmux.conf
+</span></span><span style="display:flex;"><span>└── zsh/                     <span style="color:#75715e"># Shell configuration</span>
+</span></span><span style="display:flex;"><span>    ├── .zsh.d/
+</span></span><span style="display:flex;"><span>    │   ├── common_aliases.zsh
+</span></span><span style="display:flex;"><span>    │   ├── functions.zsh
+</span></span><span style="display:flex;"><span>    │   ├── paths.zsh
+</span></span><span style="display:flex;"><span>    │   └── prompt.zsh
+</span></span><span style="display:flex;"><span>    └── .zshrc
+</span></span></code></pre></div>
+
+<style>
+    
+    .admonition{
+        border-radius: 5px;
+        padding: 0px;
+        border-left: 5px solid #00bcf6;
+        box-shadow: 0 0 .5rem .2rem #00000025;
+    }
+    .admonition-title-container{
+        background-color: #00bcf6;
+        border-top-right-radius: 5px;
+    }
+    .admonition-title {
+        font-weight: bolder;
+        font-size: large;
+        backdrop-filter: grayscale(50%) brightness(150%);
+        -webkit-backdrop-filter: grayscale(50%) brightness(150%);
+        padding: 5px 0 5px 30px;
+        border-top-right-radius: 5px;
+    }
+    @media (prefers-color-scheme: dark) {
+        .admonition-title {
+            backdrop-filter: grayscale(40%) brightness(40%);
+            -webkit-backdrop-filter: grayscale(40%) brightness(40%);
+        }
+    }
+    .admonition-content{
+        padding: 10px 0 10px 15px
+    }
+</style>
+
+
+<div class="admonition" style="border-left: 5px solid #283593;">
+    <div class="admonition-title-container" style="background-color: #283593;">
+        <div class="admonition-title">
+            📝 NOTE
+        </div>
+    </div>
+        <div class="admonition-content">This directory structure is setup for <code>stow</code> (mentioned further below) to symlink configs.</div>
+</div>
+
+<h2 id="neovim-the-development-environment">Neovim: The Development Environment</h2>
+<p>The Neovim configuration is simple - it&rsquo;s structured as a clean, modular setup:</p>
+      ]]></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://blog.mikesahari.com/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/parallel-processing/</guid><description><![CDATA[
+        
+        <p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&rsquo;s strengths - it excels in machine learning and generative AI applications. However, I <strong>prefer</strong> Go for several compelling reasons:</p>
+<ul>
+<li>Memory management with pointers</li>
+<li>Elegant concurrency using channels and goroutines</li>
+<li>Straightforward cross-compilation of binaries</li>
+<li>Clean implementation of interfaces and structs</li>
+</ul>
+<p>But preferences often face challenges. Some argue, &ldquo;Python now has concurrency, so you should switch to Python.&rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).</p>
+      ]]></description></item><item><title>Building a REST API with Go</title><link>https://blog.mikesahari.com/posts/go-simple-api/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-simple-api/</guid><description><![CDATA[
+        
+        <p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&rsquo;re new to Go or an experienced developer, you&rsquo;ll learn how to create an API that handles user authentication.</p>
+<p>For those who need to see the whole code before diving in, you can find all of this on <a href="https://github.com/catpaladin/go-api-example">Github</a></p>
+<h2 id="technology-stack-overview">Technology Stack Overview</h2>
+<p>Our API implementation uses three main technologies:</p>
+      ]]></description></item><item><title>About Me</title><link>https://blog.mikesahari.com/about/</link><pubDate>Fri, 24 Jan 2025 17:49:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/about/</guid><description><![CDATA[
+        
+        <p>Hi, I&rsquo;m Mike!</p>
+<ul>
+<li>💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML</li>
+<li>🔭 I’m currently working on personal Go projects or learnings, when not doing my day job</li>
+<li>☕ Coffee Connoisseur</li>
+<li>Blogging to help teach others about my interests</li>
+</ul>
+<hr>
+
+
+
+<style>
+  .tech-stack-container-languages-i-work-with {
+    background: #40C4FF;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+  }
+
+  .tech-stack-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .tech-stack-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .tech-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tech-icon span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #444;
+  }
+</style>
+
+<div class="tech-stack-container-languages-i-work-with">
+  <h3 class="tech-stack-title">Languages I Work With</h3>
+  <div class="tech-stack-icons">
+    
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/go/go-original.svg" alt="Go" />
+    <span>Go</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" />
+    <span>Python</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/bash/bash-original.svg" alt="Bash" />
+    <span>Bash</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="TypeScript" />
+    <span>TypeScript</span>
+  </div>
+
+
+  </div>
+</div>
+
+
+
+
+<style>
+  .tech-stack-container-dev-environment-of-choice {
+    background: #69F0AE;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+  }
+
+  .tech-stack-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .tech-stack-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .tech-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tech-icon span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #444;
+  }
+</style>
+
+<div class="tech-stack-container-dev-environment-of-choice">
+  <h3 class="tech-stack-title">Dev Environment of Choice</h3>
+  <div class="tech-stack-icons">
+    
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/neovim/neovim-original.svg" alt="Neovim" />
+    <span>Neovim</span>
+  </div>
+
+
+  </div>
+</div>
+
+
+
+
+<style>
+  .tech-stack-container-the-clouds {
+    background: #00B0FF;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+  }
+
+  .tech-stack-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .tech-stack-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .tech-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tech-icon span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #444;
+  }
+</style>
+
+<div class="tech-stack-container-the-clouds">
+  <h3 class="tech-stack-title">The Clouds</h3>
+  <div class="tech-stack-icons">
+    
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="AWS" />
+    <span>AWS</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/googlecloud/googlecloud-original.svg" alt="GCP" />
+    <span>GCP</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/digitalocean/digitalocean-original.svg" alt="Digitalocean" />
+    <span>Digitalocean</span>
+  </div>
+
+
+  </div>
+</div>
+
+
+
+
+<style>
+  .tech-stack-container-containers {
+    background: #00B8D4;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+  }
+
+  .tech-stack-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .tech-stack-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .tech-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tech-icon span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #444;
+  }
+</style>
+
+<div class="tech-stack-container-containers">
+  <h3 class="tech-stack-title">Containers!</h3>
+  <div class="tech-stack-icons">
+    
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/kubernetes/kubernetes-original.svg" alt="Kubernetes" />
+    <span>Kubernetes</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker" />
+    <span>Docker</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/helm/helm-original.svg" alt="Helm" />
+    <span>Helm</span>
+  </div>
+
+
+  </div>
+</div>
+
+
+
+
+<style>
+  .tech-stack-container-cicd {
+    background: #18FFFF;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+  }
+
+  .tech-stack-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .tech-stack-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .tech-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tech-icon span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #444;
+  }
+</style>
+
+<div class="tech-stack-container-cicd">
+  <h3 class="tech-stack-title">CI/CD</h3>
+  <div class="tech-stack-icons">
+    
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/githubactions/githubactions-original.svg" alt="Github Actions" />
+    <span>Github Actions</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/gitlab/gitlab-original.svg" alt="Gitlab CI" />
+    <span>Gitlab CI</span>
+  </div>
+
+
+  </div>
+</div>
+
+
+
+
+<style>
+  .tech-stack-container-iac-and-config-management {
+    background: #64FFDA;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+  }
+
+  .tech-stack-title {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: #333;
+  }
+
+  .tech-stack-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .tech-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+
+  .tech-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .tech-icon img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tech-icon span {
+    font-size: 12px;
+    margin-top: 5px;
+    color: #444;
+  }
+</style>
+
+<div class="tech-stack-container-iac-and-config-management">
+  <h3 class="tech-stack-title">IaC and Config Management</h3>
+  <div class="tech-stack-icons">
+    
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" alt="Terraform" />
+    <span>Terraform</span>
+  </div>
+
+  
+  
+  
+  <div class="tech-icon">
+    <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/ansible/ansible-original.svg" alt="Ansible" />
+    <span>Ansible</span>
+  </div>
+
+
+  </div>
+</div>
+      ]]></description></item><item><title>Introduction to Go and HTMX</title><link>https://blog.mikesahari.com/posts/intro-to-go-htmx/</link><pubDate>Thu, 23 Jan 2025 19:17:55 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/intro-to-go-htmx/</guid><description><![CDATA[
+        
+        <p>Hello readers. Welcome to my blog!</p>
+<p>I was debating on if I would write out a full post for this initial one (to test, you know?).
+Instead, I decided to go through my collection of notes and found a topic to post; Go &amp; <a href="https://htmx.org/docs/#introduction">htmx</a>.</p>
+<p>However, if you&rsquo;d like to learn more about me, check out my <a href="https://blog.mikesahari.com/about/">about</a> page.</p>
+<h2 id="introduction">Introduction</h2>
+<p>When building modern web applications, we often seek solutions that combine the robustness of server-side programming with the interactivity of client-side applications. Today, I&rsquo;m excited to share my experience working with Go and HTMX, a powerful combination that achieves exactly this balance.</p>
+      ]]></description></item></channel></rss>
