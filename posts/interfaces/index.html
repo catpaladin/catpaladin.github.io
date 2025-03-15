@@ -1,0 +1,550 @@
+<!doctype html><html lang=en-us><head><title>Understanding Go Interfaces // It's Go time!</title>
+<link rel="shortcut icon" href=/favicon.ico><meta charset=utf-8><meta name=generator content="Hugo 0.145.0"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.fc0c34be1d2b0fc6a1199214a0b07aa88a99ff2cf1581bca5bee62f9edf7e9c0.css><meta name=twitter:card content="summary"><meta name=twitter:title content="Understanding Go Interfaces"><meta name=twitter:description content="I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (weekend project) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go’s interface system hit me like a revelation.
+It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical."><meta property="og:url" content="https://catpaladin.github.io/posts/interfaces/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Understanding Go Interfaces"><meta property="og:description" content="I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (weekend project) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go’s interface system hit me like a revelation.
+It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-03-14T21:49:18-07:00"><meta property="article:modified_time" content="2025-03-14T21:49:18-07:00"><meta property="article:tag" content="Go"><meta property="article:tag" content="Interfaces"><meta property="article:tag" content="Python"><meta property="article:tag" content="Typescript"><meta property="article:tag" content="Mocks"><meta property="article:tag" content="Aws"></head><body><header class=app-header><a href=/><img class=app-header-avatar src=/images/avatar.jpg alt="Mike Sahari"></a>
+<span class=app-header-title>It's Go time!</span><nav class=app-header-menu><a class=app-header-menu-item href=/>Blogs</a>
+-
+<a class=app-header-menu-item href=/tags/>Tags</a>
+-
+<a class=app-header-menu-item href=/about/>About</a>
+-
+<a class=app-header-menu-item href=/index.xml>RSS</a></nav><p>A tech blog for Go, Neovim, and all the other things I find interesting.</p><div class=app-header-social><a href=https://linkedin.com/in/mike-sahari target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentcolor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853.0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601.0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144.0-2.063-.926-2.063-2.065.0-1.138.92-2.063 2.063-2.063 1.14.0 2.064.925 2.064 2.063.0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225.0H1.771C.792.0.0.774.0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2.0 22.222.0h.003z"/></svg>
+</a><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me"><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg></a></div></header><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Understanding Go Interfaces</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Mar 14, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+16 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/go/>Go</a>
+<a class=tag href=/tags/interfaces/>Interfaces</a>
+<a class=tag href=/tags/python/>Python</a>
+<a class=tag href=/tags/typescript/>Typescript</a>
+<a class=tag href=/tags/mocks/>Mocks</a>
+<a class=tag href=/tags/aws/>Aws</a></div></div></header><div class=post-content><img src=/images/go-learn.svg width=300 height=200 alt="Free image by https://github.com/MariaLetta/free-gophers-pack"><p>I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (<em>weekend project</em>) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go&rsquo;s interface system hit me like a revelation.</p><p>It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.</p><p><img src=/images/20250315-meme1.png alt=interfaces></p><p>If you&rsquo;re coming from other languages, Go&rsquo;s interfaces might seem too simple to be powerful. Trust me, that simplicity is deceptive. It&rsquo;s like discovering that the unassuming Swiss Army knife in your pocket can also transform into a top of the line commercial espresso grinder (<em>I wish this was possible</em>).</p><p>It can be a hard concept for folks. I still remember at a previous job, a couple of coworkers were complaining to me about another coworker saying, &ldquo;BlahBlah doesn&rsquo;t understand interfaces. Just look at the codebase.&rdquo; My opinion on this is that interfaces should be implemented the way they are designed for their language, and not some anti-pattern. Oh, and yes, BlahBlah did not understand interfaces for the language. They were using an anti-pattern. 😆</p><h2 id=interfaces-across-languages-a-tale-of-three-approaches>Interfaces Across Languages: A Tale of Three Approaches</h2><p>Let&rsquo;s look at how interfaces work across TypeScript, Python, and Go. This should help show the different ways to implement them. For these examples, I&rsquo;ll use a common thing that engineers will try to interface; a logger!</p><h3 id=typescript-interfaces-as-contracts>TypeScript: Interfaces as Contracts</h3><p>TypeScript&rsquo;s interfaces are explicit contracts that types must adhere to:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-typescript data-lang=typescript><span style=display:flex><span><span style=color:#75715e>// Define an interface
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>interface</span> <span style=color:#a6e22e>Logger</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>message</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span>;
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>error</span>(<span style=color:#a6e22e>message</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span>;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Explicitly implement the interface
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ConsoleLogger</span> <span style=color:#66d9ef>implements</span> <span style=color:#a6e22e>Logger</span> {
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>log</span>(<span style=color:#a6e22e>message</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>`[INFO] </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>message</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>error</span>(<span style=color:#a6e22e>message</span>: <span style=color:#66d9ef>string</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>console</span>.<span style=color:#a6e22e>error</span>(<span style=color:#e6db74>`[ERROR] </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>message</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// The function demands a Logger
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#66d9ef>function</span> <span style=color:#a6e22e>processData</span>(<span style=color:#a6e22e>data</span>: <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>logger</span>: <span style=color:#66d9ef>Logger</span>)<span style=color:#f92672>:</span> <span style=color:#66d9ef>void</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>try</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Process data...
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>log</span>(<span style=color:#e6db74>&#34;Data processed successfully&#34;</span>);
+</span></span><span style=display:flex><span>  } <span style=color:#66d9ef>catch</span> (<span style=color:#a6e22e>e</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>error</span>(<span style=color:#e6db74>`Failed to process data: </span><span style=color:#e6db74>${</span><span style=color:#a6e22e>e</span>.<span style=color:#a6e22e>message</span><span style=color:#e6db74>}</span><span style=color:#e6db74>`</span>);
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In TypeScript land, you&rsquo;re constantly dealing with:</p><ul><li>Explicit interface declarations</li><li>Classes that formally implement those interfaces</li><li>Type annotations everywhere</li><li>A whole inheritance hierarchy to maintain</li></ul><p>This explicitness creates tight coupling between your interfaces and implementations. Want to adapt an existing class to work with your interface? Too bad – you&rsquo;ll need to either modify it to explicitly implement your interface or create a wrapper class.</p><p>You basically get the following:</p><pre class=mermaid>flowchart TD
+    subgraph &#34;TypeScript&#34;
+        TS_LIB[Library Code] --&gt;|defines| TS_I[Interface]
+        TS_APP[Application Code] --&gt;|implements| TS_I
+        TS_I --&gt;|constrains| TS_APP
+    end
+
+    style TS_I fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_LIB fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_APP fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+</pre><h3 id=python-duck-typing-with-protocols>Python: Duck Typing with Protocols</h3><p>Python traditionally relies on duck typing (&ldquo;if it walks like a duck and quacks like a duck&mldr;&rdquo;), but in Python, Protocols are there for type checking and the closest thing to interfaces:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> typing <span style=color:#f92672>import</span> Protocol
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Define a Protocol for type checking</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>Logger</span>(Protocol):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>log</span>(self, message: str) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>: <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>error</span>(self, message: str) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>: <span style=color:#f92672>...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># No explicit implementation needed!</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>ConsoleLogger</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>log</span>(self, message: str) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;[INFO] </span><span style=color:#e6db74>{</span>message<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>error</span>(self, message: str) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>        print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;[ERROR] </span><span style=color:#e6db74>{</span>message<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Type hint, but runtime doesn&#39;t care</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>process_data</span>(data: str, logger: Logger) <span style=color:#f92672>-&gt;</span> <span style=color:#66d9ef>None</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>try</span>:
+</span></span><span style=display:flex><span>        <span style=color:#75715e># Process data...</span>
+</span></span><span style=display:flex><span>        logger<span style=color:#f92672>.</span>log(<span style=color:#e6db74>&#34;Data processed successfully&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>except</span> <span style=color:#a6e22e>Exception</span> <span style=color:#66d9ef>as</span> e:
+</span></span><span style=display:flex><span>        logger<span style=color:#f92672>.</span>error(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;Failed to process data: </span><span style=color:#e6db74>{</span>str(e)<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># This works even without the Protocol,</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># but the Protocol helps with static type checking</span>
+</span></span><span style=display:flex><span>process_data(<span style=color:#e6db74>&#34;some data&#34;</span>, ConsoleLogger())
+</span></span></code></pre></div><p>Python&rsquo;s approach is:</p><ul><li>Runtime duck typing (any object with the right methods works)</li><li>Optional static type checking with Protocols</li><li>No enforcement at runtime</li><li>Protocols are primarily for documentation and tooling</li></ul><p>The Protocol system is similar to Go&rsquo;s interfaces but lives primarily in the type checking realm – your code will run even if types don&rsquo;t match, potentially leading to runtime errors. Of course it&rsquo;s totally possible you&rsquo;re working on a cloud team using Python that doesn&rsquo;t understand interfaces, and simply write Python like scripts or commit full AI generated code. In that case, you&rsquo;re less likely to see use of interfaces benefiting the codebase. Let it languish.</p><p>Let&rsquo;s visualize Protocol use:</p><pre class=mermaid>flowchart TD
+    subgraph &#34;Python&#34;
+        PY_LIB[Library Code] --&gt;|expects methods| PY_DUCK[Duck-Typed Objects]
+        PY_TYPE[Type Checker] -.-&gt;|verifies against| PY_PROTO[Protocol]
+        PY_DUCK -.-&gt;|optionally checked against| PY_PROTO
+        PY_APP[Application Code] --&gt;|provides| PY_DUCK
+    end
+
+    style PY_LIB fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_DUCK fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_PROTO fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_TYPE fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_APP fill:#4B8BBE,stroke:#306998,color:#FFE873
+</pre><h3 id=go-implicit-satisfaction-with-compile-time-verification>Go: Implicit Satisfaction with Compile-Time Verification</h3><p>Now let&rsquo;s see Go&rsquo;s approach:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Define an interface</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Logger</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Log</span>(<span style=color:#a6e22e>message</span> <span style=color:#66d9ef>string</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>message</span> <span style=color:#66d9ef>string</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// No explicit implementation declaration</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ConsoleLogger</span> <span style=color:#66d9ef>struct</span>{}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#a6e22e>ConsoleLogger</span>) <span style=color:#a6e22e>Log</span>(<span style=color:#a6e22e>message</span> <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;[INFO] %s\n&#34;</span>, <span style=color:#a6e22e>message</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#a6e22e>ConsoleLogger</span>) <span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>message</span> <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;[ERROR] %s\n&#34;</span>, <span style=color:#a6e22e>message</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ProcessData requires a Logger</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessData</span>(<span style=color:#a6e22e>data</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>logger</span> <span style=color:#a6e22e>Logger</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Process data...</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>logger</span>.<span style=color:#a6e22e>Log</span>(<span style=color:#e6db74>&#34;Data processed successfully&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Go&rsquo;s approach is:</p><ul><li>Define interfaces based on what you need, not what others provide</li><li>No explicit implementation declarations</li><li>Compile-time verification that types satisfy interfaces</li><li>Zero runtime overhead for interface checks</li></ul><p>We can visualize this as:</p><pre class=mermaid>flowchart TD
+    subgraph &#34;Go&#34;
+        GO_APP[Application Code] --&gt;|defines| GO_I[Interface]
+        GO_LIB[Library Code] -.-&gt;|automatically satisfies| GO_I
+        GO_COM[Compiler] --&gt;|verifies| GO_LIB
+    end
+
+    style GO_I fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+    style GO_LIB fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+    style GO_APP fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+    style GO_COM fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+</pre><h3 id=in-comparison>In Comparison</h3><p>Let&rsquo;s visualize them side-by-side:</p><pre class=mermaid>flowchart TD
+    subgraph &#34;TypeScript&#34;
+        TS_LIB[Library Code] --&gt;|defines| TS_I[Interface]
+        TS_APP[Application Code] --&gt;|implements| TS_I
+        TS_I --&gt;|constrains| TS_APP
+    end
+
+    subgraph &#34;Python&#34;
+        PY_LIB[Library Code] --&gt;|expects methods| PY_DUCK[Duck-Typed Objects]
+        PY_TYPE[Type Checker] -.-&gt;|verifies against| PY_PROTO[Protocol]
+        PY_DUCK -.-&gt;|optionally checked against| PY_PROTO
+        PY_APP[Application Code] --&gt;|provides| PY_DUCK
+    end
+
+    subgraph &#34;Go&#34;
+        GO_APP[Application Code] --&gt;|defines| GO_I[Interface]
+        GO_LIB[Library Code] -.-&gt;|automatically satisfies| GO_I
+        GO_COM[Compiler] --&gt;|verifies| GO_LIB
+    end
+
+    style TS_I fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_LIB fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+    style TS_APP fill:#3178C6,stroke:#2C6AA8,color:#FFFFFF
+
+    style PY_LIB fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_DUCK fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_PROTO fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_TYPE fill:#4B8BBE,stroke:#306998,color:#FFE873
+    style PY_APP fill:#4B8BBE,stroke:#306998,color:#FFE873
+
+    style GO_I fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+    style GO_LIB fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+    style GO_APP fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+    style GO_COM fill:#00ADD8,stroke:#00758D,color:#FFFFFF
+</pre><p>The fundamental difference is in who defines the interfaces and how they&rsquo;re connected to implementations:</p><ol><li><strong>TypeScript</strong>: Library authors define interfaces, application developers implement them. ↔️ <em>Tight coupling</em></li><li><strong>Python</strong>: Library authors expect method signatures, application developers provide matching objects. Type checkers optionally verify. ↔️ <em>Loose coupling with optional checking</em></li><li><strong>Go</strong>: Application developers define interfaces based on what they need, and any library that happens to have matching methods automatically works. ↔️ <em>Perfect decoupling</em></li></ol><style>.admonition{border-radius:5px;padding:0;border-left:5px solid #00bcf6;box-shadow:0 0 .5rem .2rem #00000025}.admonition-title-container{background-color:#00bcf6;border-top-right-radius:5px}.admonition-title{font-weight:bolder;font-size:large;backdrop-filter:grayscale(50%)brightness(150%);-webkit-backdrop-filter:grayscale(50%)brightness(150%);padding:5px 0 5px 30px;border-top-right-radius:5px}@media(prefers-color-scheme:dark){.admonition-title{backdrop-filter:grayscale(40%)brightness(40%);-webkit-backdrop-filter:grayscale(40%)brightness(40%)}}.admonition-content{padding:10px 0 10px 15px}</style><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content><p>Go&rsquo;s approach inverts the dependency relationship!
+Instead of libraries dictating interfaces that your code must implement, your code defines interfaces that any library can satisfy without modification.</p><p>This design means:</p><ul><li>You can create interfaces for third-party code you don&rsquo;t control</li><li>Interfaces can be added to existing code without modifying it</li><li>Dependencies flow in the direction you want (toward interfaces, not implementations)</li><li>Your code becomes naturally more testable and modular (HUGE!)</li></ul></div></div><p>Let&rsquo;s dive deeper into why Go&rsquo;s interfaces are so incredible and how you can leverage their full power.</p><h2 id=what-makes-go-interfaces-special>What Makes Go Interfaces Special?</h2><p>Unlike most languages where interfaces are explicitly implemented, Go takes a completely different approach: <strong>implicit implementation</strong>. This seemingly small design decision has massive implications for how we structure our code.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// This is all it takes to define an interface in Go</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Stringer</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>String</span>() <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// And this type automatically implements it without any &#34;implements&#34; keyword</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Person</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Name</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Age</span>  <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>p</span> <span style=color:#a6e22e>Person</span>) <span style=color:#a6e22e>String</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprintf</span>(<span style=color:#e6db74>&#34;%s (%d years)&#34;</span>, <span style=color:#a6e22e>p</span>.<span style=color:#a6e22e>Name</span>, <span style=color:#a6e22e>p</span>.<span style=color:#a6e22e>Age</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>Think of Go interfaces as describing what a type can <em>do</em>, not what a type <em>is</em>. This subtle shift will change how you design your code.</div></div><p>As Rob Pike, one of Go&rsquo;s creators, famously said: &ldquo;The bigger the interface, the weaker the abstraction&rdquo; <a href=https://go-proverbs.github.io/>[1]</a>. This wasn&rsquo;t immediately intuitive to me, and I&rsquo;ve made mistakes of creating big interfaces with the aws sdk in the past, but it&rsquo;s become my guiding principle when designing Go code now.</p><p><img src=/images/20250315-meme2.png alt="Now I know"></p><h2 id=the-interface-hierarchy-or-lack-thereof>The Interface Hierarchy (or lack thereof)</h2><p>Let&rsquo;s visualize how Go&rsquo;s interfaces work compared to traditional OOP languages:</p><pre class=mermaid>graph TD
+    subgraph &#34;Go Interfaces&#34;
+        E[SmallInterface1] --&gt;|used by| G[Function1]
+        F[SmallInterface2] --&gt;|used by| H[Function2]
+        I[ConcreteType] -.-&gt;|satisfies| E
+        I -.-&gt;|satisfies| F
+    end
+
+    style E fill:#553C9A,stroke:#6B46C1,color:#E2E8F0
+    style F fill:#553C9A,stroke:#6B46C1,color:#E2E8F0
+    style G fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style H fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style I fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+</pre><pre class=mermaid>graph TD
+    subgraph &#34;Traditional OOP Interfaces&#34;
+        A[BaseInterface] --&gt; B[DerivedInterface1]
+        A --&gt; C[DerivedInterface2]
+        D[Class] --&gt;|implements| B
+        D --&gt;|implements| C
+    end
+
+    style A fill:#4A5568,stroke:#718096,color:#E2E8F0
+    style B fill:#4A5568,stroke:#718096,color:#E2E8F0
+    style C fill:#4A5568,stroke:#718096,color:#E2E8F0
+    style D fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+</pre><p>As explained in the Go documentation <a href=https://golang.org/doc/effective_go#interfaces>[2]</a>, one of Go&rsquo;s most distinctive features is that interfaces are satisfied implicitly. This means there&rsquo;s no &ldquo;implements&rdquo; keyword like in Java or C#.</p><h2 id=idiomatic-interface-usage-in-go>Idiomatic Interface Usage in Go</h2><p>There are several patterns that have emerged as idiomatic ways to use interfaces in Go:</p><h3 id=1-accept-interfaces-return-concrete-types>1. Accept Interfaces, Return Concrete Types</h3><p>Functions should accept interfaces but return concrete types. Not only does it make your code more flexible, but its this form of abstract thinking that enables your tech debt – I mean functions become more robust with their dependency injection.</p><p>Here&rsquo;s a comparison:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Good: Accept interface, return concrete type.</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessData</span>(<span style=color:#a6e22e>reader</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Reader</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>Result</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Process the data from the reader</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Result</span>{<span style=color:#f92672>...</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Less flexible: Accept concrete type.</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// You&#39;re locked in with this one</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessFile</span>(<span style=color:#a6e22e>fileName</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>os</span>.<span style=color:#a6e22e>File</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>Result</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Can only process files, not other readers</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Result</span>{<span style=color:#f92672>...</span>}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=2-define-interfaces-at-the-point-of-use>2. Define Interfaces at the Point of Use</h3><p>Unlike other languages where interfaces are defined by the implementor, in Go, interfaces are typically defined by the consumer, as outlined in Effective Go <a href=https://golang.org/doc/effective_go>[3]</a>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// In a client package that needs to store users</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>client</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// We define the interface we need</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserStorage</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>GetUser</span>(<span style=color:#a6e22e>id</span> <span style=color:#66d9ef>string</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>SaveUser</span>(<span style=color:#a6e22e>user</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Our code only depends on this interface</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessUser</span>(<span style=color:#a6e22e>storage</span> <span style=color:#a6e22e>UserStorage</span>, <span style=color:#a6e22e>id</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Implementation</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Defining interfaces for consumers of your package is an anti-pattern!</p><h3 id=3-keep-interfaces-small>3. Keep Interfaces Small</h3><p>The standard library is full of tiny interfaces that do one thing well. For example:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// From io package</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Reader</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Read</span>(<span style=color:#a6e22e>p</span> []<span style=color:#66d9ef>byte</span>) (<span style=color:#a6e22e>n</span> <span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>err</span> <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Writer</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Write</span>(<span style=color:#a6e22e>p</span> []<span style=color:#66d9ef>byte</span>) (<span style=color:#a6e22e>n</span> <span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>err</span> <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// From sort package</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Interface</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Len</span>() <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Less</span>(<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Swap</span>(<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span> <span style=color:#66d9ef>int</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>As explained in Effective Go <a href=https://golang.org/doc/effective_go>[3]</a>: &ldquo;interfaces with only one or two methods are common in Go code, and are usually given names ending in -er, such as Reader, Writer, Formatter, etc.&rdquo; It is an idiomatic style choice for the language, that I mostly follow. Just like those of us who follow the PEP 8 style guide for Python, unlike <code>somePeople</code> (YOU KNOW WHO YOU ARE!).</p><p><img src=/images/20250315-meme3.png alt="These people"></p><h2 id=consuming-standard-library-interfaces>Consuming Standard Library Interfaces</h2><p>One of the most powerful aspects of Go is how the standard library uses interfaces extensively. Let&rsquo;s see some examples of how to effectively work with these:</p><h3 id=working-with-the-databasesql-package>Working with the Database/SQL Package</h3><p>The database/sql package is a masterclass in interface usage. Let&rsquo;s look at how we can leverage its interfaces:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;context&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;database/sql&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>_</span> <span style=color:#e6db74>&#34;github.com/lib/pq&#34;</span> <span style=color:#75715e>// PostgreSQL driver</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Define our own interface for testability</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserRepository</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>GetUserByID</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>id</span> <span style=color:#66d9ef>int</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>SaveUser</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>user</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Concrete implementation using database/sql</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>SQLUserRepository</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>db</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>sql</span>.<span style=color:#a6e22e>DB</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>SQLUserRepository</span>) <span style=color:#a6e22e>GetUserByID</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>id</span> <span style=color:#66d9ef>int</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>user</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>User</span>{}
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>db</span>.<span style=color:#a6e22e>QueryRowContext</span>(<span style=color:#a6e22e>ctx</span>,
+</span></span><span style=display:flex><span>        <span style=color:#e6db74>&#34;SELECT id, name, email FROM users WHERE id = $1&#34;</span>, <span style=color:#a6e22e>id</span>,
+</span></span><span style=display:flex><span>    ).<span style=color:#a6e22e>Scan</span>(<span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>ID</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Name</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>Email</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>user</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Implementation of other methods...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Now we can use it in our business logic</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessUserData</span>(<span style=color:#a6e22e>repo</span> <span style=color:#a6e22e>UserRepository</span>, <span style=color:#a6e22e>userID</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Our code is now testable and flexible</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The beauty here is that <code>sql.DB</code> itself uses interfaces internally (like <code>driver.Conn</code>, <code>driver.Stmt</code>), allowing different database drivers to work with the same API.</p><h3 id=http-handlers-and-middleware>HTTP Handlers and Middleware</h3><p>The net/http package is another excellent example of interface usage:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Handler</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ServeHTTP</span>(<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#f92672>*</span><span style=color:#a6e22e>Request</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This tiny interface powers entire web frameworks! Let&rsquo;s see how to use it effectively:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;log&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Middleware for logging requests</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>LoggingMiddleware</span>(<span style=color:#a6e22e>next</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handler</span>) <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handler</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandlerFunc</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>start</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Call the next handler</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>next</span>.<span style=color:#a6e22e>ServeHTTP</span>(<span style=color:#a6e22e>w</span>, <span style=color:#a6e22e>r</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Log after the request is done</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>log</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%s %s took %v&#34;</span>, <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Method</span>, <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>URL</span>.<span style=color:#a6e22e>Path</span>, <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Since</span>(<span style=color:#a6e22e>start</span>))
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Our actual handler</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserHandler</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userService</span> <span style=color:#a6e22e>UserService</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>h</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>UserHandler</span>) <span style=color:#a6e22e>ServeHTTP</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Handler implementation</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Wire it all together</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userHandler</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>UserHandler</span>{<span style=color:#f92672>...</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Apply middleware</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>handler</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>LoggingMiddleware</span>(<span style=color:#a6e22e>userHandler</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handle</span>(<span style=color:#e6db74>&#34;/users/&#34;</span>, <span style=color:#a6e22e>handler</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h2 id=advanced-interface-techniques>Advanced Interface Techniques</h2><h3 id=1-interface-composition>1. Interface Composition</h3><p>You can compose interfaces by embedding them, as shown in the Go documentation <a href=https://golang.org/doc/effective_go#interfaces>[2]</a>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ReadWriter</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Reader</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Writer</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ReadWriteCloser</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Reader</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Writer</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>Closer</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This is how the standard library builds up more complex interfaces from simpler ones.</p><h3 id=2-optional-interface-implementation>2. Optional Interface Implementation</h3><p>Sometimes you want to provide special behavior for types that implement a specific interface, but fall back to default behavior for those that don&rsquo;t. This pattern is explored in Ian Lance Taylor&rsquo;s article on Go interfaces <a href=https://research.swtch.com/interfaces>[6]</a>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// From the encoding/json package</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Marshaler</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>MarshalJSON</span>() ([]<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Inside the json package, it checks if values implement this interface</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> <span style=color:#a6e22e>m</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>value</span>.(<span style=color:#a6e22e>Marshaler</span>); <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>MarshalJSON</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span><span style=color:#75715e>// Otherwise fall back to default marshaling</span>
+</span></span></code></pre></div><p>This pattern is used extensively throughout the standard library <a href=https://pkg.go.dev/std>[4]</a>.</p><h3 id=3-type-assertions-and-type-switches>3. Type Assertions and Type Switches</h3><p>When working with interfaces, you often need to extract the concrete type:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>HandleData</span>(<span style=color:#a6e22e>data</span> <span style=color:#66d9ef>interface</span>{}) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Type switch</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>data</span>.(<span style=color:#66d9ef>type</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>case</span> <span style=color:#66d9ef>string</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;String:&#34;</span>, <span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>case</span> <span style=color:#66d9ef>int</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Integer:&#34;</span>, <span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>case</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Stringer</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Stringer:&#34;</span>, <span style=color:#a6e22e>v</span>.<span style=color:#a6e22e>String</span>())
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Unknown type: %T\n&#34;</span>, <span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Or type assertion</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>str</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>data</span>.(<span style=color:#66d9ef>string</span>); <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// It&#39;s a string</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The Go Blog&rsquo;s article on reflection <a href=https://go.dev/blog/laws-of-reflection>[5]</a> provides deep insights into how these mechanisms work under the hood.</p><h2 id=practical-interface-examples>Practical Interface Examples</h2><p><img src=/images/20250315-meme4.png alt="they don&rsquo;t even test"></p><h3 id=example-1-creating-mock-friendly-code>Example 1: Creating Mock-Friendly Code</h3><p>Let&rsquo;s say we need to interact with a database. One day you could be using SQLite for a project and all of a sudden your friend, who is also working on the project, switches the database to MariaDB because the creator liked his comment on LinkedIn. Or maybe you get sick of relational databases and setup Couchbase (NoSQL, LETS GOOOOOOOO).</p><p>Instead of directly using a specific database implementation, we can define an interface:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>UserStore</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>GetUser</span>(<span style=color:#a6e22e>id</span> <span style=color:#66d9ef>string</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>SaveUser</span>(<span style=color:#a6e22e>user</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>DeleteUser</span>(<span style=color:#a6e22e>id</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Our business logic only depends on the interface</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ProcessUserData</span>(<span style=color:#a6e22e>store</span> <span style=color:#a6e22e>UserStore</span>, <span style=color:#a6e22e>userID</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>user</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>store</span>.<span style=color:#a6e22e>GetUser</span>(<span style=color:#a6e22e>userID</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Process user data...</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>user</span>.<span style=color:#a6e22e>LastProcessed</span> = <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>store</span>.<span style=color:#a6e22e>SaveUser</span>(<span style=color:#a6e22e>user</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>I got super excited when I learned about interfacing to create easier mock tests. Instead of spinning up a real database, I can create a simple mock the calls:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>MockUserStore</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>users</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>m</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>MockUserStore</span>) <span style=color:#a6e22e>GetUser</span>(<span style=color:#a6e22e>id</span> <span style=color:#66d9ef>string</span>) (<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>user</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>users</span>[<span style=color:#a6e22e>id</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>exists</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;user not found&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>user</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// implement other methods...</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Now testing is trivial!</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>TestProcessUserData</span>(<span style=color:#a6e22e>t</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>testing</span>.<span style=color:#a6e22e>T</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>mockStore</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>MockUserStore</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>users</span>: <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#f92672>*</span><span style=color:#a6e22e>User</span>{
+</span></span><span style=display:flex><span>            <span style=color:#e6db74>&#34;123&#34;</span>: {<span style=color:#a6e22e>ID</span>: <span style=color:#e6db74>&#34;123&#34;</span>, <span style=color:#a6e22e>Name</span>: <span style=color:#e6db74>&#34;Test User&#34;</span>},
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>ProcessUserData</span>(<span style=color:#a6e22e>mockStore</span>, <span style=color:#e6db74>&#34;123&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Assert on results...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=example-2-working-with-third-party-libraries-using-aws-sdk-v2>Example 2: Working with Third-Party Libraries Using AWS SDK v2</h3><p>Let&rsquo;s see how to effectively interface with the AWS SDK v2, which was designed with better testability in mind:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;context&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;io&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;time&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/aws/aws-sdk-go-v2/aws&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;github.com/aws/aws-sdk-go-v2/service/s3&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Define our own interface that describes just what we need</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>S3Client</span> <span style=color:#66d9ef>interface</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>GetObject</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectOutput</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>PutObject</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>PutObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>PutObjectOutput</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Our service that depends on the interface, not the concrete implementation</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>StorageService</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span> <span style=color:#a6e22e>S3Client</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Factory function</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewStorageService</span>(<span style=color:#a6e22e>client</span> <span style=color:#a6e22e>S3Client</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>StorageService</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>StorageService</span>{<span style=color:#a6e22e>client</span>: <span style=color:#a6e22e>client</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>StorageService</span>) <span style=color:#a6e22e>DownloadFile</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>bucket</span>, <span style=color:#a6e22e>key</span> <span style=color:#66d9ef>string</span>) ([]<span style=color:#66d9ef>byte</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>client</span>.<span style=color:#a6e22e>GetObject</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectInput</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Bucket</span>: <span style=color:#a6e22e>aws</span>.<span style=color:#a6e22e>String</span>(<span style=color:#a6e22e>bucket</span>),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Key</span>:    <span style=color:#a6e22e>aws</span>.<span style=color:#a6e22e>String</span>(<span style=color:#a6e22e>key</span>),
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>, <span style=color:#a6e22e>err</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Body</span>.<span style=color:#a6e22e>Close</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>ReadAll</span>(<span style=color:#a6e22e>result</span>.<span style=color:#a6e22e>Body</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// For actual code, use the real client</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// This is quick and dirty high-level logic</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Configure the SDK (error handling omitted for brevity)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cfg</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>LoadDefaultConfig</span>(<span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>TODO</span>(), <span style=color:#a6e22e>config</span>.<span style=color:#a6e22e>WithRegion</span>(<span style=color:#e6db74>&#34;us-west-2&#34;</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// S3 client</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>client</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>NewFromConfig</span>(<span style=color:#a6e22e>cfg</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Pass it to our service</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>service</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewStorageService</span>(<span style=color:#a6e22e>client</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>data</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>service</span>.<span style=color:#a6e22e>DownloadFile</span>(<span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>TODO</span>(), <span style=color:#e6db74>&#34;my-bucket&#34;</span>, <span style=color:#e6db74>&#34;my-file.txt&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// ...</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>And then for the test we just need to create a struct that matches our interface.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// For tests, use a mock implementation</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>MockS3Client</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>GetObjectFunc</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectOutput</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>PutObjectFunc</span> <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>PutObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>PutObjectOutput</span>, <span style=color:#66d9ef>error</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>m</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>MockS3Client</span>) <span style=color:#a6e22e>GetObject</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectOutput</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>GetObjectFunc</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>params</span>, <span style=color:#a6e22e>optFns</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>m</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>MockS3Client</span>) <span style=color:#a6e22e>PutObject</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>PutObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>PutObjectOutput</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>PutObjectFunc</span>(<span style=color:#a6e22e>ctx</span>, <span style=color:#a6e22e>params</span>, <span style=color:#a6e22e>optFns</span><span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>TestDownloadFile</span>(<span style=color:#a6e22e>t</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>testing</span>.<span style=color:#a6e22e>T</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Create a mock that returns predefined data</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>mockClient</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>MockS3Client</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>GetObjectFunc</span>: <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>ctx</span> <span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>Context</span>, <span style=color:#a6e22e>params</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectInput</span>, <span style=color:#a6e22e>optFns</span> <span style=color:#f92672>...</span><span style=color:#66d9ef>func</span>(<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>Options</span>)) (<span style=color:#f92672>*</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectOutput</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>s3</span>.<span style=color:#a6e22e>GetObjectOutput</span>{
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>Body</span>: <span style=color:#a6e22e>io</span>.<span style=color:#a6e22e>NopCloser</span>(<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>NewReader</span>(<span style=color:#e6db74>&#34;mock file content&#34;</span>)),
+</span></span><span style=display:flex><span>            }, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>service</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewStorageService</span>(<span style=color:#a6e22e>mockClient</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>data</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>service</span>.<span style=color:#a6e22e>DownloadFile</span>(<span style=color:#a6e22e>context</span>.<span style=color:#a6e22e>TODO</span>(), <span style=color:#e6db74>&#34;test-bucket&#34;</span>, <span style=color:#e6db74>&#34;test-key&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Assert no error</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Expected no error, got %v&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Assert data is as expected</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> string(<span style=color:#a6e22e>data</span>) <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;mock file content&#34;</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Fatalf</span>(<span style=color:#e6db74>&#34;Expected &#39;mock file content&#39;, got &#39;%s&#39;&#34;</span>, string(<span style=color:#a6e22e>data</span>))
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>And now with this, we mock the aws calls and let our <code>DownloadFile</code> do its thing.</p><div class=admonition style="border-left:5px solid #283593"><div class=admonition-title-container style=background-color:#283593><div class=admonition-title>📝 Note</div></div><div class=admonition-content>The AWS SDK v2 was completely redesigned around interfaces, making it much more testable than v1. Notice how we define our own narrow interface that matches just the methods we actually use, rather than trying to implement the entire AWS API.</div></div><p>This pattern gives us several advantages:</p><ol><li>We only depend on the specific methods we need, not the entire API</li><li>It&rsquo;s clear from our interface what AWS functionality we&rsquo;re using</li><li>We can easily mock the client for testing (which I find better than actually calling aws resources or using middleware for testing)</li><li>We can swap implementations for different environments (local dev, staging, production)</li></ol><h2 id=the-empty-interface-and-type-assertions>The Empty Interface and Type Assertions</h2><p>Before we wrap up, let&rsquo;s talk about the empty interface: <code>interface{}</code> (or <code>any</code> in Go 1.18+). This interface has no methods, which means every type satisfies it.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>PrintAnything</span>(<span style=color:#a6e22e>v</span> <span style=color:#66d9ef>interface</span>{}) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Type assertion to check if v is a string</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>str</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>v</span>.(<span style=color:#66d9ef>string</span>); <span style=color:#a6e22e>ok</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;String:&#34;</span>, <span style=color:#a6e22e>str</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Type switch for multiple types</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>val</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>v</span>.(<span style=color:#66d9ef>type</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>case</span> <span style=color:#66d9ef>int</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Integer:&#34;</span>, <span style=color:#a6e22e>val</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>case</span> <span style=color:#66d9ef>bool</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Boolean:&#34;</span>, <span style=color:#a6e22e>val</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>case</span> []<span style=color:#66d9ef>interface</span>{}:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Slice with&#34;</span>, len(<span style=color:#a6e22e>val</span>), <span style=color:#e6db74>&#34;items&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Unknown type: %T\n&#34;</span>, <span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #00e5ff"><div class=admonition-title-container style=background-color:#00e5ff><div class=admonition-title>🚨 Caution</div></div><div class=admonition-content>While the empty interface is powerful, use it sparingly. The more specific your interfaces, the more the compiler can help you catch errors early.</div></div><h2 id=wrapping-up-the-interface-philosophy>Wrapping Up: The Interface Philosophy</h2><p>After years of working with Go interfaces, I&rsquo;ve developed a simple philosophy that aligns with the Go documentation and community best practices:</p><ol><li>Start with concrete implementations</li><li>Extract interfaces when you need abstraction</li><li>Keep interfaces small and focused</li><li>Let behavior determine the interfaces, not the other way around</li><li>Embrace the fact that interfaces are satisfied implicitly</li></ol><pre class=mermaid>flowchart LR
+    A[Concrete Implementation] --&gt;|Extract| B[Small Interface]
+    B --&gt;|Used by| C[Business Logic]
+    D[New Implementation] -.-&gt;|Implicitly satisfies| B
+
+    style A fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+    style B fill:#553C9A,stroke:#6B46C1,color:#E2E8F0
+    style C fill:#4A5568,stroke:#718096,color:#E2E8F0
+    style D fill:#2D3748,stroke:#4A5568,color:#E2E8F0
+</pre><p>Go&rsquo;s interface system forces you to think differently about abstraction, and that&rsquo;s a good thing.</p><p>So go forth and interface all the things - just keep &rsquo;em small!</p><h2 id=references>References</h2><ul><li>[1] <a href=https://go-proverbs.github.io/>Rob Pike, &ldquo;Go Proverbs&rdquo;</a></li><li>[2] <a href=https://golang.org/doc/effective_go#interfaces>Go Documentation, &ldquo;Interfaces&rdquo;</a></li><li>[3] <a href=https://golang.org/doc/effective_go>The Go Authors, &ldquo;Effective Go&rdquo;</a></li><li>[4] <a href=https://pkg.go.dev/std>The Go Team, &ldquo;Standard Library Documentation&rdquo;</a></li><li>[5] <a href=https://go.dev/blog/laws-of-reflection>The Go Blog, &ldquo;The Laws of Reflection&rdquo;</a></li><li>[6] <a href=https://research.swtch.com/interfaces>Ian Lance Taylor, &ldquo;Go Interfaces&rdquo;</a></li></ul></div><div class=post-footer></div></article></main><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
