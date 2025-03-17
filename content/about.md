@@ -4,12 +4,18 @@ draft = false
 title = 'About Me'
 +++
 
-Hi, I'm Mike!
+<img class="app-header-avatar" src="/images/avatar.jpg" alt="Mike Sahari" />
+
+{{<admonition title="📚 Greetings!" bg-color="#00B0FF">}}
+Hi, I'm Mike! Welcome to my blog. This blog will be a place to share my learnings and experiences; with a primary theme of Go.
+
+Here are some things about me:
 
 - 💻 Senior Software Engineer with experience in DevOps, Platform/Infrastructure, and ML
 - 🔭 I’m currently working on personal Go projects or learnings, when not doing my day job
 - ☕ Coffee Connoisseur
 - Blogging to help teach others about my interests
+{{</admonition>}}
 
 ---
 

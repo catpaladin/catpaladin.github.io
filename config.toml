@@ -30,9 +30,10 @@ title = "It's Go time!"
 
 [params]
   author = "Mike Sahari"
-  description = "A tech blog for Go, Neovim, and all the other things I find interesting."
+  description = "A tech blog for Go, Tech, and all the other things I find interesting."
   menu_item_separator = " - "
   avatar = "images/avatar.jpg"
+  favicon = "images/gopher_favicon.svg"
 
   [[params.social]]
     icon = "brand-linkedin"
@@ -48,6 +49,11 @@ title = "It's Go time!"
     icon = "brand-mastodon"
     name = "Mastodon"
     url = "https://mastodon.social/@ineedmorecoffee"
+
+  [[params.social]]
+    icon = "brand-bluesky"
+    name = "Bluesky"
+    url = "https://bsky.app/profile/msahari.bsky.social"
 
   [params.style]
     darkestColor = "#253031"
