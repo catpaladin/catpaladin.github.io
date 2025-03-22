@@ -1,0 +1,480 @@
+<!doctype html><html lang=en-us><head><title>Modern Templating for Go with Templ // It's Go time!</title>
+<link rel="shortcut icon" href=images/gopher_favicon.svg><meta charset=utf-8><meta name=generator content="Hugo 0.145.0"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><link rel=stylesheet href=/css/main.min.fc0c34be1d2b0fc6a1199214a0b07aa88a99ff2cf1581bca5bee62f9edf7e9c0.css><style>.top-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background-color:#2c3e50;background-image:linear-gradient(to right,#2c3e50,#4a6785);position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.2)}.top-nav-title-link{text-decoration:none;color:inherit;transition:opacity .2s;display:flex;align-items:center;margin-right:auto}.top-nav-title-link:hover{opacity:.85}.top-nav-title{font-weight:700;padding-right:20px;font-size:1.2rem;letter-spacing:.5px;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.3)}.top-nav-social{display:flex;align-items:center;margin-right:20px}.top-nav-social a{margin-left:15px;color:#fff;font-size:1.25rem;transition:transform .2s,color .2s}.top-nav-social a:hover{transform:scale(1.15);color:#64b5f6}.menu-container{position:relative;z-index:1000}.menu-button{display:flex;flex-direction:column;justify-content:space-between;width:30px;height:24px;background:0 0;border:none;cursor:pointer;padding:0;transition:transform .2s}.menu-button:hover{transform:scale(1.1)}.menu-button-line{display:block;width:100%;height:3px;background-color:#fff;border-radius:3px;transition:all .3s linear}.menu-button.active .menu-button-line:nth-child(1){transform:translateY(10.5px)rotate(45deg)}.menu-button.active .menu-button-line:nth-child(2){opacity:0}.menu-button.active .menu-button-line:nth-child(3){transform:translateY(-10.5px)rotate(-45deg)}.menu-dropdown{position:absolute;top:35px;right:0;background-color:#2c3e50;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.3);min-width:180px;display:none;padding:10px 0;border-top:3px solid #64b5f6}.menu-dropdown.active{display:block;animation:fadeIn .2s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.menu-dropdown a{display:block;padding:10px 20px;text-decoration:none;color:#fff;font-size:1rem;transition:background-color .2s}.menu-dropdown a:hover{background-color:rgba(100,181,246,.2);padding-left:24px}@media(max-width:600px){.top-nav{padding:10px 16px}.top-nav-title{font-size:1rem}.top-nav-social a{margin-left:12px}}</style><meta name=twitter:card content="summary"><meta name=twitter:title content="Modern Templating for Go with Templ"><meta name=twitter:description content="I’ve been working on a handful of personal webdev Go projects, and the one thing I could never wrap my head around was Templ. I would start the project and go, “Oh no. I need a UI for this. Not everything can be made into a TUI… or can it..”. This would lead me to looking at the Templ docs, not understanding how to implement it, and either use the embed package (I LOVE embed!) or starting a TypeScript frontend, creating a bunch of tsx files and coming to the sudden realization that I gave in to React."><meta property="og:url" content="https://blog.mikesahari.com/posts/html-templating/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Modern Templating for Go with Templ"><meta property="og:description" content="I’ve been working on a handful of personal webdev Go projects, and the one thing I could never wrap my head around was Templ. I would start the project and go, “Oh no. I need a UI for this. Not everything can be made into a TUI… or can it..”. This would lead me to looking at the Templ docs, not understanding how to implement it, and either use the embed package (I LOVE embed!) or starting a TypeScript frontend, creating a bunch of tsx files and coming to the sudden realization that I gave in to React."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-03-21T19:50:55-07:00"><meta property="article:modified_time" content="2025-03-21T19:50:55-07:00"><meta property="article:tag" content="Html"><meta property="article:tag" content="Go"><meta property="article:tag" content="Htmx"><meta property="article:tag" content="Templating"><meta property="article:tag" content="Templ"><meta property="article:tag" content="Webdev"></head><body><div class=top-nav><a href=/ class=top-nav-title-link><span class=top-nav-title>It's Go time!</span></a><div class=top-nav-social><a href=https://linkedin.com/in/mike-sahari target=_blank rel="noreferrer noopener me" aria-label=LinkedIn><svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentcolor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853.0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601.0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144.0-2.063-.926-2.063-2.065.0-1.138.92-2.063 2.063-2.063 1.14.0 2.064.925 2.064 2.063.0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225.0H1.771C.792.0.0.774.0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2.0 22.222.0h.003z"/></svg>
+</a><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me" aria-label=Github><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me" aria-label=Mastodon><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg>
+</a><a href=https://bsky.app/profile/msahari.bsky.social target=_blank rel="noreferrer noopener me" aria-label=Bluesky><svg class="icon icon-brand-bluesky" viewBox="0 0 24 24" fill="currentcolor"><title>Bluesky</title><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908.0 3.08.0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741.0 01-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478.0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg></a></div><div class=menu-container><button class=menu-button aria-label="Toggle menu">
+<span class=menu-button-line></span>
+<span class=menu-button-line></span>
+<span class=menu-button-line></span></button><div class=menu-dropdown><a href=/>Blogs</a>
+<a href=/tags/>Tags</a>
+<a href=/about/>About</a>
+<a href=/index.xml>RSS</a></div></div></div><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Modern Templating for Go with Templ</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Mar 21, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+11 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/html/>Html</a>
+<a class=tag href=/tags/go/>Go</a>
+<a class=tag href=/tags/htmx/>Htmx</a>
+<a class=tag href=/tags/templating/>Templating</a>
+<a class=tag href=/tags/templ/>Templ</a>
+<a class=tag href=/tags/webdev/>Webdev</a></div></div></header><div class=post-content><img src=/images/go-learn.svg width=300 height=200 alt="Free image by https://github.com/MariaLetta/free-gophers-pack"><p>I&rsquo;ve been working on a handful of personal webdev Go projects, and the one thing I could never wrap my head around was <a href=https://github.com/a-h/templ>Templ</a>. I would start the project and go, &ldquo;Oh no. I need a UI for this. Not everything can be made into a TUI&mldr; or can it..&rdquo;. This would lead me to looking at the Templ docs, not understanding how to implement it, and either use the embed package (I LOVE <a href=https://pkg.go.dev/embed>embed</a>!) or starting a TypeScript frontend, creating a bunch of tsx files and coming to the sudden realization that I gave in to React.</p><p><img src=/images/20250322-meme1.png alt="tech debt"></p><p>Templ brings type-safe, component-based HTML templating to the Go ecosystem. When paired with <a href=https://htmx.org/>HTMX</a> (Yes, I did try the GoTH stack sans Templ and thoroughly enjoyed it), it creates a powerful combination for building interactive web applications with minimal JavaScript.</p><p>For those of us who appreciate Go&rsquo;s simplicity and performance but struggle with the frontend story, Templ represents something of a holy grail. It&rsquo;s the missing puzzle piece that completes the picture of what modern Go web development can be.</p><p>Before discovering Templ, I bounced between various unsatisfying options:</p><ol><li>Standard library templates: Powerful but stringly-typed and prone to runtime errors</li><li>Pure JavaScript frontends: &ldquo;Two applications&rdquo; syndrome</li><li>Embedding HTML (and raw handcrafted artisan JS): Simple but not scalable or maintainable</li></ol><p>Each approach left me feeling like I was making a compromise. Templ finally offered a path that felt aligned with Go&rsquo;s philosophy – strong typing, compile-time validation, and composition over inheritance.</p><p>I&rsquo;m still early in my journey with Templ, but for the first time, I feel like I&rsquo;m building web UIs the &ldquo;Go way&rdquo; instead of fighting against the language or surrendering to the JavaScript ecosystem. And that feels right.</p><h2 id=what-is-templ>What is Templ?</h2><p>Templ is a templating language and compiler for Go that focuses on type safety and composition. Unlike traditional templating engines that rely on string-based templates, Templ treats templates as first-class Go code.</p><p>Here&rsquo;s what makes Templ stand out from the crowd:</p><ul><li><strong>Type Safety</strong>: Templ templates are compiled to Go code, which means type errors are caught at compile-time, not runtime.</li><li><strong>Component-Based</strong>: If you&rsquo;re used to the whole component structure, you&rsquo;ll love this. Build reusable components that compose together naturally.</li><li><strong>Go Integration</strong>: Seamlessly integrate with your existing Go code and ecosystem.</li><li><strong>Performance</strong>: Templates compile down to efficient Go code that renders the HTML.</li><li><strong>HTMX-Friendly</strong>: Pairs perfectly with HTMX for building interactive interfaces with minimal JavaScript.</li></ul><h2 id=installation-and-project-setup>Installation and Project Setup</h2><p>Getting started with Templ is straightforward. You&rsquo;ll need two things:</p><ol><li>The Templ command-line tool (compiler)</li><li>The Templ runtime library</li></ol><p>Let&rsquo;s install both:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># Install the Templ CLI</span>
+</span></span><span style=display:flex><span>go install github.com/a-h/templ/cmd/templ@latest
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Add the runtime to your project</span>
+</span></span><span style=display:flex><span>go get github.com/a-h/templ
+</span></span></code></pre></div><h3 id=project-structure>Project Structure</h3><p>From a high-level, our Templ project structure will look similar to this (sans the actual completed server for this blog post):</p><pre tabindex=0><code>example-templ-project/
+├── cmd/
+│   └── server/
+│       └── main.go          # Application entry point
+├── internal/
+│   ├── components/          # Generated Go code (don&#39;t edit these!)
+│   │   └── views_templ.go
+│   ├── handlers/
+│   │   ├── http.go          # HTTP handlers
+│   │   └── routes.go        # Route setup
+│   ├── models/
+│   │   └── model.go         # Domain models
+│   ├── services/
+│   │   └── service.go       # Business logic
+│   └── views/               # Generated Go code (don&#39;t edit these!)
+│       └── views_templ.go
+├── scripts/                 # Includes any bash scripts for build/gen
+├── templates/
+│   ├── components/
+│   │   ├── card.templ       # Reusable UI components
+│   │   ├── layout.templ
+│   │   └── nav.templ
+│   ├── pages/
+│   │   ├── home.templ       # Page templates
+│   │   └── about.templ
+│   └── views/               # Content
+│       ├── sample.templ
+│       └── content.templ
+├── .air.toml
+├── .gitignore
+├── go.mod
+├── go.sum
+└── Makefile
+</code></pre><style>.admonition{border-radius:5px;padding:0;border-left:5px solid #00bcf6;box-shadow:0 0 .5rem .2rem #00000025}.admonition-title-container{background-color:#00bcf6;border-top-right-radius:5px}.admonition-title{font-weight:bolder;font-size:large;backdrop-filter:grayscale(50%)brightness(150%);-webkit-backdrop-filter:grayscale(50%)brightness(150%);padding:5px 0 5px 30px;border-top-right-radius:5px}@media(prefers-color-scheme:dark){.admonition-title{backdrop-filter:grayscale(40%)brightness(40%);-webkit-backdrop-filter:grayscale(40%)brightness(40%)}}.admonition-content{padding:10px 0 10px 15px}</style><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>Keep your <code>.templ</code> files and their generated <code>.go</code> files in separate packages to avoid circular dependencies. The generated code should be in a different package from your application code.</div></div><p>In a Go + Templ project, it&rsquo;s important to follow these principles:</p><ol><li><strong>Separation of Concerns</strong>: Keep templates, handlers, and business logic separated</li><li><strong>Component-Based Design</strong>: Break down UIs into reusable components</li><li><strong>Clean Generation</strong>: Generated code should be ignored in version control</li><li><strong>Idiomatic Go</strong>: Follow standard Go project layouts and conventions</li></ol><p>To make this process easier, let&rsquo;s create the following:</p><ul><li>A <code>generate-templ.sh</code> for generating <code>.templ</code> files and putting our templated <code>_templ.go</code> files under our <code>internal/</code> directory.</li><li>A <code>Makefile</code> to simplify our all our commands.</li><li>A <code>.air.toml</code> for using Air to hot reload our app as we work on it.</li></ul><h4 id=scripting-templ-generating>Scripting Templ Generating</h4><p>First let&rsquo;s create the script.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p scripts
+</span></span><span style=display:flex><span>touch scripts/generate-templ.sh
+</span></span><span style=display:flex><span>chmod +x scripts/generate-templ.sh
+</span></span></code></pre></div><p>And inside the script you&rsquo;ll want to add the following contents:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e>#!/bin/bash
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Find all templ files</span>
+</span></span><span style=display:flex><span>find ./templates -name <span style=color:#e6db74>&#34;*.templ&#34;</span> | <span style=color:#66d9ef>while</span> read -r src_file; <span style=color:#66d9ef>do</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Calculate destination path</span>
+</span></span><span style=display:flex><span>    rel_path<span style=color:#f92672>=</span><span style=color:#e6db74>${</span>src_file#./templates/<span style=color:#e6db74>}</span>
+</span></span><span style=display:flex><span>    dir_name<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>dirname <span style=color:#e6db74>&#34;</span>$rel_path<span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>    file_name<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>basename <span style=color:#e6db74>&#34;</span>$rel_path<span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>)</span>
+</span></span><span style=display:flex><span>    dest_dir<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;./internal/</span>$dir_name<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Create output directory</span>
+</span></span><span style=display:flex><span>    mkdir -p <span style=color:#e6db74>&#34;</span>$dest_dir<span style=color:#e6db74>&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Run templ on the file and capture output</span>
+</span></span><span style=display:flex><span>    templ generate -f <span style=color:#e6db74>&#34;</span>$src_file<span style=color:#e6db74>&#34;</span> -stdout &gt; <span style=color:#e6db74>&#34;</span>$dest_dir<span style=color:#e6db74>/</span><span style=color:#e6db74>${</span>file_name%.templ<span style=color:#e6db74>}</span><span style=color:#e6db74>_templ.go&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>done</span>
+</span></span></code></pre></div><p>This simple script will make it easy to generate the files from <code>templates/</code> to <code>internal/</code>.</p><h4 id=setting-up-the-makefile>Setting up the Makefile</h4><p>Now you&rsquo;ll want to add the compilation step to your build process. Let&rsquo;s create a <code>Makefile</code> under the root of the directory. A good Makefile might look like this:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-makefile data-lang=makefile><span style=display:flex><span><span style=color:#a6e22e>.PHONY</span><span style=color:#f92672>:</span> generate build run clean dev
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>generate</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	./scripts/generate-templ.sh
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>build</span><span style=color:#f92672>:</span> generate
+</span></span><span style=display:flex><span>	go build -o bin/server ./cmd/server
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>run</span><span style=color:#f92672>:</span> build
+</span></span><span style=display:flex><span>	./bin/server
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Default example if none specified
+</span></span></span><span style=display:flex><span><span style=color:#75715e># This is added because our example project will have multiple cmd targets
+</span></span></span><span style=display:flex><span><span style=color:#75715e># Usage: make dev CMD_DIR=greeting-example
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>CMD_DIR <span style=color:#f92672>?=</span> server
+</span></span><span style=display:flex><span><span style=color:#a6e22e>dev</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	CMD_DIR<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>CMD_DIR<span style=color:#66d9ef>)</span> air
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>clean</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>	rm -rf bin/
+</span></span><span style=display:flex><span>	find ./templates -name <span style=color:#e6db74>&#34;*_templ.go&#34;</span> -type f -delete
+</span></span></code></pre></div><p>Now we can run <code>make generate</code> over and over and over. Although, this next step will make it unnecessary with the use of Air.</p><h4 id=setup-air-toml>Setup Air TOML</h4><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>Many developers use <a href=https://github.com/cosmtrek/air>Air</a> for hot reloading during development. It can be configured to recompile your Templ files and restart your server when changes are detected.</div></div><p>First we want to install Air.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>go install github.com/air-verse/air@latest
+</span></span></code></pre></div><p>And now create the <code>.air.toml</code> in the root directory. The contents will look like:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-toml data-lang=toml><span style=display:flex><span><span style=color:#a6e22e>root</span> = <span style=color:#e6db74>&#34;.&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>tmp_dir</span> = <span style=color:#e6db74>&#34;tmp&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[<span style=color:#a6e22e>build</span>]
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>cmd</span> = <span style=color:#e6db74>&#34;./scripts/generate-templ.sh &amp;&amp; go build -o ./tmp/main ./cmd/${CMD_DIR}&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>bin</span> = <span style=color:#e6db74>&#34;./tmp/main&#34;</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>include_ext</span> = [<span style=color:#e6db74>&#34;go&#34;</span>, <span style=color:#e6db74>&#34;templ&#34;</span>]
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exclude_regex</span> = [<span style=color:#e6db74>&#34;_templ.go&#34;</span>]
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>delay</span> = <span style=color:#ae81ff>1000</span>
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>exclude_dir</span> = [<span style=color:#e6db74>&#34;assets&#34;</span>, <span style=color:#e6db74>&#34;tmp&#34;</span>, <span style=color:#e6db74>&#34;vendor&#34;</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[<span style=color:#a6e22e>screen</span>]
+</span></span><span style=display:flex><span>  <span style=color:#a6e22e>clear_on_rebuild</span> = <span style=color:#66d9ef>true</span>
+</span></span></code></pre></div><p>This config will let us generate and build every time the files are modified. It leverages our bash script and makes it dynamic for the multiple commands that we will be creating under <code>cmd/</code>.</p><h2 id=coding-the-project>Coding the Project</h2><p>Let&rsquo;s start with some basic examples to get a feel for how Templ works with some cat-themed examples.</p><p><img src=/images/20250322-meme2.png alt="cat memes"></p><h3 id=your-first-templ-view>Your First Templ View</h3><p>Create a file named <code>greeting.templ</code> under <code>templates/views/</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p templates/views
+</span></span><span style=display:flex><span>touch templates/views/greeting.templ
+</span></span></code></pre></div><p>Create the following content:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Create this under `templates/views/greeting.templ`</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>views</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatGreeting</span>(<span style=color:#a6e22e>catName</span> <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>	&lt;<span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>h1</span>&gt;<span style=color:#a6e22e>Hello</span>, {<span style=color:#a6e22e>catName</span>}!&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h1</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>p</span>&gt;<span style=color:#a6e22e>Welcome</span> <span style=color:#a6e22e>to</span> <span style=color:#a6e22e>the</span> <span style=color:#a6e22e>Templ</span> <span style=color:#a6e22e>demo</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>p</span>&gt;
+</span></span><span style=display:flex><span>	&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Run the Templ compiler to generate Go code:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make generate
+</span></span></code></pre></div><p>This will create a file called <code>greeting_templ.go</code> (found under <code>internal/views/</code>) that contains the compiled Go code for your template.</p><p>Now you can use your template in a Go HTTP handler. Let&rsquo;s create a <code>main.go</code> to test our code. Let&rsquo;s do some setup.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p cmd/greeting-example
+</span></span><span style=display:flex><span>touch cmd/greeting-example/main.go
+</span></span></code></pre></div><p>Inside the contents:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Remember to create under `cmd/greeting-example/main.go`</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;example-templ-project/templates/views&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/a-h/templ&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handle</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#a6e22e>templ</span>.<span style=color:#a6e22e>Handler</span>(<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatGreeting</span>(<span style=color:#e6db74>&#34;Whiskers&#34;</span>)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>And now we can run it with:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make dev CMD_DIR<span style=color:#f92672>=</span>greeting-example
+</span></span></code></pre></div><p>Visiting <code>localhost:8080</code> in your browser will show off our example!</p><h3 id=component-composition>Component Composition</h3><p>One of Templ&rsquo;s strengths is composition. Here&rsquo;s how you can compose templates. First let&rsquo;s create a component:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>mkdir -p templates/components
+</span></span><span style=display:flex><span>touch templates/components/layout.templ
+</span></span></code></pre></div><p>Add the following content to create our reusable component under <code>templates/components/layout.templ</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>components</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatLayout</span>(<span style=color:#a6e22e>title</span> <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>	&lt;!<span style=color:#a6e22e>DOCTYPE</span> <span style=color:#a6e22e>html</span>&gt;
+</span></span><span style=display:flex><span>	&lt;<span style=color:#a6e22e>html</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>head</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>title</span>&gt;{<span style=color:#a6e22e>title</span>}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>title</span>&gt;
+</span></span><span style=display:flex><span>			&lt;!<span style=color:#f92672>--</span> <span style=color:#a6e22e>HTMX</span> <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>interactivity</span> <span style=color:#a6e22e>without</span> <span style=color:#a6e22e>JavaScript</span> <span style=color:#f92672>--</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>script</span> <span style=color:#a6e22e>src</span>=<span style=color:#e6db74>&#34;https://unpkg.com/htmx.org@1.9.6&#34;</span>&gt;&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>script</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>style</span>&gt;
+</span></span><span style=display:flex><span>				<span style=color:#a6e22e>body</span> {
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>font</span><span style=color:#f92672>-</span><span style=color:#a6e22e>family</span>: <span style=color:#a6e22e>system</span><span style=color:#f92672>-</span><span style=color:#a6e22e>ui</span>, <span style=color:#a6e22e>sans</span><span style=color:#f92672>-</span><span style=color:#a6e22e>serif</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>max</span><span style=color:#f92672>-</span><span style=color:#a6e22e>width</span>: <span style=color:#ae81ff>800</span><span style=color:#a6e22e>px</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>margin</span>: <span style=color:#ae81ff>0</span> <span style=color:#a6e22e>auto</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>padding</span>: <span style=color:#ae81ff>1</span><span style=color:#a6e22e>rem</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>background</span><span style=color:#f92672>-</span><span style=color:#a6e22e>color</span>: <span style=color:#960050;background-color:#1e0010>#</span><span style=color:#a6e22e>fffaf5</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>				.<span style=color:#a6e22e>cat</span><span style=color:#f92672>-</span><span style=color:#a6e22e>container</span> {
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>border</span>: <span style=color:#ae81ff>2</span><span style=color:#a6e22e>px</span> <span style=color:#a6e22e>solid</span> <span style=color:#960050;background-color:#1e0010>#</span><span style=color:#a6e22e>ffb74d</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>border</span><span style=color:#f92672>-</span><span style=color:#a6e22e>radius</span>: <span style=color:#ae81ff>8</span><span style=color:#a6e22e>px</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>padding</span>: <span style=color:#ae81ff>1</span><span style=color:#a6e22e>rem</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>margin</span><span style=color:#f92672>-</span><span style=color:#a6e22e>bottom</span>: <span style=color:#ae81ff>1</span><span style=color:#a6e22e>rem</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>				.<span style=color:#a6e22e>cat</span><span style=color:#f92672>-</span><span style=color:#a6e22e>paw</span> {
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>cursor</span>: <span style=color:#a6e22e>pointer</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>display</span>: <span style=color:#a6e22e>inline</span><span style=color:#f92672>-</span><span style=color:#a6e22e>block</span>;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>transition</span>: <span style=color:#a6e22e>transform</span> <span style=color:#ae81ff>0.2</span><span style=color:#a6e22e>s</span>;
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>				.<span style=color:#a6e22e>cat</span><span style=color:#f92672>-</span><span style=color:#a6e22e>paw</span>:<span style=color:#a6e22e>hover</span> {
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>transform</span>: <span style=color:#a6e22e>rotate</span>(<span style=color:#ae81ff>10</span><span style=color:#a6e22e>deg</span>);
+</span></span><span style=display:flex><span>				}
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>style</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>head</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>body</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>header</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>span</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-paw&#34;</span>&gt;<span style=color:#960050;background-color:#1e0010>🐾</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>span</span>&gt; &lt;<span style=color:#a6e22e>strong</span>&gt;<span style=color:#a6e22e>Templ</span> <span style=color:#a6e22e>Demo</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>strong</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>header</span>&gt;
+</span></span><span style=display:flex><span>			{ <span style=color:#a6e22e>children</span><span style=color:#f92672>...</span> }
+</span></span><span style=display:flex><span>		&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>body</span>&gt;
+</span></span><span style=display:flex><span>	&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>html</span>&gt;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This will allow us to add HTMX and a simple box. Now let&rsquo;s use our component in a view! Create <code>templates/views/composition.templ</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>views</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;example-templ-project/internal/components&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatContent</span>(<span style=color:#a6e22e>title</span> <span style=color:#66d9ef>string</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#960050;background-color:#1e0010>@</span><span style=color:#a6e22e>components</span>.<span style=color:#a6e22e>CatLayout</span>(<span style=color:#a6e22e>title</span>) {
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>main</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>div</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-container&#34;</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>h1</span>&gt;<span style=color:#a6e22e>Welcome</span> <span style=color:#a6e22e>to</span> <span style=color:#a6e22e>my</span> <span style=color:#a6e22e>catalog</span> <span style=color:#a6e22e>of</span> <span style=color:#a6e22e>templates</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h1</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>p</span>&gt;<span style=color:#a6e22e>This</span> <span style=color:#a6e22e>is</span> <span style=color:#a6e22e>an</span> <span style=color:#a6e22e>amazing</span> <span style=color:#a6e22e>demo</span> <span style=color:#a6e22e>of</span> <span style=color:#a6e22e>Templ</span> <span style=color:#a6e22e>with</span> <span style=color:#a6e22e>HTMX</span>.&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>p</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>main</span>&gt;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Now let&rsquo;s test it all with an example command. Create the following <code>cmd/composition-example/main.go</code> with the following content:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/a-h/templ&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;example-templ-project/internal/views&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handle</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#a6e22e>templ</span>.<span style=color:#a6e22e>Handler</span>(<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatContent</span>(<span style=color:#e6db74>&#34;Cat Page!&#34;</span>)))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>We can run this on <code>localhost:8080</code> with:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make dev CMD_DIR<span style=color:#f92672>=</span>composition-example
+</span></span></code></pre></div><p>Here&rsquo;s a diagram showing the component composition flow:</p><pre class=mermaid>graph TD
+    A[HTTP Request] --&gt; B[Handler]
+    B --&gt; C[Content Component]
+    C --&gt; D[Layout Component]
+    D --&gt; E[Render HTML Response]
+
+    style A fill:#2D3748,color:#E2E8F0
+    style B fill:#4A5568,color:#E2E8F0
+    style C fill:#718096,color:#E2E8F0
+    style D fill:#A0AEC0,color:#1A202C
+    style E fill:#CBD5E0,color:#1A202C
+</pre><h3 id=conditional-rendering>Conditional Rendering</h3><p>Templ supports conditional rendering using Go&rsquo;s own control structures. For this, let&rsquo;s make use of our compositional to load htmx and let&rsquo;s create a <code>templates/views/conditional.templ</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>views</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;example-templ-project/internal/components&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatTreatingContent</span>(<span style=color:#a6e22e>catName</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>hasTreats</span> <span style=color:#66d9ef>bool</span>) {
+</span></span><span style=display:flex><span>    &lt;<span style=color:#a6e22e>div</span> <span style=color:#a6e22e>id</span>=<span style=color:#e6db74>&#34;cat-treating&#34;</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-container&#34;</span>&gt;
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>hasTreats</span> {
+</span></span><span style=display:flex><span>            &lt;<span style=color:#a6e22e>h1</span>&gt;<span style=color:#a6e22e>Thank</span> <span style=color:#a6e22e>you</span> <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>the</span> <span style=color:#a6e22e>treats</span>, {<span style=color:#a6e22e>catName</span>}!&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h1</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#a6e22e>span</span>&gt;<span style=color:#960050;background-color:#1e0010>😻</span> <span style=color:#a6e22e>Happy</span> <span style=color:#a6e22e>cat</span> <span style=color:#a6e22e>is</span> <span style=color:#a6e22e>happy</span>!&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>span</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#a6e22e>button</span> <span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>post</span>=<span style=color:#e6db74>&#34;/conditional?hasTreats=false&#34;</span> <span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>target</span>=<span style=color:#e6db74>&#34;#cat-treating&#34;</span> <span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>swap</span>=<span style=color:#e6db74>&#34;outerHTML&#34;</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;treat-button&#34;</span>&gt;
+</span></span><span style=display:flex><span>                    <span style=color:#a6e22e>Reset</span>
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>button</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            &lt;<span style=color:#a6e22e>h1</span>&gt;<span style=color:#a6e22e>Hello</span>, {<span style=color:#a6e22e>catName</span>}!&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h1</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>                &lt;<span style=color:#a6e22e>button</span> <span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>post</span>=<span style=color:#e6db74>&#34;/conditional?hasTreats=true&#34;</span> <span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>target</span>=<span style=color:#e6db74>&#34;#cat-treating&#34;</span> <span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>swap</span>=<span style=color:#e6db74>&#34;outerHTML&#34;</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;treat-button&#34;</span>&gt;
+</span></span><span style=display:flex><span>                    <span style=color:#a6e22e>Give</span> <span style=color:#a6e22e>Treats</span>
+</span></span><span style=display:flex><span>                &lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>button</span>&gt;
+</span></span><span style=display:flex><span>            &lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    &lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatTreatingPage</span>(<span style=color:#a6e22e>catName</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>hasTreats</span> <span style=color:#66d9ef>bool</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#960050;background-color:#1e0010>@</span><span style=color:#a6e22e>components</span>.<span style=color:#a6e22e>CatLayout</span>(<span style=color:#e6db74>&#34;Treats&#34;</span>) {
+</span></span><span style=display:flex><span>        <span style=color:#960050;background-color:#1e0010>@</span><span style=color:#a6e22e>CatTreatingContent</span>(<span style=color:#a6e22e>catName</span>, <span style=color:#a6e22e>hasTreats</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Next we need to create the example command for this. Setup <code>cmd/iteration-example/main.go</code> to have the following contents:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;github.com/a-h/templ&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;example-templ-project/internal/views&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Handle</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#a6e22e>templ</span>.<span style=color:#a6e22e>Handler</span>(<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatContent</span>(<span style=color:#e6db74>&#34;Cat Page!&#34;</span>)))
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/conditional&#34;</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Method</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;GET&#34;</span> {
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// Full page with layout for initial load</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatTreatingPage</span>(<span style=color:#e6db74>&#34;Whiskers&#34;</span>, <span style=color:#66d9ef>false</span>).<span style=color:#a6e22e>Render</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Context</span>(), <span style=color:#a6e22e>w</span>)
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>			<span style=color:#75715e>// Just the content for HTMX requests</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>hasTreats</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>URL</span>.<span style=color:#a6e22e>Query</span>().<span style=color:#a6e22e>Get</span>(<span style=color:#e6db74>&#34;hasTreats&#34;</span>) <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;true&#34;</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatTreatingContent</span>(<span style=color:#e6db74>&#34;Whiskers&#34;</span>, <span style=color:#a6e22e>hasTreats</span>).<span style=color:#a6e22e>Render</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Context</span>(), <span style=color:#a6e22e>w</span>)
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	})
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Remember to change the <code>CMD_DIR</code> for testing this.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make dev CMD_DIR<span style=color:#f92672>=</span>conditional-example
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #283593"><div class=admonition-title-container style=background-color:#283593><div class=admonition-title>📝 Note</div></div><div class=admonition-content>Notice how we&rsquo;ve added an HTMX-powered button that makes a POST request to <code>/conditional</code> and will swap its own HTML with the server response. This is how HTMX enables interactivity without writing JavaScript.</div></div><h3 id=iteration>Iteration</h3><p>Iterating over collections is just as intuitive, although this example has quite a bit going on. Let&rsquo;s create <code>templates/views/iteration.templ</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>views</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;fmt&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#e6db74>&#34;example-templ-project/internal/components&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Cat</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>ID</span>       <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Name</span>     <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Breed</span>    <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>Naps</span>     <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>FavToy</span>   <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatList</span>(<span style=color:#a6e22e>cats</span> []<span style=color:#a6e22e>Cat</span>) {
+</span></span><span style=display:flex><span>	&lt;<span style=color:#a6e22e>div</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-collection&#34;</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>h2</span>&gt;<span style=color:#a6e22e>Cat</span> <span style=color:#a6e22e>Collection</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h2</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>ul</span>&gt;
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>cat</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>cats</span> {
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>li</span> <span style=color:#a6e22e>id</span>={<span style=color:#e6db74>&#34;cat-&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprint</span>(<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span>)} <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-item&#34;</span>&gt;
+</span></span><span style=display:flex><span>					&lt;<span style=color:#a6e22e>strong</span>&gt;{<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Name</span>}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>strong</span>&gt; <span style=color:#f92672>-</span> {<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Breed</span>}
+</span></span><span style=display:flex><span>					&lt;<span style=color:#a6e22e>div</span>&gt;<span style=color:#a6e22e>Naps</span> <span style=color:#a6e22e>today</span>: {<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprintf</span>(<span style=color:#e6db74>&#34;%d&#34;</span>, <span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Naps</span>)}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>					&lt;<span style=color:#a6e22e>div</span>&gt;<span style=color:#a6e22e>Favorite</span> <span style=color:#a6e22e>toy</span>: {<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>FavToy</span>}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>					&lt;<span style=color:#a6e22e>button</span>
+</span></span><span style=display:flex><span>						<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>get</span>={<span style=color:#e6db74>&#34;/pet-cat/&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprint</span>(<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span>)}
+</span></span><span style=display:flex><span>						<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>target</span>={<span style=color:#e6db74>&#34;#cat-&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprint</span>(<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span>)}
+</span></span><span style=display:flex><span>						<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>swap</span>=<span style=color:#e6db74>&#34;outerHTML&#34;</span>
+</span></span><span style=display:flex><span>					&gt;
+</span></span><span style=display:flex><span>						<span style=color:#a6e22e>Pet</span> {<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Name</span>}
+</span></span><span style=display:flex><span>					&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>button</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>li</span>&gt;
+</span></span><span style=display:flex><span>			}
+</span></span><span style=display:flex><span>		&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>ul</span>&gt;
+</span></span><span style=display:flex><span>	&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatPage</span>(<span style=color:#a6e22e>cats</span> []<span style=color:#a6e22e>Cat</span>, <span style=color:#a6e22e>hasTreats</span> <span style=color:#66d9ef>bool</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#960050;background-color:#1e0010>@</span><span style=color:#a6e22e>components</span>.<span style=color:#a6e22e>CatLayout</span>(<span style=color:#e6db74>&#34;Cat Paradise&#34;</span>) {
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>main</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>div</span> <span style=color:#a6e22e>id</span>=<span style=color:#e6db74>&#34;treats-section&#34;</span>&gt;
+</span></span><span style=display:flex><span>				<span style=color:#960050;background-color:#1e0010>@</span><span style=color:#a6e22e>CatTreatingSection</span>(<span style=color:#a6e22e>hasTreats</span>)
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>div</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-collection&#34;</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>h2</span>&gt;<span style=color:#a6e22e>Cat</span> <span style=color:#a6e22e>Collection</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h2</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>ul</span>&gt;
+</span></span><span style=display:flex><span>					<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>cat</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>cats</span> {
+</span></span><span style=display:flex><span>						<span style=color:#960050;background-color:#1e0010>@</span><span style=color:#a6e22e>CatListItem</span>(<span style=color:#a6e22e>cat</span>)
+</span></span><span style=display:flex><span>					}
+</span></span><span style=display:flex><span>				&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>ul</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>main</span>&gt;
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Treatments section component</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatTreatingSection</span>(<span style=color:#a6e22e>hasTreats</span> <span style=color:#66d9ef>bool</span>) {
+</span></span><span style=display:flex><span>	&lt;<span style=color:#a6e22e>div</span> <span style=color:#a6e22e>id</span>=<span style=color:#e6db74>&#34;treats-section&#34;</span> <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-container&#34;</span>&gt;
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>hasTreats</span> {
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>h2</span>&gt;<span style=color:#a6e22e>Treats</span> <span style=color:#a6e22e>are</span> <span style=color:#a6e22e>available</span>! <span style=color:#960050;background-color:#1e0010>🍤</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h2</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>span</span>&gt;<span style=color:#960050;background-color:#1e0010>😻</span> <span style=color:#a6e22e>All</span> <span style=color:#a6e22e>cats</span> <span style=color:#a6e22e>are</span> <span style=color:#a6e22e>happy</span>!&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>span</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>button</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>post</span>=<span style=color:#e6db74>&#34;/treats?hasTreats=false&#34;</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>target</span>=<span style=color:#e6db74>&#34;#treats-section&#34;</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>swap</span>=<span style=color:#e6db74>&#34;outerHTML&#34;</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;treat-button&#34;</span>&gt;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>Put</span> <span style=color:#a6e22e>Treats</span> <span style=color:#a6e22e>Away</span>
+</span></span><span style=display:flex><span>				&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>button</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		} <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>h2</span>&gt;<span style=color:#a6e22e>No</span> <span style=color:#a6e22e>treats</span> <span style=color:#a6e22e>currently</span>&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>h2</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>				&lt;<span style=color:#a6e22e>button</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>post</span>=<span style=color:#e6db74>&#34;/treats?hasTreats=true&#34;</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>target</span>=<span style=color:#e6db74>&#34;#treats-section&#34;</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>swap</span>=<span style=color:#e6db74>&#34;outerHTML&#34;</span>
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;treat-button&#34;</span>&gt;
+</span></span><span style=display:flex><span>					<span style=color:#a6e22e>Give</span> <span style=color:#a6e22e>Treats</span> <span style=color:#a6e22e>to</span> <span style=color:#a6e22e>All</span> <span style=color:#a6e22e>Cats</span>
+</span></span><span style=display:flex><span>				&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>button</span>&gt;
+</span></span><span style=display:flex><span>			&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Individual cat item</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>templ</span> <span style=color:#a6e22e>CatListItem</span>(<span style=color:#a6e22e>cat</span> <span style=color:#a6e22e>Cat</span>) {
+</span></span><span style=display:flex><span>	&lt;<span style=color:#a6e22e>li</span> <span style=color:#a6e22e>id</span>={<span style=color:#e6db74>&#34;cat-&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprint</span>(<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span>)} <span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;cat-item&#34;</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>strong</span>&gt;{<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Name</span>}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>strong</span>&gt; <span style=color:#f92672>-</span> {<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Breed</span>}
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>div</span>&gt;<span style=color:#a6e22e>Naps</span> <span style=color:#a6e22e>today</span>: {<span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprintf</span>(<span style=color:#e6db74>&#34;%d&#34;</span>, <span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Naps</span>)}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>div</span>&gt;<span style=color:#a6e22e>Favorite</span> <span style=color:#a6e22e>toy</span>: {<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>FavToy</span>}&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>div</span>&gt;
+</span></span><span style=display:flex><span>		&lt;<span style=color:#a6e22e>button</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>get</span>={<span style=color:#e6db74>&#34;/pet-cat/&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprint</span>(<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span>)}
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>target</span>={<span style=color:#e6db74>&#34;#cat-&#34;</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprint</span>(<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span>)}
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>hx</span><span style=color:#f92672>-</span><span style=color:#a6e22e>swap</span>=<span style=color:#e6db74>&#34;outerHTML&#34;</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>class</span>=<span style=color:#e6db74>&#34;treat-button&#34;</span>
+</span></span><span style=display:flex><span>		&gt;
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>Pet</span> {<span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>Name</span>}
+</span></span><span style=display:flex><span>		&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>button</span>&gt;
+</span></span><span style=display:flex><span>	&lt;<span style=color:#f92672>/</span><span style=color:#a6e22e>li</span>&gt;
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Let&rsquo;s setup the <code>cmd/iteration-example/main.go</code> to handle the HTMX requests:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>package</span> <span style=color:#a6e22e>main</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> (
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;net/http&#34;</span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;strconv&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;example-templ-project/internal/views&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>var</span> (
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// This is mock data. Generally you would get and update this data with a database</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>cats</span> = []<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>Cat</span>{
+</span></span><span style=display:flex><span>		{<span style=color:#a6e22e>ID</span>: <span style=color:#ae81ff>1</span>, <span style=color:#a6e22e>Name</span>: <span style=color:#e6db74>&#34;Finn&#34;</span>, <span style=color:#a6e22e>Breed</span>: <span style=color:#e6db74>&#34;Orange&#34;</span>, <span style=color:#a6e22e>Naps</span>: <span style=color:#ae81ff>5</span>, <span style=color:#a6e22e>FavToy</span>: <span style=color:#e6db74>&#34;Mouse&#34;</span>},
+</span></span><span style=display:flex><span>		{<span style=color:#a6e22e>ID</span>: <span style=color:#ae81ff>2</span>, <span style=color:#a6e22e>Name</span>: <span style=color:#e6db74>&#34;Honey&#34;</span>, <span style=color:#a6e22e>Breed</span>: <span style=color:#e6db74>&#34;Calico&#34;</span>, <span style=color:#a6e22e>Naps</span>: <span style=color:#ae81ff>3</span>, <span style=color:#a6e22e>FavToy</span>: <span style=color:#e6db74>&#34;String&#34;</span>},
+</span></span><span style=display:flex><span>		{<span style=color:#a6e22e>ID</span>: <span style=color:#ae81ff>3</span>, <span style=color:#a6e22e>Name</span>: <span style=color:#e6db74>&#34;Wonkers&#34;</span>, <span style=color:#a6e22e>Breed</span>: <span style=color:#e6db74>&#34;Black&#34;</span>, <span style=color:#a6e22e>Naps</span>: <span style=color:#ae81ff>7</span>, <span style=color:#a6e22e>FavToy</span>: <span style=color:#e6db74>&#34;Catnip Ball&#34;</span>},
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>globalHasTreats</span> = <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/&#34;</span>, <span style=color:#a6e22e>handleMainPage</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/pet-cat/&#34;</span>, <span style=color:#a6e22e>handlePetCat</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>HandleFunc</span>(<span style=color:#e6db74>&#34;/treats&#34;</span>, <span style=color:#a6e22e>handleTreats</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ListenAndServe</span>(<span style=color:#e6db74>&#34;:8080&#34;</span>, <span style=color:#66d9ef>nil</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handleMainPage</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatPage</span>(<span style=color:#a6e22e>cats</span>, <span style=color:#a6e22e>globalHasTreats</span>).<span style=color:#a6e22e>Render</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Context</span>(), <span style=color:#a6e22e>w</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handlePetCat</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>idStr</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>URL</span>.<span style=color:#a6e22e>Path</span>[len(<span style=color:#e6db74>&#34;/pet-cat/&#34;</span>):]
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>id</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strconv</span>.<span style=color:#a6e22e>Atoi</span>(<span style=color:#a6e22e>idStr</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Invalid cat ID&#34;</span>, <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusBadRequest</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>targetCat</span> <span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>Cat</span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>var</span> <span style=color:#a6e22e>found</span> <span style=color:#66d9ef>bool</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>cat</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>cats</span> {
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>if</span> <span style=color:#a6e22e>cat</span>.<span style=color:#a6e22e>ID</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>id</span> {
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>cats</span>[<span style=color:#a6e22e>i</span>].<span style=color:#a6e22e>Naps</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>targetCat</span> = <span style=color:#a6e22e>cats</span>[<span style=color:#a6e22e>i</span>]
+</span></span><span style=display:flex><span>			<span style=color:#a6e22e>found</span> = <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>			<span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>		}
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>found</span> {
+</span></span><span style=display:flex><span>		<span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Error</span>(<span style=color:#a6e22e>w</span>, <span style=color:#e6db74>&#34;Cat not found&#34;</span>, <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>StatusNotFound</span>)
+</span></span><span style=display:flex><span>		<span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>	}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatListItem</span>(<span style=color:#a6e22e>targetCat</span>).<span style=color:#a6e22e>Render</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Context</span>(), <span style=color:#a6e22e>w</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>handleTreats</span>(<span style=color:#a6e22e>w</span> <span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>ResponseWriter</span>, <span style=color:#a6e22e>r</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>http</span>.<span style=color:#a6e22e>Request</span>) {
+</span></span><span style=display:flex><span>	<span style=color:#75715e>// Toggle treats state</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>hasTreatsParam</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>URL</span>.<span style=color:#a6e22e>Query</span>().<span style=color:#a6e22e>Get</span>(<span style=color:#e6db74>&#34;hasTreats&#34;</span>)
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>globalHasTreats</span> = (<span style=color:#a6e22e>hasTreatsParam</span> <span style=color:#f92672>==</span> <span style=color:#e6db74>&#34;true&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>views</span>.<span style=color:#a6e22e>CatTreatingSection</span>(<span style=color:#a6e22e>globalHasTreats</span>).<span style=color:#a6e22e>Render</span>(<span style=color:#a6e22e>r</span>.<span style=color:#a6e22e>Context</span>(), <span style=color:#a6e22e>w</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>We can see this in action under <code>localhost:8080</code> with:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>make dev CMD_DIR<span style=color:#f92672>=</span>iteration-example
+</span></span></code></pre></div><h2 id=wrap-up>Wrap Up</h2><p>Templ represents a significant step forward for Go web development. By bringing a component-based approach with full type safety to Go templates, it addresses many of the pain points developers have faced with traditional templating solutions.</p><p>When combined with HTMX, it creates a powerful stack for building interactive web applications with minimal JavaScript.</p><p>Here&rsquo;s why you should consider Templ and HTMX for your next Go web project:</p><ol><li><strong>Maintainability</strong>: Components are modular, reusable, and composable.</li><li><strong>Performance</strong>: Compiled templates are efficient and fast.</li><li><strong>Integration</strong>: Works seamlessly with the standard Go HTTP stack.</li><li><strong>Interactivity</strong>: HTMX enables dynamic interfaces without complex JavaScript frameworks.</li></ol><p>Whether you&rsquo;re building a simple website or a complex web application, Templ&rsquo;s approach to templating aligns perfectly with Go&rsquo;s philosophy of simplicity, type safety, and performance. The idiomatic project structure ensures your code remains maintainable as it grows, while the combination with HTMX lets you create rich, interactive experiences without the complexity of a full JavaScript framework.</p><p>Checkout the entire project code in my <a href=https://github.com/catpaladin/example-templ-project>github repo</a>.</p><p>Give Templ and HTMX a try for your next Go web project - I think you&rsquo;ll find it&rsquo;s the templating solution you&rsquo;ve been waiting for!</p></div><div class=post-footer></div></article></main><script>document.addEventListener("DOMContentLoaded",function(){const e=document.querySelector(".menu-button"),t=document.querySelector(".menu-dropdown");e&&t&&(e.addEventListener("click",function(){e.classList.toggle("active"),t.classList.toggle("active")}),document.addEventListener("click",function(n){!e.contains(n.target)&&!t.contains(n.target)&&(e.classList.remove("active"),t.classList.remove("active"))}))})</script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
