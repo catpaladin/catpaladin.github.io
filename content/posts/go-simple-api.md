@@ -2,7 +2,8 @@
 date = '2025-01-25T12:05:27-08:00'
 draft = false
 title = 'Building a REST API with Go'
-tags = ["go", "api"]
+tags = ["go", "api", "rest", "jwt"]
+featured_image = "/images/go-work.svg"
 +++
 
 Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we'll explore building a secure REST API from the ground up using Go. Whether you're new to Go or an experienced developer, you'll learn how to create an API that handles user authentication.

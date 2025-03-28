@@ -2,7 +2,8 @@
 date = '2025-02-28T22:14:22-08:00'
 draft = false
 title = 'A Guide to Pointers in Go'
-tags = ["go", "pointers", "memory"]
+tags = ["go", "pointers", "memory", "fundamentals"]
+featured_image = "/images/go-learn.svg"
 +++
 
 Let's get real about pointers in Go—they're not the scary beasts you might remember from C (if you came from that CS background). Go's pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.

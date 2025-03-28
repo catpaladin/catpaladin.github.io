@@ -2,10 +2,9 @@
 date = '2025-03-14T21:49:18-07:00'
 draft = false
 title = 'Understanding Go Interfaces'
-tags = ["go", "interfaces", "python", "typescript", "mocks", "aws"]
+tags = ["go", "interfaces", "python", "typescript", "mocks", "aws", "fundamentals"]
+featured_image = "/images/go-learn.svg"
 +++
-
-<img src="/images/go-learn.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
 
 I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (*weekend project*) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go's interface system hit me like a revelation.
 

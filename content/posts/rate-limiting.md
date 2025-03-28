@@ -3,6 +3,7 @@ date = '2025-03-07T18:52:37-08:00'
 draft = false
 title = 'Building a Rate-Limiter in Go'
 tags = ["go", "api", "reverse-proxy", "rate-limiting"]
+featured_image = "/images/go-magic.svg"
 +++
 
 Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!

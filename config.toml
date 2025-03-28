@@ -65,6 +65,12 @@ title = "It's Go time!"
 [markup.goldmark.renderer]
   unsafe = true
 
+[markup]
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 4
+    ordered = false
+
 [security]
   enableInlineShortcodes = true
 

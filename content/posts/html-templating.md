@@ -3,9 +3,8 @@ date = '2025-03-21T19:50:55-07:00'
 draft = false
 title = 'Modern Templating for Go with Templ'
 tags = ['html', 'go', 'htmx', 'templating', 'templ', 'webdev']
+featured_image = "/images/go-trending.svg"
 +++
-
-<img src="/images/go-learn.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
 
 I've been working on a handful of personal webdev Go projects, and the one thing I could never wrap my head around was [Templ](https://github.com/a-h/templ). I would start the project and go, "Oh no. I need a UI for this. Not everything can be made into a TUI... or can it..". This would lead me to looking at the Templ docs, not understanding how to implement it, and either use the embed package (I LOVE [embed](https://pkg.go.dev/embed)!) or starting a TypeScript frontend, creating a bunch of tsx files and coming to the sudden realization that I gave in to React.
 

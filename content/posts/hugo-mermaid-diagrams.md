@@ -3,6 +3,7 @@ date = '2025-03-01T19:48:53-08:00'
 draft = false
 title = 'Getting Mermaid Diagrams Working in Hugo'
 tags = ["hugo", "mermaid", "blogging"]
+featured_image = "/images/go-fish.svg"
 +++
 
 Let's be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it's often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.

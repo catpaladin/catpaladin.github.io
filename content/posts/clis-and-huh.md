@@ -2,7 +2,8 @@
 date = '2025-02-08T08:15:00-08:00'
 draft = false
 title = 'Building Beautiful CLIs with Huh'
-tags = ["go", "commandline"]
+tags = ["go", "commandline", "cli", "charmbracelet"]
+featured_image = "/images/go-fish.svg"
 +++
 
 *Hey there, fellow Go enthusiasts! Today, I'm going to share something that completely changed my CLI development game. Buckle up – we're diving deep into making CLIs that users will actually enjoy using!*

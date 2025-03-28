@@ -174,6 +174,8 @@
 
   </head>
   <body>
+    {{ partial "scroll-indicator.html" . }}
+
     <!-- Enhanced top navigation bar -->
     <div class="top-nav">
       <a href="{{ "" | relURL }}" class="top-nav-title-link">
@@ -213,7 +215,6 @@
       {{ end }}
     </main>
 
-    <!-- Menu button JavaScript -->
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const menuButton = document.querySelector('.menu-button');
@@ -234,6 +235,26 @@
             }
           });
         }
+
+        // Get the scroll indicator element
+        const scrollIndicator = document.getElementById('scroll-indicator');
+
+        // Function to update the scroll indicator
+        function updateScrollIndicator() {
+          // Calculate scroll progress
+          const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+          const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+          const scrolled = (winScroll / height) * 100;
+
+          // Update width of scroll indicator
+          scrollIndicator.style.width = scrolled + '%';
+        }
+
+        // Add scroll event listener
+        window.addEventListener('scroll', updateScrollIndicator);
+
+        // Initial update
+        updateScrollIndicator();
       });
     </script>
 

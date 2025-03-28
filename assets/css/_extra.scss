@@ -53,3 +53,21 @@ strong, b {
   color: $primary-color;
   font-weight: 700;
 }
+
+// Scroll indicator
+#scroll-indicator-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  z-index: 1001;
+  background-color: transparent;
+}
+
+#scroll-indicator {
+  height: 100%;
+  width: 0;
+  background-color: $primary-color; // Using your theme's primary color
+  transition: width 0.1s ease-out;
+}

@@ -3,6 +3,7 @@ date = '2025-02-07T15:30:00-08:00'
 draft = false
 title = 'Managing Development Environments with Dotfiles'
 tags = ["dev", "dotfiles", "neovim"]
+featured_image = "/images/go-magic.svg"
 +++
 
 Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.

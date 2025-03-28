@@ -2,12 +2,12 @@
 date = '2025-02-21T21:43:05-08:00'
 draft = false
 title = 'Go Channels: A Concurrency Guide'
-tags = ["go", "channels", "concurrency", "parallelism"]
+tags = ["go", "channels", "concurrency", "parallelism", "fundamentals"]
+toc = false
+featured_image = "/images/go-learn.svg"
 +++
 
 Hello fellow Gophers!
-
-<img src="/images/go-connect.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
 
 I'm absolutely thrilled to dive deep into one of Go's most elegant features: **Channels**! If you're just starting your Go journey or looking to level up your concurrency game, you're in for a treat.
 
