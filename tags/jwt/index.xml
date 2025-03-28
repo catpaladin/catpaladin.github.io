@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Jwt on It's Go time!</title><link>https://blog.mikesahari.com/tags/jwt/</link><description>Recent content in Jwt on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 25 Jan 2025 12:05:27 -0800</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/jwt/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a REST API with Go</title><link>https://blog.mikesahari.com/posts/go-simple-api/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-simple-api/</guid><description><![CDATA[
+        
+        <img src="https://blog.mikesahari.com/images/go-work.svg" width="800" height="150" />
+        
+        <p>Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we&rsquo;ll explore building a secure REST API from the ground up using Go. Whether you&rsquo;re new to Go or an experienced developer, you&rsquo;ll learn how to create an API that handles user authentication.</p>
+<p>For those who need to see the whole code before diving in, you can find all of this on <a href="https://github.com/catpaladin/go-api-example">Github</a></p>
+<h2 id="technology-stack-overview">Technology Stack Overview</h2>
+<p>Our API implementation uses three main technologies:</p>
+      ]]></description></item></channel></rss>

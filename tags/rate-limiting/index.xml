@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Rate-Limiting on It's Go time!</title><link>https://blog.mikesahari.com/tags/rate-limiting/</link><description>Recent content in Rate-Limiting on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 07 Mar 2025 18:52:37 -0800</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/rate-limiting/index.xml" rel="self" type="application/rss+xml"/><item><title>Building a Rate-Limiter in Go</title><link>https://blog.mikesahari.com/posts/rate-limiting/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/rate-limiting/</guid><description><![CDATA[
         
+        <img src="https://blog.mikesahari.com/images/go-magic.svg" width="800" height="150" />
+        
         <p>Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!</p>
 <p>In this post, we&rsquo;re building a configurable rate-limiting reverse proxy. And by the end of this blog, you&rsquo;ll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes.</p>
       ]]></description></item></channel></rss>

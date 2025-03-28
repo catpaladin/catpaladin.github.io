@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Aws on It's Go time!</title><link>https://blog.mikesahari.com/tags/aws/</link><description>Recent content in Aws on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 14 Mar 2025 21:49:18 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/aws/index.xml" rel="self" type="application/rss+xml"/><item><title>Understanding Go Interfaces</title><link>https://blog.mikesahari.com/posts/interfaces/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/interfaces/</guid><description><![CDATA[
         
-        <img src="/images/go-learn.svg" width="300" height="200" alt="Free image by https://github.com/MariaLetta/free-gophers-pack">
-<p>I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (<em>weekend project</em>) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go&rsquo;s interface system hit me like a revelation.</p>
+        <img src="https://blog.mikesahari.com/images/go-learn.svg" width="800" height="150" />
+        
+        <p>I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (<em>weekend project</em>) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go&rsquo;s interface system hit me like a revelation.</p>
 <p>It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.</p>
       ]]></description></item></channel></rss>

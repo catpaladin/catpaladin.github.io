@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Mermaid on It's Go time!</title><link>https://blog.mikesahari.com/tags/mermaid/</link><description>Recent content in Mermaid on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 01 Mar 2025 19:48:53 -0800</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/mermaid/index.xml" rel="self" type="application/rss+xml"/><item><title>Getting Mermaid Diagrams Working in Hugo</title><link>https://blog.mikesahari.com/posts/hugo-mermaid-diagrams/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/hugo-mermaid-diagrams/</guid><description><![CDATA[
         
+        <img src="https://blog.mikesahari.com/images/go-fish.svg" width="800" height="150" />
+        
         <p>Let&rsquo;s be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it&rsquo;s often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.</p>
 <p>After spending way too many hours banging my head against this particular wall with the m10c theme, I&rsquo;m documenting the actual working solution so you don&rsquo;t have to suffer through the same pain.</p>
 <h2 id="an-intro-to-mermaid-through-examples">An Intro to Mermaid Through Examples</h2>
