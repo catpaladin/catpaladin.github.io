@@ -1,97 +1,69 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on It's Go time!</title><link>https://blog.mikesahari.com/tags/</link><description>Recent content in Tags on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 21 Mar 2025 19:50:55 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>Go</title><link>https://blog.mikesahari.com/tags/go/</link><pubDate>Fri, 21 Mar 2025 19:50:55 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/go/</guid><description>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Tags on It's Go time!</title><link>https://blog.mikesahari.com/tags/</link><description>Recent content in Tags on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>It's Go time!</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Fri, 28 Mar 2025 21:45:06 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>Data-Structures</title><link>https://blog.mikesahari.com/tags/data-structures/</link><pubDate>Fri, 28 Mar 2025 21:45:06 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/data-structures/</guid><description>
         
+      </description></item><item><title>Fundamentals</title><link>https://blog.mikesahari.com/tags/fundamentals/</link><pubDate>Fri, 28 Mar 2025 21:45:06 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/fundamentals/</guid><description>
+        
+      </description></item><item><title>Go</title><link>https://blog.mikesahari.com/tags/go/</link><pubDate>Fri, 28 Mar 2025 21:45:06 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/go/</guid><description>
+        
+      </description></item><item><title>Programming</title><link>https://blog.mikesahari.com/tags/programming/</link><pubDate>Fri, 28 Mar 2025 21:45:06 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/programming/</guid><description>
         
       </description></item><item><title>Html</title><link>https://blog.mikesahari.com/tags/html/</link><pubDate>Fri, 21 Mar 2025 19:50:55 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/html/</guid><description>
         
-        
       </description></item><item><title>Htmx</title><link>https://blog.mikesahari.com/tags/htmx/</link><pubDate>Fri, 21 Mar 2025 19:50:55 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/htmx/</guid><description>
-        
         
       </description></item><item><title>Templ</title><link>https://blog.mikesahari.com/tags/templ/</link><pubDate>Fri, 21 Mar 2025 19:50:55 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/templ/</guid><description>
         
-        
       </description></item><item><title>Templating</title><link>https://blog.mikesahari.com/tags/templating/</link><pubDate>Fri, 21 Mar 2025 19:50:55 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/templating/</guid><description>
-        
         
       </description></item><item><title>Webdev</title><link>https://blog.mikesahari.com/tags/webdev/</link><pubDate>Fri, 21 Mar 2025 19:50:55 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/webdev/</guid><description>
         
-        
       </description></item><item><title>Aws</title><link>https://blog.mikesahari.com/tags/aws/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/aws/</guid><description>
-        
-        
-      </description></item><item><title>Fundamentals</title><link>https://blog.mikesahari.com/tags/fundamentals/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/fundamentals/</guid><description>
-        
         
       </description></item><item><title>Interfaces</title><link>https://blog.mikesahari.com/tags/interfaces/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/interfaces/</guid><description>
         
-        
       </description></item><item><title>Mocks</title><link>https://blog.mikesahari.com/tags/mocks/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/mocks/</guid><description>
-        
         
       </description></item><item><title>Python</title><link>https://blog.mikesahari.com/tags/python/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/python/</guid><description>
         
-        
       </description></item><item><title>Typescript</title><link>https://blog.mikesahari.com/tags/typescript/</link><pubDate>Fri, 14 Mar 2025 21:49:18 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/typescript/</guid><description>
-        
         
       </description></item><item><title>Api</title><link>https://blog.mikesahari.com/tags/api/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/api/</guid><description>
         
-        
       </description></item><item><title>Rate-Limiting</title><link>https://blog.mikesahari.com/tags/rate-limiting/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/rate-limiting/</guid><description>
-        
         
       </description></item><item><title>Reverse-Proxy</title><link>https://blog.mikesahari.com/tags/reverse-proxy/</link><pubDate>Fri, 07 Mar 2025 18:52:37 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/reverse-proxy/</guid><description>
         
-        
       </description></item><item><title>Blogging</title><link>https://blog.mikesahari.com/tags/blogging/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/blogging/</guid><description>
-        
         
       </description></item><item><title>Hugo</title><link>https://blog.mikesahari.com/tags/hugo/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/hugo/</guid><description>
         
-        
       </description></item><item><title>Mermaid</title><link>https://blog.mikesahari.com/tags/mermaid/</link><pubDate>Sat, 01 Mar 2025 19:48:53 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/mermaid/</guid><description>
-        
         
       </description></item><item><title>Memory</title><link>https://blog.mikesahari.com/tags/memory/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/memory/</guid><description>
         
-        
       </description></item><item><title>Pointers</title><link>https://blog.mikesahari.com/tags/pointers/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/pointers/</guid><description>
-        
         
       </description></item><item><title>Channels</title><link>https://blog.mikesahari.com/tags/channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/channels/</guid><description>
         
-        
       </description></item><item><title>Concurrency</title><link>https://blog.mikesahari.com/tags/concurrency/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/concurrency/</guid><description>
-        
         
       </description></item><item><title>Parallelism</title><link>https://blog.mikesahari.com/tags/parallelism/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/parallelism/</guid><description>
         
-        
       </description></item><item><title>Generics</title><link>https://blog.mikesahari.com/tags/generics/</link><pubDate>Sat, 15 Feb 2025 09:00:54 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/generics/</guid><description>
-        
         
       </description></item><item><title>Charmbracelet</title><link>https://blog.mikesahari.com/tags/charmbracelet/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/charmbracelet/</guid><description>
         
-        
       </description></item><item><title>Cli</title><link>https://blog.mikesahari.com/tags/cli/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/cli/</guid><description>
-        
         
       </description></item><item><title>Commandline</title><link>https://blog.mikesahari.com/tags/commandline/</link><pubDate>Sat, 08 Feb 2025 08:15:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/commandline/</guid><description>
         
-        
       </description></item><item><title>Dev</title><link>https://blog.mikesahari.com/tags/dev/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/dev/</guid><description>
-        
         
       </description></item><item><title>Dotfiles</title><link>https://blog.mikesahari.com/tags/dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/dotfiles/</guid><description>
         
-        
       </description></item><item><title>Neovim</title><link>https://blog.mikesahari.com/tags/neovim/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/neovim/</guid><description>
-        
         
       </description></item><item><title>Jwt</title><link>https://blog.mikesahari.com/tags/jwt/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/jwt/</guid><description>
         
-        
       </description></item><item><title>Rest</title><link>https://blog.mikesahari.com/tags/rest/</link><pubDate>Sat, 25 Jan 2025 12:05:27 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/tags/rest/</guid><description>
-        
         
       </description></item></channel></rss>
