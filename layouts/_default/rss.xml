@@ -41,12 +41,11 @@
       {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
       <guid isPermaLink="true">{{ .Permalink }}</guid>
 
-      <!-- Add Media RSS tag for featured image -->
       {{ with .Params.featured_image }}
       <media:content
         url="{{ . | absURL }}"
         medium="image"
-        type="image/jpeg"
+        type="{{ if in . ".svg" }}image/svg+xml{{ else if in . ".png" }}image/png{{ else }}image/jpeg{{ end }}"
         isDefault="true" />
       {{ end }}
 

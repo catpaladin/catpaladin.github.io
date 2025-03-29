@@ -19,6 +19,93 @@ jobs:
           submodules: true
           fetch-depth: 0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23'
+
+      - name: Install SVG to PNG dependencies
+        run: npm install -g sharp glob
+
+      - name: Create SVG to PNG conversion script
+        run: |
+          cat > convert-svg.js << 'EOF'
+          const fs = require('fs');
+          const path = require('path');
+          const sharp = require('sharp');
+          const glob = require('glob');
+
+          // Find all SVG files in static directory
+          glob('static/**/*.svg', {}, (err, files) => {
+            if (err) {
+              console.error('Error finding SVG files:', err);
+              process.exit(1);
+            }
+
+            console.log(`Found ${files.length} SVG files`);
+
+            // Process each SVG file
+            let completed = 0;
+            const total = files.length;
+
+            if (total === 0) {
+              console.log('No SVG files found to convert');
+              process.exit(0);
+            }
+
+            files.forEach(file => {
+              // Create PNG file in the exact same directory
+              const pngFile = file.replace(/\.svg$/, '.png');
+              console.log(`Converting ${file} to ${pngFile}`);
+
+              try {
+                // Read SVG file
+                const svgData = fs.readFileSync(file);
+
+                // Convert to PNG
+                sharp(svgData)
+                  .resize({
+                    width: 1200,
+                    height: 630,
+                    fit: 'contain',
+                    background: { r: 255, g: 255, b: 255, alpha: 1 }
+                  })
+                  .png()
+                  .toFile(pngFile)
+                  .then(() => {
+                    console.log(`✅ Successfully converted ${file} to PNG`);
+                    completed++;
+
+                    // Exit when all conversions are done
+                    if (completed === total) {
+                      console.log('All conversions completed successfully!');
+                    }
+                  })
+                  .catch(err => {
+                    console.error(`❌ Error converting ${file}:`, err);
+                    completed++;
+
+                    // Continue with other files even if one fails
+                    if (completed === total) {
+                      console.log('All conversions completed with some errors!');
+                    }
+                  });
+              } catch (err) {
+                console.error(`❌ Error reading ${file}:`, err);
+                completed++;
+
+                // Continue with other files even if one fails
+                if (completed === total) {
+                  console.log('All conversions completed with some errors!');
+                }
+              }
+            });
+          });
+          EOF
+
+      - name: Run SVG to PNG conversion
+        run: node convert-svg.js
+
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:

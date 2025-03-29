@@ -8,6 +8,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="{{ .Site.Params.author | default "John Doe" }}" />
     <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Description }}{{ end }}" />
+
+    <!-- Open Graph tags -->
+    <meta property="og:site_name" content="{{ .Site.Title }}" />
+    <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }}{{ end }}" />
+    <meta property="og:description" content="{{ with .Description }}{{ . }}{{ else }}{{ if .IsPage }}{{ .Summary }}{{ else }}{{ .Site.Params.description }}{{ end }}{{ end }}" />
+    <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
+    <meta property="og:url" content="{{ .Permalink }}" />
+
+    <!-- Featured image handling with SVG conversion -->
+    {{ if .Params.featured_image }}
+      {{ $featured_image := .Params.featured_image }}
+      {{ $image_ext := path.Ext $featured_image }}
+
+      {{ if eq $image_ext ".svg" }}
+        {{ $png_version := replace $featured_image ".svg" ".png" }}
+        <!-- Check if a PNG version exists, otherwise use a default image -->
+        {{ if fileExists (printf "static%s" $png_version) }}
+          <meta property="og:image" content="{{ $png_version | absURL }}" />
+          <meta property="og:image:secure_url" content="{{ $png_version | absURL }}" />
+        {{ else }}
+          <!-- If no PNG version exists, use default image -->
+          <meta property="og:image" content="{{ .Site.Params.default_og_image | default "/images/default-og-image.png" | absURL }}" />
+          <meta property="og:image:secure_url" content="{{ .Site.Params.default_og_image | default "/images/default-og-image.png" | absURL }}" />
+        {{ end }}
+      {{ else }}
+        <!-- Not an SVG, use the image directly -->
+        <meta property="og:image" content="{{ $featured_image | absURL }}" />
+        <meta property="og:image:secure_url" content="{{ $featured_image | absURL }}" />
+      {{ end }}
+
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+    {{ end }}
+
     {{ $style := resources.Get "css/main.scss" | resources.ExecuteAsTemplate "css/main.scss" . | css.Sass | resources.Minify | resources.Fingerprint -}}
     <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
 
