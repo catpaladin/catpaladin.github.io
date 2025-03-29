@@ -3,14 +3,14 @@ date = '2025-03-14T21:49:18-07:00'
 draft = false
 title = 'Understanding Go Interfaces'
 tags = ["go", "interfaces", "python", "typescript", "mocks", "aws", "fundamentals"]
-featured_image = "/images/go-learn.svg"
+featured_image = "/images/gophers/go-learn.svg"
 +++
 
 I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (*weekend project*) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go's interface system hit me like a revelation.
 
 It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.
 
-![interfaces](/images/20250315-meme1.png)
+![interfaces](/images/2025/03/20250315-meme1.png)
 
 If you're coming from other languages, Go's interfaces might seem too simple to be powerful. Trust me, that simplicity is deceptive. It's like discovering that the unassuming Swiss Army knife in your pocket can also transform into a top of the line commercial espresso grinder (*I wish this was possible*).
 
@@ -340,7 +340,7 @@ Think of Go interfaces as describing what a type can _do_, not what a type _is_.
 
 As Rob Pike, one of Go's creators, famously said: "The bigger the interface, the weaker the abstraction" [\[1\]](https://go-proverbs.github.io/). This wasn't immediately intuitive to me, and I've made mistakes of creating big interfaces with the aws sdk in the past, but it's become my guiding principle when designing Go code now.
 
-![Now I know](/images/20250315-meme2.png)
+![Now I know](/images/2025/03/20250315-meme2.png)
 
 ## The Interface Hierarchy (or lack thereof)
 
@@ -450,7 +450,7 @@ type Interface interface {
 
 As explained in Effective Go [\[3\]](https://golang.org/doc/effective_go): "interfaces with only one or two methods are common in Go code, and are usually given names ending in -er, such as Reader, Writer, Formatter, etc." It is an idiomatic style choice for the language, that I mostly follow. Just like those of us who follow the PEP 8 style guide for Python, unlike `somePeople` (YOU KNOW WHO YOU ARE!).
 
-![These people](/images/20250315-meme3.png)
+![These people](/images/2025/03/20250315-meme3.png)
 
 ## Consuming Standard Library Interfaces
 
@@ -624,7 +624,7 @@ The Go Blog's article on reflection [\[5\]](https://go.dev/blog/laws-of-reflecti
 
 ## Practical Interface Examples
 
-![they don't even test](/images/20250315-meme4.png)
+![they don't even test](/images/2025/03/20250315-meme4.png)
 
 ### Example 1: Creating Mock-Friendly Code
 

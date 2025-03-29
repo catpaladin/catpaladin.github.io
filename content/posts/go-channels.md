@@ -4,7 +4,7 @@ draft = false
 title = 'Go Channels: A Concurrency Guide'
 tags = ["go", "channels", "concurrency", "parallelism", "fundamentals"]
 toc = false
-featured_image = "/images/go-learn.svg"
+featured_image = "/images/gophers/go-learn.svg"
 +++
 
 Hello fellow Gophers!
@@ -17,7 +17,7 @@ I hate to use an analogy here, but imagine you have a team of engineers working 
 
 For project Kilonova to be complete, your engineers need to meet to chat and exchange information, along with completing their work. Channels are that method of meeting. They are an area where your goroutines—I mean engineers can communicate to complete Kilonova. Without channels, it would be like the team of engineers never talk to each other and go about working in silos (and we all know how well that works out! 😅).
 
-![I don't even know who you are](/images/20250221-meme1.png)
+![I don't even know who you are](/images/2025/02/20250221-meme1.png)
 
 Analogy out of the way, this blog post is full of material because I have tons of notes (I use [Obsidian](https://obsidian.md/) btw) on Go Channels. Let's dive in.
 
@@ -619,7 +619,7 @@ The `default` case in `select` makes channel operations non-blocking, which is u
 
 Go allows specifying channel direction in function signatures, providing additional type safety to concurrent code.
 
-![python](/images/20250222-meme1.png)
+![python](/images/2025/02/20250222-meme1.png)
 
 ### Example: Using Channel Direction in Functions
 
@@ -1327,7 +1327,7 @@ func processRequest(req Request, ctx context.Context) {
 
 ### Deadlocks: The Concurrency Standoff
 
-![the standoff](/images/20250222-meme2.png)
+![the standoff](/images/2025/02/20250222-meme2.png)
 
 Deadlocks occur when goroutines are waiting for each other in a circular dependency. Go's runtime will detect some deadlocks:
 

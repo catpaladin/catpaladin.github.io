@@ -3,7 +3,7 @@ date = '2025-02-08T08:15:00-08:00'
 draft = false
 title = 'Building Beautiful CLIs with Huh'
 tags = ["go", "commandline", "cli", "charmbracelet"]
-featured_image = "/images/go-fish.svg"
+featured_image = "/images/gophers/go-fish.svg"
 +++
 
 *Hey there, fellow Go enthusiasts! Today, I'm going to share something that completely changed my CLI development game. Buckle up – we're diving deep into making CLIs that users will actually enjoy using!*
@@ -12,7 +12,7 @@ featured_image = "/images/go-fish.svg"
 
 You know how we all instinctively reach for [cobra](https://github.com/spf13/cobra) when building command-line tools in Go? Well, here is the perfect companion that's transformed how I think about CLI interactions: [huh](https://github.com/charmbracelet/huh) by Charmbracelet.
 
-![huh](/images/huh-cat.gif "huh")
+![huh](/images/gifs/huh-cat.gif "huh")
 
 *Here's the thing that got me excited:* While `cobra` handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), `huh` brings something entirely different to the table. It's all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.
 
@@ -110,7 +110,7 @@ func interactiveIP() {
 
 #### Extra: Dynamic Selection Options
 
-![you hardcoded..](/images/20250207-meme1.png)
+![you hardcoded..](/images/2025/02/20250207-meme1.png)
 
 
 {{<admonition title="📝 NOTE" bg-color="#283593">}}

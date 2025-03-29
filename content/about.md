@@ -2,9 +2,12 @@
 date = '2025-01-24T17:49:05-08:00'
 draft = false
 title = 'About Me'
+toc = false
 +++
 
 <img class="app-header-avatar" src="/images/avatar.jpg" alt="Mike Sahari" />
+
+<br>
 
 {{<admonition title="📚 Greetings!" bg-color="#00B0FF">}}
 Hi, I'm Mike! Welcome to my blog. This blog will be a place to share my learnings and experiences; with a primary theme of Go.
@@ -52,4 +55,7 @@ Here are some things about me:
   {{< tech-icon name="Terraform" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/terraform/terraform-original.svg" >}}
   {{< tech-icon name="Ansible" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/ansible/ansible-original.svg" >}}
 {{< /tech-stack >}}
+
+---
+
 

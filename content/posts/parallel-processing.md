@@ -3,7 +3,7 @@ date = '2025-02-01T10:00:12-08:00'
 draft = false
 title = 'Go vs Python for Parallel Processing'
 tags = ["go", "python", "concurrency", "parallelism"]
-featured_image = "/images/go-connect.svg"
+featured_image = "/images/gophers/go-connect.svg"
 +++
 
 I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python's strengths - it excels in machine learning and generative AI applications. However, I **prefer** Go for several compelling reasons:
@@ -15,7 +15,7 @@ I was inspired to write this article after a recent discussion about programming
 
 But preferences often face challenges. Some argue, "Python now has concurrency, so you should switch to Python." I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).
 
-![python simps be like](/images/20250201-meme1.png "be like that huh")
+![python simps be like](/images/2025/02/20250201-meme1.png "be like that huh")
 
 This debate sparked my curiosity: how does Python 3.13's new GIL-disabled feature actually perform compared to Go's native concurrency? Let's run through an experiment and find out.
 
@@ -207,7 +207,7 @@ Average Time per Thread: 1.01 seconds
 
 That was cool and pretty fast. But realistically, when are you going to get a team at work to embrace something experimental because it's faster?
 
-![reality](/images/20250201-meme2.png "reality")
+![reality](/images/2025/02/20250201-meme2.png "reality")
 
 ### **Go: Goroutines and Channels**
 
@@ -302,7 +302,7 @@ Execution Time: 0.11 seconds
 Average Time per Goroutine: 0.01 seconds
 ```
 
-![lets GO](/images/20250201-meme3.png "lets GO")
+![lets GO](/images/2025/02/20250201-meme3.png "lets GO")
 
 ## Comparisons
 

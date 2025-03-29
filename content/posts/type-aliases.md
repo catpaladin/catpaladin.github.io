@@ -3,7 +3,7 @@ date = '2025-02-15T09:00:54-08:00'
 draft = false
 title = 'Understanding Generic Type Aliases in Go 1.24'
 tags = ["go", "python", "typescript", "generics"]
-featured_image = "/images/go-generics.svg"
+featured_image = "/images/gophers/go-generics.svg"
 +++
 
 After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let's break down exactly what this means, how it works, and how it compares to other languages.
@@ -68,7 +68,7 @@ graph TD
     style I fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
     style J fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
 ```
-<!-- ![Type Aliases](/images/20250215-mermaid1.png) -->
+<!-- ![Type Aliases](/images/2025/02/20250215-mermaid1.png) -->
 
 Generic type aliases allow us to create type synonyms that can work with different data types while maintaining Go's strong type safety.
 Think of it as creating flexible building blocks that can adapt to different data types without sacrificing compile-time safety.

@@ -3,12 +3,12 @@ date = '2025-03-21T19:50:55-07:00'
 draft = false
 title = 'Modern Templating for Go with Templ'
 tags = ['html', 'go', 'htmx', 'templating', 'templ', 'webdev']
-featured_image = "/images/go-trending.svg"
+featured_image = "/images/gophers/go-trending.svg"
 +++
 
 I've been working on a handful of personal webdev Go projects, and the one thing I could never wrap my head around was [Templ](https://github.com/a-h/templ). I would start the project and go, "Oh no. I need a UI for this. Not everything can be made into a TUI... or can it..". This would lead me to looking at the Templ docs, not understanding how to implement it, and either use the embed package (I LOVE [embed](https://pkg.go.dev/embed)!) or starting a TypeScript frontend, creating a bunch of tsx files and coming to the sudden realization that I gave in to React.
 
-![tech debt](/images/20250322-meme1.png)
+![tech debt](/images/2025/03/20250322-meme1.png)
 
 Templ brings type-safe, component-based HTML templating to the Go ecosystem. When paired with [HTMX](https://htmx.org/) (Yes, I did try the GoTH stack sans Templ and thoroughly enjoyed it), it creates a powerful combination for building interactive web applications with minimal JavaScript.
 
@@ -208,7 +208,7 @@ This config will let us generate and build every time the files are modified. It
 
 Let's start with some basic examples to get a feel for how Templ works with some cat-themed examples.
 
-![cat memes](/images/20250322-meme2.png)
+![cat memes](/images/2025/03/20250322-meme2.png)
 
 ### Your First Templ View
 

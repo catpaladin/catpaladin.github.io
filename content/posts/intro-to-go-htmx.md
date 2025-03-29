@@ -3,7 +3,7 @@ date = '2025-01-23T19:17:55-08:00'
 draft = false
 title = 'Introduction to Go and HTMX'
 tags = ["go", "htmx"]
-featured_image = "/images/go-space.svg"
+featured_image = "/images/gophers/go-space.svg"
 +++
 
 Hello readers. Welcome to my blog!

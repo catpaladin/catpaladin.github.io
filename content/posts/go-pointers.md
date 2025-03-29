@@ -3,7 +3,7 @@ date = '2025-02-28T22:14:22-08:00'
 draft = false
 title = 'A Guide to Pointers in Go'
 tags = ["go", "pointers", "memory", "fundamentals"]
-featured_image = "/images/go-learn.svg"
+featured_image = "/images/gophers/go-learn.svg"
 +++
 
 Let's get real about pointers in Go—they're not the scary beasts you might remember from C (if you came from that CS background). Go's pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.
@@ -12,7 +12,7 @@ Let's get real about pointers in Go—they're not the scary beasts you might rem
 
 This blog introduces pointers, a fundamental programming concept many developers struggle with. Having worked with numerous senior Cloud Engineers, SREs, and Platform Engineers who, despite years of industry experience, have only Python knowledge and limited exposure to memory management concepts, I've crafted this primer to establish essential context before diving into the main teachings.
 
-![true story](/images/20250301-meme1.png)
+![true story](/images/2025/03/20250301-meme1.png)
 
 If you're coming from Python, you might be wondering why we even need pointers. After all, Python handles everything behind the scenes, right? Well, that's exactly the point - and also the limitation.
 
@@ -275,7 +275,7 @@ flowchart LR
 
 ### Example 3: Pointers to Structs
 
-![Struct pointers](/images/20250301-meme2.png)
+![Struct pointers](/images/2025/03/20250301-meme2.png)
 
 Struct pointers are extremely common in Go for modifying complex data types:
 
@@ -567,7 +567,7 @@ Use pointers when you need to modify a value, when working with large data struc
 
 ## Common Pitfalls with Pointers
 
-![always blame releng](/images/20250301-meme3.png)
+![always blame releng](/images/2025/03/20250301-meme3.png)
 
 While Go's pointers are safer than those in C/C++, there are still some common mistakes to avoid:
 
