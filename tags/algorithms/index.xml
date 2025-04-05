@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Algorithms on It's Go time!</title><link>https://blog.mikesahari.com/tags/algorithms/</link><description>Recent content in Algorithms on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>It's Go time!</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Sat, 05 Apr 2025 14:30:41 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/algorithms/index.xml" rel="self" type="application/rss+xml"/><item><title>Mastering DSAs in Go: The Big-O Guide [Part 1]</title><link>https://blog.mikesahari.com/posts/dsa-part1-big-o/</link><pubDate>Sat, 05 Apr 2025 14:30:41 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/dsa-part1-big-o/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-grow.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
+        <p>I&rsquo;ve been really enjoying teaching fundamentals in Go, recently. If you haven&rsquo;t read any
+of my other blogs or are new to go, I strongly recommend checking out my
+<a href="https://blog.mikesahari.com/tags/fundamentals/">fundamentals</a> posts. I started this
+blog as a next step, and before I knew it I was writing something way too long to share.
+This will be the first part of a blog series on data structures and algorithms; and of
+course, in Go!</p>
+      ]]></description></item></channel></rss>

@@ -1,0 +1,462 @@
+<!doctype html><html lang=en-us><head><title>Mastering DSAs in Go: The Big-O Guide [Part 1] // It's Go time!</title>
+<link rel="shortcut icon" href=images/gopher_favicon.svg><meta charset=utf-8><meta name=generator content="Hugo 0.145.0"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Mastering DSAs in Go: The Big-O Guide [Part 1]"><meta property="og:description" content="I&rsquo;ve been really enjoying teaching fundamentals in Go, recently. If you haven&rsquo;t read any
+of my other blogs or are new to go, I strongly recommend checking out my
+fundamentals posts. I started this
+blog as a next step, and before I knew it I was writing something way too long to share.
+This will be the first part of a blog series on data structures and algorithms; and of
+course, in Go!"><meta property="og:type" content="article"><meta property="og:url" content="https://blog.mikesahari.com/posts/dsa-part1-big-o/"><meta property="og:image" content="https://blog.mikesahari.com/images/gophers/go-grow.png"><meta property="og:image:secure_url" content="https://blog.mikesahari.com/images/gophers/go-grow.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><link rel=stylesheet href=/css/main.min.b37ba17c9ff2695938f19925e96fb7afaa9d51743ea79f35d668e4e8bacfc19d.css><style>.top-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background-color:#2c3e50;background-image:linear-gradient(to right,#2c3e50,#4a6785);position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.2)}.top-nav-title-link{text-decoration:none;color:inherit;transition:opacity .2s;display:flex;align-items:center;margin-right:auto}.top-nav-title-link:hover{opacity:.85}.top-nav-title{font-weight:700;padding-right:20px;font-size:1.2rem;letter-spacing:.5px;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.3)}.top-nav-social{display:flex;align-items:center;margin-right:20px}.top-nav-social a{margin-left:15px;color:#fff;font-size:1.25rem;transition:transform .2s,color .2s}.top-nav-social a:hover{transform:scale(1.15);color:#64b5f6}.menu-container{position:relative;z-index:1000}.menu-button{display:flex;flex-direction:column;justify-content:space-between;width:30px;height:24px;background:0 0;border:none;cursor:pointer;padding:0;transition:transform .2s}.menu-button:hover{transform:scale(1.1)}.menu-button-line{display:block;width:100%;height:3px;background-color:#fff;border-radius:3px;transition:all .3s linear}.menu-button.active .menu-button-line:nth-child(1){transform:translateY(10.5px)rotate(45deg)}.menu-button.active .menu-button-line:nth-child(2){opacity:0}.menu-button.active .menu-button-line:nth-child(3){transform:translateY(-10.5px)rotate(-45deg)}.menu-dropdown{position:absolute;top:35px;right:0;background-color:#2c3e50;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.3);min-width:180px;display:none;padding:10px 0;border-top:3px solid #64b5f6}.menu-dropdown.active{display:block;animation:fadeIn .2s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.menu-dropdown a{display:block;padding:10px 20px;text-decoration:none;color:#fff;font-size:1rem;transition:background-color .2s}.menu-dropdown a:hover{background-color:rgba(100,181,246,.2);padding-left:24px}@media(max-width:600px){.top-nav{padding:10px 16px}.top-nav-title{font-size:1rem}.top-nav-social a{margin-left:12px}}</style><meta name=twitter:card content="summary"><meta name=twitter:title content="Mastering DSAs in Go: The Big-O Guide [Part 1]"><meta name=twitter:description content="I’ve been really enjoying teaching fundamentals in Go, recently. If you haven’t read any of my other blogs or are new to go, I strongly recommend checking out my fundamentals posts. I started this blog as a next step, and before I knew it I was writing something way too long to share. This will be the first part of a blog series on data structures and algorithms; and of course, in Go!"><meta property="og:url" content="https://blog.mikesahari.com/posts/dsa-part1-big-o/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Mastering DSAs in Go: The Big-O Guide [Part 1]"><meta property="og:description" content="I’ve been really enjoying teaching fundamentals in Go, recently. If you haven’t read any of my other blogs or are new to go, I strongly recommend checking out my fundamentals posts. I started this blog as a next step, and before I knew it I was writing something way too long to share. This will be the first part of a blog series on data structures and algorithms; and of course, in Go!"><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-04-05T14:30:41-07:00"><meta property="article:modified_time" content="2025-04-05T14:30:41-07:00"><meta property="article:tag" content="Go"><meta property="article:tag" content="Algorithms"><meta property="article:tag" content="Performance"><meta property="article:tag" content="Big-O"><meta property="article:tag" content="Computer-Science"></head><body><div id=scroll-indicator-container><div id=scroll-indicator></div></div><div class=top-nav><a href=/ class=top-nav-title-link><span class=top-nav-title>It's Go time!</span></a><div class=top-nav-social><a href=https://linkedin.com/in/mike-sahari target=_blank rel="noreferrer noopener me" aria-label=LinkedIn><svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentcolor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853.0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601.0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144.0-2.063-.926-2.063-2.065.0-1.138.92-2.063 2.063-2.063 1.14.0 2.064.925 2.064 2.063.0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225.0H1.771C.792.0.0.774.0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2.0 22.222.0h.003z"/></svg>
+</a><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me" aria-label=Github><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me" aria-label=Mastodon><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg>
+</a><a href=https://bsky.app/profile/msahari.bsky.social target=_blank rel="noreferrer noopener me" aria-label=Bluesky><svg class="icon icon-brand-bluesky" viewBox="0 0 24 24" fill="currentcolor"><title>Bluesky</title><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908.0 3.08.0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741.0 01-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478.0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg></a></div><div class=menu-container><button class=menu-button aria-label="Toggle menu">
+<span class=menu-button-line></span>
+<span class=menu-button-line></span>
+<span class=menu-button-line></span></button><div class=menu-dropdown><a href=/>Blogs</a>
+<a href=/tags/>Tags</a>
+<a href=/about/>About</a>
+<a href=/index.xml>RSS</a></div></div></div><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Mastering DSAs in Go: The Big-O Guide [Part 1]</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+Apr 5, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+15 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/go/>Go</a>
+<a class=tag href=/tags/algorithms/>Algorithms</a>
+<a class=tag href=/tags/performance/>Performance</a>
+<a class=tag href=/tags/big-o/>Big-O</a>
+<a class=tag href=/tags/computer-science/>Computer-Science</a></div></div></header><br><div class=post-featured-image><img src=/images/gophers/go-grow.svg alt="Mastering DSAs in Go: The Big-O Guide [Part 1]"></div><br><div class=post-toc><div class=post-toc-title>Table of Contents</div><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#what-is-big-o-notation>What is Big-O Notation?</a></li><li><a href=#understanding-complexity-classes-in-practice>Understanding Complexity Classes in Practice</a><ul><li><a href=#o1---constant-time-the-speed-champion>O(1) - Constant Time: The Speed Champion</a></li><li><a href=#olog-n---logarithmic-time-the-efficient-divider>O(log n) - Logarithmic Time: The Efficient Divider</a></li><li><a href=#on---linear-time-the-honest-worker>O(n) - Linear Time: The Honest Worker</a></li><li><a href=#on-log-n---linearithmic-time-the-practical-sorter>O(n log n) - Linearithmic Time: The Practical Sorter</a></li><li><a href=#on---quadratic-time-the-brute-force-approach>O(n²) - Quadratic Time: The Brute-Force Approach</a></li></ul></li><li><a href=#practical-performance-comparison>Practical Performance Comparison</a></li><li><a href=#go-standard-library-performance-tips>Go Standard Library Performance Tips</a></li><li><a href=#beyond-big-o-the-devil-in-the-details>Beyond Big-O: The Devil in the Details</a></li><li><a href=#when-to-optimize>When to Optimize?</a></li><li><a href=#conclusion>Conclusion</a></li><li><a href=#references>References</a></li></ul></nav></div></div><style>.post-toc{background-color:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin:20px 0}.post-toc-title{font-weight:700;margin-bottom:10px;color:#00b0ff;font-size:1.2em}.post-toc-content ul{list-style-type:none;padding-left:15px}.post-toc-content ul li{margin-bottom:8px}.post-toc-content ul li a{text-decoration:none;color:#263238;transition:color .2s}.post-toc-content ul li a:hover{color:#00b0ff}@media(prefers-color-scheme:dark){.post-toc{background-color:#263238;border-color:#253031}.post-toc-content ul li a{color:#afbac4}}</style><div class=post-content><p>I&rsquo;ve been really enjoying teaching fundamentals in Go, recently. If you haven&rsquo;t read any
+of my other blogs or are new to go, I strongly recommend checking out my
+<a href=https://blog.mikesahari.com/tags/fundamentals/>fundamentals</a> posts. I started this
+blog as a next step, and before I knew it I was writing something way too long to share.
+This will be the first part of a blog series on data structures and algorithms; and of
+course, in Go!</p><p>In my opinion, understanding algorithm complexity is non-negotiable for writing
+efficient code. But let&rsquo;s face it, you&rsquo;re not always going to work on a team where
+engineers write efficient code (let alone an algorithm!). Even worse, you may work in a
+larger team with tech leads that don&rsquo;t understand algorithms; resulting in your newer
+engineers missing out on the chance for proper mentorship in coding (or be taught bad
+practices!).</p><p><img src=/images/2025/04/20250405-meme1.png alt="think mark think"></p><p>Big-O isn&rsquo;t just academic theory—it&rsquo;s a practical tool that determines whether your
+application will handle 10,000 users or crash when the 101st person logs in. Whether
+you&rsquo;re new to Big-O or interested in learning it in Go, this blog will help teach you
+about these algorithms.</p><h2 id=what-is-big-o-notation>What is Big-O Notation?</h2><p>Big-O notation is how we describe an algorithm&rsquo;s efficiency as input size grows. It&rsquo;s
+like a speed limit sign for your code—telling you not how fast your algorithm runs on
+your M2 MacBook Pro, but how it will perform when your data grows from kilobytes to
+gigabytes.</p><style>.admonition{border-radius:5px;padding:0;border-left:5px solid #00bcf6;box-shadow:0 0 .5rem .2rem #00000025}.admonition-title-container{background-color:#00bcf6;border-top-right-radius:5px}.admonition-title{font-weight:bolder;font-size:large;backdrop-filter:grayscale(50%)brightness(150%);-webkit-backdrop-filter:grayscale(50%)brightness(150%);padding:5px 0 5px 30px;border-top-right-radius:5px}@media(prefers-color-scheme:dark){.admonition-title{backdrop-filter:grayscale(40%)brightness(40%);-webkit-backdrop-filter:grayscale(40%)brightness(40%)}}.admonition-content{padding:10px 0 10px 15px}</style><div class=admonition style="border-left:5px solid #283593"><div class=admonition-title-container style=background-color:#283593><div class=admonition-title>📝 Note</div></div><div class=admonition-content>Big-O notation describes the
+worst-case scenario for your algorithm&rsquo;s time or space complexity. It answers: &ldquo;How does
+my algorithm&rsquo;s performance scale?&rdquo; rather than &ldquo;How fast is my function right now?&rdquo;</div></div><p>In essence, Big-O focuses on the growth rate of time or space requirements as the input
+size increases toward infinity, ignoring constants and lower-order terms that become
+insignificant with large inputs.</p><pre class=mermaid>flowchart LR
+    classDef default fill:#2d333b,stroke:#3b454e,color:#adbac7
+    classDef constant fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    classDef logarithmic fill:#004d40,stroke:#00796b,color:#e0f2f1
+    classDef linear fill:#b71c1c,stroke:#e53935,color:#ffebee
+    classDef linearithmic fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    classDef quadratic fill:#880e4f,stroke:#d81b60,color:#fce4ec
+    classDef exponential fill:#3e2723,stroke:#6d4c41,color:#efebe9
+
+    A[&#34;&lt;b&gt;Common Big O Complexities&lt;/b&gt;&#34;] --&gt; B[&#34;O(1): Constant&#34;]
+    A --&gt; C[&#34;O(log n): Logarithmic&#34;]
+    A --&gt; D[&#34;O(n): Linear&#34;]
+    A --&gt; E[&#34;O(n log n): Linearithmic&#34;]
+    A --&gt; F[&#34;O(n²): Quadratic&#34;]
+    A --&gt; G[&#34;O(2^n): Exponential&#34;]
+
+    B:::constant
+    C:::logarithmic
+    D:::linear
+    E:::linearithmic
+    F:::quadratic
+    G:::exponential
+</pre><h2 id=understanding-complexity-classes-in-practice>Understanding Complexity Classes in Practice</h2><p>Let&rsquo;s explore these complexity classes with practical Go implementations and see exactly
+what happens as our inputs grow.</p><h3 id=o1---constant-time-the-speed-champion>O(1) - Constant Time: The Speed Champion</h3><p><img src=/images/2025/04/20250405-meme2.png alt="speed champion"></p><p>Operations that execute in the same time regardless of input size. This is the gold
+standard we strive for.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// GetMapValue is an example of Constant Time</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>GetMapValue</span>(<span style=color:#a6e22e>m</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>key</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>bool</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>val</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>m</span>[<span style=color:#a6e22e>key</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>val</span>, <span style=color:#a6e22e>exists</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This function performs a hash table lookup which takes the same amount of time whether
+your map has 10 entries or 10 million. Go&rsquo;s maps are implemented as hash tables, giving
+us O(1) average-case access time.</p><p>Here&rsquo;s what happens behind the scenes:</p><pre class=mermaid>flowchart TD
+    A[Start GetMapValue] --&gt; B[&#34;Compute hash of key&#34;]
+    B --&gt; C[&#34;Locate bucket based on hash&#34;]
+    C --&gt; D[&#34;Search bucket for key&#34;]
+    D --&gt; E{&#34;Key found?&#34;}
+    E --&gt;|Yes| F[&#34;Return value and true&#34;]
+    E --&gt;|No| G[&#34;Return zero value and false&#34;]
+
+    subgraph &#34;Performance Analysis&#34;
+    H[&#34;Map size: 10&#34;] --&gt; I[&#34;Operations: ~3&#34;]
+    J[&#34;Map size: 1,000,000&#34;] --&gt; K[&#34;Operations: ~3&#34;]
+    end
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style E fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style F fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style G fill:#880e4f,stroke:#d81b60,color:#fce4ec
+    style H fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style I fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style J fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style K fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+</pre><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>While Go maps provide O(1) lookups on
+average, their worst-case performance can degrade to O(n) under pathological hash
+collision cases. In practice, Go&rsquo;s implementation mitigates this by using a good hash
+function and automatically growing the hash table when needed.</div></div><p>The beauty of O(1) operations is their predictability—they&rsquo;ll perform the same whether
+your app has 10 users or 10 million. This is why we love them for hot paths in our code.</p><h3 id=olog-n---logarithmic-time-the-efficient-divider>O(log n) - Logarithmic Time: The Efficient Divider</h3><p><img src=/images/2025/04/20250405-meme3.png alt="binary search"></p><p>Algorithms that reduce the problem size by a fraction (typically half) with each step.
+The binary search is the poster child here.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// BinarySearch is an example of Logarithmic Time</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>BinarySearch</span>(<span style=color:#a6e22e>sorted</span> []<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>target</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>left</span>, <span style=color:#a6e22e>right</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>, len(<span style=color:#a6e22e>sorted</span>)<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>left</span> <span style=color:#f92672>&lt;=</span> <span style=color:#a6e22e>right</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>mid</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>left</span> <span style=color:#f92672>+</span> (<span style=color:#a6e22e>right</span><span style=color:#f92672>-</span><span style=color:#a6e22e>left</span>)<span style=color:#f92672>/</span><span style=color:#ae81ff>2</span> <span style=color:#75715e>// Avoids integer overflow</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>switch</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#a6e22e>sorted</span>[<span style=color:#a6e22e>mid</span>] <span style=color:#f92672>==</span> <span style=color:#a6e22e>target</span>:
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>mid</span> <span style=color:#75715e>// Found it!</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#a6e22e>sorted</span>[<span style=color:#a6e22e>mid</span>] &lt; <span style=color:#a6e22e>target</span>:
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>left</span> = <span style=color:#a6e22e>mid</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#75715e>// Look in the right half</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#a6e22e>sorted</span>[<span style=color:#a6e22e>mid</span>] &gt; <span style=color:#a6e22e>target</span>:
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>right</span> = <span style=color:#a6e22e>mid</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span> <span style=color:#75715e>// Look in the left half</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span> <span style=color:#75715e>// Target not found</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Let&rsquo;s trace through this with a concrete example:</p><pre tabindex=0><code>sorted = [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+target = 23
+</code></pre><ol><li>Initial state: <code>left=0, right=9, mid=4, sorted[mid]=16</code></li><li>16 &lt; 23, so we set <code>left=5</code></li><li>New state: <code>left=5, right=9, mid=7, sorted[mid]=56</code></li><li>56 > 23, so we set <code>right=6</code></li><li>New state: <code>left=5, right=6, mid=5, sorted[mid]=23</code></li><li>23 == 23, return 5</li></ol><p>With just 3 comparisons, we found our target in a list of 10 elements. If we had a
+million elements? It would take around 20 comparisons. That&rsquo;s the power of O(log n).</p><pre class=mermaid>flowchart TD
+    A[&#34;Start BinarySearch&#34;] --&gt; B[&#34;left = 0, right = len(sorted)-1&#34;]
+    B --&gt; C{&#34;left &lt;= right?&#34;}
+    C --&gt;|No| D[&#34;Return -1 (Not Found)&#34;]
+    C --&gt;|Yes| E[&#34;mid = left + (right-left)/2&#34;]
+    E --&gt; F{&#34;sorted[mid] == target?&#34;}
+    F --&gt;|Yes| G[&#34;Return mid (Found)&#34;]
+    F --&gt;|No| H{&#34;sorted[mid] &lt; target?&#34;}
+    H --&gt;|Yes| I[&#34;left = mid + 1&#34;]
+    H --&gt;|No| J[&#34;right = mid - 1&#34;]
+    I --&gt; C
+    J --&gt; C
+
+    subgraph &#34;Performance Growth&#34;
+    K[&#34;Elements: 10&#34;] --&gt; L[&#34;Comparisons: ~3&#34;]
+    M[&#34;Elements: 1,000&#34;] --&gt; N[&#34;Comparisons: ~10&#34;]
+    O[&#34;Elements: 1,000,000&#34;] --&gt; P[&#34;Comparisons: ~20&#34;]
+    end
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style D fill:#880e4f,stroke:#d81b60,color:#fce4ec
+    style E fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style F fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style G fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style H fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style I fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style J fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style K fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style L fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style M fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style N fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style O fill:#3e2723,stroke:#6d4c41,color:#efebe9
+    style P fill:#3e2723,stroke:#6d4c41,color:#efebe9
+</pre><div class=admonition style="border-left:5px solid #69f0ae"><div class=admonition-title-container style=background-color:#69f0ae><div class=admonition-title>🗨️ Example</div></div><div class=admonition-content><p>The Go standard library uses
+binary search in several places, like the <code>sort.Search</code> function. Here&rsquo;s how you&rsquo;d use
+it to find the position to insert a new element while maintaining order:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;sort&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>FindInsertPosition</span>(<span style=color:#a6e22e>sorted</span> []<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>value</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>sort</span>.<span style=color:#a6e22e>Search</span>(len(<span style=color:#a6e22e>sorted</span>), <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>i</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>sorted</span>[<span style=color:#a6e22e>i</span>] <span style=color:#f92672>&gt;=</span> <span style=color:#a6e22e>value</span>
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div></div></div><p>Remember that binary search requires sorted data, which is a crucial prerequisite. If
+your data isn&rsquo;t sorted, you&rsquo;ll need to sort it first (typically an O(n log n)
+operation), which changes the overall performance characteristics.</p><h3 id=on---linear-time-the-honest-worker>O(n) - Linear Time: The Honest Worker</h3><p><img src=/images/2025/04/20250405-meme4.png alt="honest worker"></p><p>Operations where execution time grows in direct proportion to input size. Every element
+gets processed exactly once.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// ContainsElement is an example of Linear Time</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>ContainsElement</span>(<span style=color:#a6e22e>slice</span> []<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>target</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>val</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>slice</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>val</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>target</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This might look simple, but don&rsquo;t underestimate it. Linear algorithms are often the best
+you can do for unsorted data, and they&rsquo;re predictable and cache-friendly. The time
+required scales directly with the input size.</p><pre class=mermaid>flowchart TD
+    A[&#34;Start ContainsElement&#34;] --&gt; B[&#34;i = 0&#34;]
+    B --&gt; C{&#34;i &lt; len(slice)?&#34;}
+    C --&gt;|No| D[&#34;Return false&#34;]
+    C --&gt;|Yes| E{&#34;slice[i] == target?&#34;}
+    E --&gt;|Yes| F[&#34;Return true&#34;]
+    E --&gt;|No| G[&#34;i++&#34;]
+    G --&gt; C
+
+    subgraph &#34;Performance Scaling&#34;
+    K[&#34;Elements: 10&#34;] --&gt; L[&#34;Iterations: 1-10&#34;]
+    M[&#34;Elements: 1,000&#34;] --&gt; N[&#34;Iterations: 1-1,000&#34;]
+    O[&#34;Elements: 1,000,000&#34;] --&gt; P[&#34;Iterations: 1-1,000,000&#34;]
+    end
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style D fill:#880e4f,stroke:#d81b60,color:#fce4ec
+    style E fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style F fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style G fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style K fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style L fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style M fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style N fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style O fill:#3e2723,stroke:#6d4c41,color:#efebe9
+    style P fill:#3e2723,stroke:#6d4c41,color:#efebe9
+</pre><div class=admonition style="border-left:5px solid #01579b"><div class=admonition-title-container style=background-color:#01579b><div class=admonition-title>📌 Important</div></div><div class=admonition-content>Go&rsquo;s slice iteration with
+<code>range</code> is highly optimized. The compiler can eliminate bounds checking in many
+situations, making linear scans extremely efficient—sometimes approaching the
+theoretical memory bandwidth limit of your hardware.</div></div><p>Linear algorithms are often unavoidable when you need to process all elements at least
+once, such as when calculating sums, finding maximum values, or checking if all elements
+meet a condition.</p><h3 id=on-log-n---linearithmic-time-the-practical-sorter>O(n log n) - Linearithmic Time: The Practical Sorter</h3><p><img src=/images/2025/04/20250405-meme5.png alt="comparison sorter"></p><p>Found in efficient sorting algorithms and divide-and-conquer approaches, O(n log n)
+represents the best possible time complexity for comparison-based sorting.</p><p>Go&rsquo;s standard library sort package implements an optimized version of quicksort (with
+insertion sort for small slices) that achieves O(n log n) average-case performance:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// QuickSort is an example of Linearithmic Time</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>QuickSort</span>(<span style=color:#a6e22e>arr</span> []<span style=color:#66d9ef>int</span>) []<span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Make a copy to avoid modifying input</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, len(<span style=color:#a6e22e>arr</span>))
+</span></span><span style=display:flex><span>    copy(<span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>arr</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Call the recursive helper</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>quickSortHelper</span>(<span style=color:#a6e22e>result</span>, <span style=color:#ae81ff>0</span>, len(<span style=color:#a6e22e>result</span>)<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>result</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>quickSortHelper</span>(<span style=color:#a6e22e>arr</span> []<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>low</span>, <span style=color:#a6e22e>high</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>low</span> &lt; <span style=color:#a6e22e>high</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Partition the array and get the pivot index</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>pivotIndex</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>partition</span>(<span style=color:#a6e22e>arr</span>, <span style=color:#a6e22e>low</span>, <span style=color:#a6e22e>high</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Recursively sort the sub-arrays</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>quickSortHelper</span>(<span style=color:#a6e22e>arr</span>, <span style=color:#a6e22e>low</span>, <span style=color:#a6e22e>pivotIndex</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>quickSortHelper</span>(<span style=color:#a6e22e>arr</span>, <span style=color:#a6e22e>pivotIndex</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>, <span style=color:#a6e22e>high</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>partition</span>(<span style=color:#a6e22e>arr</span> []<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>low</span>, <span style=color:#a6e22e>high</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Choose the rightmost element as pivot</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>pivot</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>high</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Index of smaller element</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>low</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>j</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>low</span>; <span style=color:#a6e22e>j</span> &lt; <span style=color:#a6e22e>high</span>; <span style=color:#a6e22e>j</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// If current element is smaller than the pivot</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span>] <span style=color:#f92672>&lt;=</span> <span style=color:#a6e22e>pivot</span> {
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Increment index of smaller element</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>i</span>], <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span>] = <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span>], <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>i</span>]
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Swap the pivot element with the element at (i+1)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>i</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>], <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>high</span>] = <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>high</span>], <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>i</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Return the partition index</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #69f0ae"><div class=admonition-title-container style=background-color:#69f0ae><div class=admonition-title>🗨️ Example</div></div><div class=admonition-content><p>In this example, we used <code>copy</code>.
+If you are not familiar with how this works, it accepts a destination slice type and a
+source slice type.</p><p>So in our use above, we copied all the values from <code>arr</code> into <code>result</code>. Without this
+copy step, you&rsquo;d be modifying the original slice that was passed in, which could lead to
+unexpected side effects.</p></div></div><p>Now let&rsquo;s analyze what happens during a quicksort with a small example:</p><pre tabindex=0><code>arr = [38, 27, 43, 3, 9, 82, 10]
+</code></pre><p>The recursive partitioning creates a tree-like structure of work:</p><pre class=mermaid>flowchart TD
+    subgraph &#34;QuickSort Process Example&#34;
+    A[&#34;[38, 27, 43, 3, 9, 82, 10]&#34;] --&gt; B[&#34;Pivot = 10&#34;]
+    B --&gt; C[&#34;[3, 9, 10] + [38, 27, 43, 82]&#34;]
+    C --&gt; D[&#34;Pivot = 9&#34;]
+    C --&gt; E[&#34;Pivot = 27&#34;]
+    D --&gt; F[&#34;[3] + [9] + [10]&#34;]
+    E --&gt; G[&#34;[27] + [38, 43, 82]&#34;]
+    G --&gt; H[&#34;Pivot = 82&#34;]
+    H --&gt; I[&#34;[38, 43] + [82]&#34;]
+    I --&gt; J[&#34;Pivot = 43&#34;]
+    J --&gt; K[&#34;[38] + [43] + [82]&#34;]
+    end
+
+    subgraph &#34;Performance Analysis&#34;
+    L[&#34;Elements: 10&#34;] --&gt; M[&#34;Operations: ~30&#34;]
+    N[&#34;Elements: 1,000&#34;] --&gt; O[&#34;Operations: ~10,000&#34;]
+    P[&#34;Elements: 1,000,000&#34;] --&gt; Q[&#34;Operations: ~20,000,000&#34;]
+    end
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style E fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style F fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style G fill:#880e4f,stroke:#d81b60,color:#fce4ec
+    style H fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style I fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style J fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style K fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style L fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style M fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style N fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style O fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style P fill:#3e2723,stroke:#6d4c41,color:#efebe9
+    style Q fill:#3e2723,stroke:#6d4c41,color:#efebe9
+</pre><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content><p>In Go, prefer using the standard
+library&rsquo;s <code>sort</code> package for sorting needs rather than implementing your own. It&rsquo;s
+well-optimized and handles edge cases properly:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#e6db74>&#34;sort&#34;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// For slices of basic types</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>nums</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>6</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>4</span>}
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sort</span>.<span style=color:#a6e22e>Ints</span>(<span style=color:#a6e22e>nums</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// For custom sorting</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>sort</span>.<span style=color:#a6e22e>Slice</span>(<span style=color:#a6e22e>people</span>, <span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>j</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>people</span>[<span style=color:#a6e22e>i</span>].<span style=color:#a6e22e>Age</span> &lt; <span style=color:#a6e22e>people</span>[<span style=color:#a6e22e>j</span>].<span style=color:#a6e22e>Age</span>
+</span></span><span style=display:flex><span>})
+</span></span></code></pre></div></div></div><p>The O(n log n) complexity comes from:</p><ul><li>The recursive partitioning creates a tree of height log n (divide)</li><li>At each level, we do about n work comparing elements (conquer)</li></ul><p>This makes it much more efficient than quadratic algorithms for large datasets. When
+sorting a million elements, quicksort would perform about 20 million operations compared
+to a trillion for bubble sort!</p><h3 id=on---quadratic-time-the-brute-force-approach>O(n²) - Quadratic Time: The Brute-Force Approach</h3><p><img src=/images/2025/04/20250405-meme6.png alt=savages></p><p>Characterized by nested loops, quadratic algorithms quickly become impractical as data
+size grows.</p><p>I once had an engineer message me on Slack, asking how I was able to retrieve a ton of
+data so fast. He asked if it was because I was using Go and because he was using Python.
+When I told him that was part of the reason, he said he was just going to use AI to
+rewrite it in Go; but before he went down the vibe coding route with his Cursor setup, I
+asked a bunch of leading questions about how he was processing the data. Turns out, he
+had vibe coded a very poor implementation of bubble sort (without understanding it)!</p><p>Let&rsquo;s take a look at a cleaner implementation of bubble sort.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Bubble Sort is an example of Quadratic Time</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>BubbleSort</span>(<span style=color:#a6e22e>arr</span> []<span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>n</span> <span style=color:#f92672>:=</span> len(<span style=color:#a6e22e>arr</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>i</span> &lt; <span style=color:#a6e22e>n</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>swapped</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>j</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>; <span style=color:#a6e22e>j</span> &lt; <span style=color:#a6e22e>n</span><span style=color:#f92672>-</span><span style=color:#a6e22e>i</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>; <span style=color:#a6e22e>j</span><span style=color:#f92672>++</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span>] &gt; <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>] {
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span>], <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>] = <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span>], <span style=color:#a6e22e>arr</span>[<span style=color:#a6e22e>j</span>]
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>swapped</span> = <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// If no swapping occurred in this pass, the array is sorted</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>swapped</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Bubble sort performs comparisons and swaps between adjacent elements, gradually
+&ldquo;bubbling&rdquo; the largest elements to their correct positions. Let&rsquo;s walk through it:</p><pre tabindex=0><code>arr = [5, 3, 8, 4, 2]
+
+Pass 1:
+Compare 5 &amp; 3 → Swap → [3, 5, 8, 4, 2]
+Compare 5 &amp; 8 → No swap → [3, 5, 8, 4, 2]
+Compare 8 &amp; 4 → Swap → [3, 5, 4, 8, 2]
+Compare 8 &amp; 2 → Swap → [3, 5, 4, 2, 8]
+
+Pass 2:
+Compare 3 &amp; 5 → No swap → [3, 5, 4, 2, 8]
+Compare 5 &amp; 4 → Swap → [3, 4, 5, 2, 8]
+Compare 5 &amp; 2 → Swap → [3, 4, 2, 5, 8]
+
+Pass 3:
+Compare 3 &amp; 4 → No swap → [3, 4, 2, 5, 8]
+Compare 4 &amp; 2 → Swap → [3, 2, 4, 5, 8]
+
+Pass 4:
+Compare 3 &amp; 2 → Swap → [2, 3, 4, 5, 8]
+
+Final: [2, 3, 4, 5, 8]
+</code></pre><pre class=mermaid>flowchart TD
+    A[&#34;Start BubbleSort&#34;] --&gt; B[&#34;n = len(arr)&#34;]
+    B --&gt; C[&#34;Loop i from 0 to n-1&#34;]
+    C --&gt; D[&#34;swapped = false&#34;]
+    D --&gt; E[&#34;Loop j from 0 to n-i-2&#34;]
+    E --&gt; F{&#34;arr[j] &gt; arr[j+1]?&#34;}
+    F --&gt;|Yes| G[&#34;Swap arr[j] and arr[j+1]&#34;]
+    G --&gt; H[&#34;swapped = true&#34;]
+    F --&gt;|No| I[&#34;j++&#34;]
+    H --&gt; I
+    I --&gt; J{&#34;j &lt; n-i-1?&#34;}
+    J --&gt;|Yes| E
+    J --&gt;|No| K{&#34;swapped?&#34;}
+    K --&gt;|Yes| L[&#34;i++&#34;]
+    K --&gt;|No| M[&#34;Break outer loop&#34;]
+    L --&gt; N{&#34;i &lt; n?&#34;}
+    N --&gt;|Yes| C
+    N --&gt;|No| O[&#34;End&#34;]
+    M --&gt; O
+
+    subgraph &#34;Time Complexity Growth&#34;
+    P[&#34;Elements: 10&#34;] --&gt; Q[&#34;Comparisons: ~45&#34;]
+    R[&#34;Elements: 100&#34;] --&gt; S[&#34;Comparisons: ~4,950&#34;]
+    T[&#34;Elements: 1,000&#34;] --&gt; U[&#34;Comparisons: ~499,500&#34;]
+    end
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style E fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style F fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style G fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style H fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style I fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style J fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style K fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style L fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style M fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style N fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style O fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style P fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style Q fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
+    style R fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style S fill:#01579b,stroke:#0288d1,color:#e1f5fe
+    style T fill:#3e2723,stroke:#6d4c41,color:#efebe9
+    style U fill:#3e2723,stroke:#6d4c41,color:#efebe9
+</pre><div class=admonition style="border-left:5px solid #00e5ff"><div class=admonition-title-container style=background-color:#00e5ff><div class=admonition-title>🚨 Caution</div></div><div class=admonition-content><p>Quadratic algorithms become
+impractical very quickly. For n = 1,000, a bubble sort performs nearly 500,000
+comparisons. For n = 1,000,000, it would require about 500 billion comparisons! This is
+why we almost never use bubble sort in production code (or do we?).</p><p><img src=/images/2025/04/20250405-meme7.png alt="bubble sort 2 prod"></p></div></div><p>Despite their inefficiency, quadratic algorithms sometimes appear in code bases:</p><ol><li>When processing small datasets where the simplicity of implementation outweighs
+performance concerns</li><li>When the nested loops perform constant-time operations, making the code appear
+simpler</li><li>In legacy code (languishing) that hasn&rsquo;t been optimized</li></ol><p>Always be suspicious of nested loops in performance-critical code paths, as they often
+indicate O(n²) complexity.</p><h2 id=practical-performance-comparison>Practical Performance Comparison</h2><p>To drive home the dramatic differences between these complexity classes, let&rsquo;s look at
+how they scale with input size:</p><table><thead><tr><th>Input Size</th><th>O(1)</th><th>O(log n)</th><th>O(n)</th><th>O(n log n)</th><th>O(n²)</th></tr></thead><tbody><tr><td>10</td><td>1</td><td>3</td><td>10</td><td>30</td><td>100</td></tr><tr><td>100</td><td>1</td><td>7</td><td>100</td><td>700</td><td>10,000</td></tr><tr><td>1,000</td><td>1</td><td>10</td><td>1,000</td><td>10,000</td><td>1,000,000</td></tr><tr><td>1,000,000</td><td>1</td><td>20</td><td>1,000,000</td><td>20,000,000</td><td>1,000,000,000,000</td></tr></tbody></table><p>Notice how the O(n²) algorithm becomes completely impractical for large inputs, while
+O(log n) barely increases as the input size explodes. This is why binary search on a
+sorted array of 1 billion items still completes almost instantly, while a bubble sort
+would take years on the same data.</p><h2 id=go-standard-library-performance-tips>Go Standard Library Performance Tips</h2><p>The Go standard library was designed with performance in mind, and its implementations
+often use clever optimizations to achieve better-than-expected performance:</p><div class=admonition style="border-left:5px solid #01579b"><div class=admonition-title-container style=background-color:#01579b><div class=admonition-title>📌 Important</div></div><div class=admonition-content><p>Go&rsquo;s slice and map operations
+have specific performance characteristics you should know:</p><ul><li><code>append()</code> is amortized O(1) per element, though occasionally it requires O(n) work
+for resizing</li><li>Map iterations with <code>range</code> are O(n) but in random order by design</li><li><code>sort.Sort()</code> uses introsort, a hybrid algorithm with O(n log n) complexity</li><li><code>copy()</code> is O(n) where n is the minimum of the destination and source slice lengths</li></ul></div></div><h2 id=beyond-big-o-the-devil-in-the-details>Beyond Big-O: The Devil in the Details</h2><p>While Big-O notation is crucial, it doesn&rsquo;t tell the whole story:</p><ol><li><strong>Constants matter</strong>: An O(n) algorithm with a high constant factor might be slower
+than an O(n log n) algorithm for practical input sizes</li><li><strong>Memory access patterns</strong>: Go&rsquo;s slice operations are efficient partly because they
+leverage CPU cache locality</li><li><strong>Best/average/worst case</strong>: Some algorithms have different complexity in different
+scenarios</li></ol><p>For example, Go&rsquo;s map lookup is O(1) on average but could degrade to O(n) in the worst
+case with pathological hash collisions. In practice, this almost never happens due to
+Go&rsquo;s implementation details.</p><h2 id=when-to-optimize>When to Optimize?</h2><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>Choosing the right algorithm from the
+start isn&rsquo;t premature optimization—it&rsquo;s good engineering. You can refactor inefficient
+code, but you can&rsquo;t refactor a crashed production system while it&rsquo;s broken!</div></div><p>In Go, the general approach should be:</p><ol><li>Choose algorithms with appropriate complexity for your expected data scale</li><li>Write clean, idiomatic Go code</li><li>Profile to identify actual bottlenecks</li><li>Optimize only where needed</li></ol><h2 id=conclusion>Conclusion</h2><p>Understanding Big-O notation is a foundational skill for every Go developer. It helps
+you make informed decisions about algorithm selection and predict how your application
+will scale as data grows.</p><p>In the next part of this series, we&rsquo;ll dive deeper into data structures and algorithms
+in Go!</p><p>Until then, remember: the difference between O(n) and O(n²) might be the difference
+between a system that scales smoothly and one that collapses under load.</p><h2 id=references>References</h2><ol><li><a href=https://www.bigocheatsheet.com/>Big O Cheat Sheet</a></li><li><a href=https://blog.golang.org/slices-intro>Go Blog: Slices</a></li><li><a href=https://golang.org/pkg/sort/>Go Standard Library - sort package</a></li><li><a href="https://www.youtube.com/watch?v=HtSuA80QTyo">YouTube: MIT Introduction to Algorithms</a></li><li><a href=https://golang.org/doc/effective_go#maps>Go Documentation - Maps</a></li></ol></div><div class=post-footer></div></article></main><script>document.addEventListener("DOMContentLoaded",function(){const e=document.querySelector(".menu-button"),t=document.querySelector(".menu-dropdown");e&&t&&(e.addEventListener("click",function(){e.classList.toggle("active"),t.classList.toggle("active")}),document.addEventListener("click",function(n){!e.contains(n.target)&&!t.contains(n.target)&&(e.classList.remove("active"),t.classList.remove("active"))}));const s=document.getElementById("scroll-indicator");function n(){const e=document.body.scrollTop||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,n=e/t*100;s.style.width=n+"%"}window.addEventListener("scroll",n),n()})</script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
