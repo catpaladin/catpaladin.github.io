@@ -1,0 +1,1070 @@
+<!doctype html><html lang=en-us><head><title>Mastering DSAs in Go - Data Structures [Part 2] // It's Go time!</title>
+<link rel="shortcut icon" href=images/gopher_favicon.svg><meta charset=utf-8><meta name=generator content="Hugo 0.147.3"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Mastering DSAs in Go - Data Structures [Part 2]"><meta property="og:description" content="Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you&rsquo;ve missed
+Part 1 on Big O, you can read it
+here.
+Data structures form the foundation of computer science—they&rsquo;re how we organize, store,
+and manipulate information in ways that mirror how we think and solve problems. Far
+beyond mere implementation details, these abstractions shape how we conceptualize
+computational challenges. Whether you&rsquo;re building a search engine indexing billions of
+webpages, an operating system managing memory resources, or a mobile app tracking user
+interactions, choosing the right data structure can mean the difference between a
+solution that scales gracefully and one that becomes that legacy tech debt app that
+engineers share stories about, blaming the original designer (you know who you are)."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.mikesahari.com/posts/dsa-part2-data-structures/"><meta property="og:image" content="https://blog.mikesahari.com/images/gophers/go-learn.png"><meta property="og:image:secure_url" content="https://blog.mikesahari.com/images/gophers/go-learn.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><link rel=stylesheet href=/css/main.min.216aa339707d2caeee70aeddfac721c3782663a9b44fd9e673a60def25ab54b7.css><style>.top-nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background-color:#2c3e50;background-image:linear-gradient(to right,#2c3e50,#4a6785);position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.2)}.top-nav-title-link{text-decoration:none;color:inherit;transition:opacity .2s;display:flex;align-items:center;margin-right:auto}.top-nav-title-link:hover{opacity:.85}.top-nav-title{font-weight:700;padding-right:20px;font-size:1.2rem;letter-spacing:.5px;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.3)}.top-nav-social{display:flex;align-items:center;margin-right:20px}.top-nav-social a{margin-left:15px;color:#fff;font-size:1.25rem;transition:transform .2s,color .2s}.top-nav-social a:hover{transform:scale(1.15);color:#64b5f6}.menu-container{position:relative;z-index:1000}.menu-button{display:flex;flex-direction:column;justify-content:space-between;width:30px;height:24px;background:0 0;border:none;cursor:pointer;padding:0;transition:transform .2s}.menu-button:hover{transform:scale(1.1)}.menu-button-line{display:block;width:100%;height:3px;background-color:#fff;border-radius:3px;transition:all .3s linear}.menu-button.active .menu-button-line:nth-child(1){transform:translateY(10.5px)rotate(45deg)}.menu-button.active .menu-button-line:nth-child(2){opacity:0}.menu-button.active .menu-button-line:nth-child(3){transform:translateY(-10.5px)rotate(-45deg)}.menu-dropdown{position:absolute;top:35px;right:0;background-color:#2c3e50;border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.3);min-width:180px;display:none;padding:10px 0;border-top:3px solid #64b5f6}.menu-dropdown.active{display:block;animation:fadeIn .2s ease-in-out}@keyframes fadeIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}.menu-dropdown a{display:block;padding:10px 20px;text-decoration:none;color:#fff;font-size:1rem;transition:background-color .2s}.menu-dropdown a:hover{background-color:rgba(100,181,246,.2);padding-left:24px}@media(max-width:600px){.top-nav{padding:10px 16px}.top-nav-title{font-size:1rem}.top-nav-social a{margin-left:12px}}</style><meta name=twitter:card content="summary"><meta name=twitter:title content="Mastering DSAs in Go - Data Structures [Part 2]"><meta name=twitter:description content="Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you’ve missed Part 1 on Big O, you can read it here.
+Data structures form the foundation of computer science—they’re how we organize, store, and manipulate information in ways that mirror how we think and solve problems. Far beyond mere implementation details, these abstractions shape how we conceptualize computational challenges. Whether you’re building a search engine indexing billions of webpages, an operating system managing memory resources, or a mobile app tracking user interactions, choosing the right data structure can mean the difference between a solution that scales gracefully and one that becomes that legacy tech debt app that engineers share stories about, blaming the original designer (you know who you are)."><meta property="og:url" content="https://blog.mikesahari.com/posts/dsa-part2-data-structures/"><meta property="og:site_name" content="It's Go time!"><meta property="og:title" content="Mastering DSAs in Go - Data Structures [Part 2]"><meta property="og:description" content="Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you’ve missed Part 1 on Big O, you can read it here.
+Data structures form the foundation of computer science—they’re how we organize, store, and manipulate information in ways that mirror how we think and solve problems. Far beyond mere implementation details, these abstractions shape how we conceptualize computational challenges. Whether you’re building a search engine indexing billions of webpages, an operating system managing memory resources, or a mobile app tracking user interactions, choosing the right data structure can mean the difference between a solution that scales gracefully and one that becomes that legacy tech debt app that engineers share stories about, blaming the original designer (you know who you are)."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-05-17T14:06:14-07:00"><meta property="article:modified_time" content="2025-05-17T14:06:14-07:00"><meta property="article:tag" content="Go"><meta property="article:tag" content="Programming"><meta property="article:tag" content="Data-Structures"><meta property="article:tag" content="Algorithms"><meta property="article:tag" content="Big-O"><meta property="article:tag" content="Performance"></head><body><div id=scroll-indicator-container><div id=scroll-indicator></div></div><div class=top-nav><a href=/ class=top-nav-title-link><span class=top-nav-title>It's Go time!</span></a><div class=top-nav-social><a href=https://linkedin.com/in/mike-sahari target=_blank rel="noreferrer noopener me" aria-label=LinkedIn><svg class="icon icon-brand-linkedin" viewBox="0 0 24 24" fill="currentcolor"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853.0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601.0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144.0-2.063-.926-2.063-2.065.0-1.138.92-2.063 2.063-2.063 1.14.0 2.064.925 2.064 2.063.0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225.0H1.771C.792.0.0.774.0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2.0 22.222.0h.003z"/></svg>
+</a><a href=https://github.com/catpaladin target=_blank rel="noreferrer noopener me" aria-label=Github><svg class="icon icon-brand-github" viewBox="0 0 24 24" fill="currentcolor"><title>GitHub</title><path d="M12 .297c-6.63.0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577.0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93.0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176.0.0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22.0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22.0 1.606-.015 2.896-.015 3.286.0.315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+</a><a href=https://mastodon.social/@ineedmorecoffee target=_blank rel="noreferrer noopener me" aria-label=Mastodon><svg class="icon icon-brand-mastodon" viewBox="0 0 24 24" fill="currentcolor"><title>Mastodon</title><path d="M23.268 5.313c-.35-2.578-2.617-4.61-5.304-5.004C17.51.242 15.792.0 11.813.0h-.03c-3.98.0-4.835.242-5.288.309C3.882.692 1.496 2.518.917 5.127.64 6.412.61 7.837.661 9.143c.074 1.874.088 3.745.26 5.611.118 1.24.325 2.47.62 3.68.55 2.237 2.777 4.098 4.96 4.857 2.336.792 4.849.923 7.256.38.265-.061.527-.132.786-.213.585-.184 1.27-.39 1.774-.753a.057.057.0 00.023-.043v-1.809a.052.052.0 00-.02-.041.053.053.0 00-.046-.01 20.282 20.282.0 01-4.709.545c-2.73.0-3.463-1.284-3.674-1.818a5.593 5.593.0 01-.319-1.433.053.053.0 01.066-.054c1.517.363 3.072.546 4.632.546.376.0.75.0 1.125-.01 1.57-.044 3.224-.124 4.768-.422.038-.008.077-.015.11-.024 2.435-.464 4.753-1.92 4.989-5.604.008-.145.03-1.52.03-1.67.002-.512.167-3.63-.024-5.545zm-3.748 9.195h-2.561V8.29c0-1.309-.55-1.976-1.67-1.976-1.23.0-1.846.79-1.846 2.35v3.403h-2.546V8.663c0-1.56-.617-2.35-1.848-2.35-1.112.0-1.668.668-1.67 1.977v6.218H4.822V8.102c0-1.31.337-2.35 1.011-3.12.696-.77 1.608-1.164 2.74-1.164 1.311.0 2.302.5 2.962 1.498l.638 1.06.638-1.06c.66-.999 1.65-1.498 2.96-1.498 1.13.0 2.043.395 2.74 1.164.675.77 1.012 1.81 1.012 3.12z"/></svg>
+</a><a href=https://bsky.app/profile/msahari.bsky.social target=_blank rel="noreferrer noopener me" aria-label=Bluesky><svg class="icon icon-brand-bluesky" viewBox="0 0 24 24" fill="currentcolor"><title>Bluesky</title><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566.944 1.561 1.266.902 1.565.139 1.908.0 3.08.0 3.768c0 .69.378 5.65.624 6.479.815 2.736 3.713 3.66 6.383 3.364.136-.02.275-.039.415-.056-.138.022-.276.04-.415.056-3.912.58-7.387 2.005-2.83 7.078 5.013 5.19 6.87-1.113 7.823-4.308.953 3.195 2.05 9.271 7.733 4.308 4.267-4.308 1.172-6.498-2.74-7.078a8.741 8.741.0 01-.415-.056c.14.017.279.036.415.056 2.67.297 5.568-.628 6.383-3.364.246-.828.624-5.79.624-6.478.0-.69-.139-1.861-.902-2.206-.659-.298-1.664-.62-4.3 1.24C16.046 4.748 13.087 8.687 12 10.8z"/></svg></a></div><div class=menu-container><button class=menu-button aria-label="Toggle menu">
+<span class=menu-button-line></span>
+<span class=menu-button-line></span>
+<span class=menu-button-line></span></button><div class=menu-dropdown><a href=/>Blogs</a>
+<a href=/tags/>Tags</a>
+<a href=/about/>About</a>
+<a href=/index.xml>RSS</a></div></div></div><main class=app-container><article class=post><header class=post-header><h1 class=post-title>Mastering DSAs in Go - Data Structures [Part 2]</h1><div class=post-meta><div><svg class="icon icon-calendar" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>calendar</title><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+May 17, 2025</div><div><svg class="icon icon-clock" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>clock</title><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+28 min read</div><div><svg class="icon icon-tag" viewBox="0 0 24 24" fill="none" stroke="currentcolor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><title>tag</title><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83.0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+<a class=tag href=/tags/go/>Go</a>
+<a class=tag href=/tags/programming/>Programming</a>
+<a class=tag href=/tags/data-structures/>Data-Structures</a>
+<a class=tag href=/tags/algorithms/>Algorithms</a>
+<a class=tag href=/tags/big-o/>Big-O</a>
+<a class=tag href=/tags/performance/>Performance</a></div></div></header><br><div class=post-featured-image><img src=/images/gophers/go-learn.svg alt="Mastering DSAs in Go - Data Structures [Part 2]"></div><br><div class=post-toc><div class=post-toc-title>Table of Contents</div><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#understanding-big-o-the-language-of-performance>Understanding Big O: The Language of Performance</a></li><li><a href=#arrays-and-slices-the-foundation-of-sequential-data>Arrays and Slices: The Foundation of Sequential Data</a><ul><li><a href=#technical-performance-analysis>Technical Performance Analysis</a></li><li><a href=#practical-examples>Practical Examples</a><ul><li><a href=#example-1-dynamic-collection-with-append>Example 1: Dynamic Collection with Append</a></li><li><a href=#example-2-fixed-size-collection-with-insertions>Example 2: Fixed-Size Collection with Insertions</a></li></ul></li><li><a href=#optimal-usage-scenarios>Optimal Usage Scenarios</a></li></ul></li><li><a href=#linked-lists-the-chain-of-nodes>Linked Lists: The Chain of Nodes</a><ul><li><a href=#technical-performance-analysis-1>Technical Performance Analysis</a></li><li><a href=#practical-example-linked-list-operations>Practical Example: Linked List Operations</a></li><li><a href=#real-world-application-transaction-history>Real-world application: Transaction History</a></li><li><a href=#technical-implementation-considerations>Technical Implementation Considerations</a></li></ul></li><li><a href=#hash-tables-maps-in-go-key-value-access-masters>Hash Tables (Maps in Go): Key-Value Access Masters</a><ul><li><a href=#technical-performance-analysis-2>Technical Performance Analysis</a></li><li><a href=#practical-example-user-age-lookup>Practical Example: User Age Lookup</a></li><li><a href=#technical-implementation-details>Technical Implementation Details</a></li></ul></li><li><a href=#binary-trees-hierarchical-ordered-data>Binary Trees: Hierarchical Ordered Data</a><ul><li><a href=#technical-performance-analysis-3>Technical Performance Analysis</a></li><li><a href=#basic-bst-implementation>Basic BST Implementation</a></li><li><a href=#real-world-application-word-frequency-counter>Real-World Application: Word Frequency Counter</a></li></ul></li><li><a href=#stacks-and-queues-sequential-access-patterns>Stacks and Queues: Sequential Access Patterns</a><ul><li><a href=#stack-implementation>Stack Implementation</a></li><li><a href=#queue-implementation>Queue Implementation</a></li><li><a href=#comparison-visualized>Comparison (visualized)</a></li><li><a href=#technical-performance-analysis-4>Technical Performance Analysis</a></li><li><a href=#practical-example-postfix-expression-evaluator>Practical Example: Postfix Expression Evaluator</a></li><li><a href=#practical-example-simple-task-queue>Practical Example: Simple Task Queue</a></li><li><a href=#implementation-alternatives-for-efficient-queues>Implementation Alternatives for Efficient Queues</a></li></ul></li><li><a href=#practical-comparisons-choosing-the-right-tool>Practical Comparisons: Choosing the Right Tool</a><ul><li><a href=#common-use-case-examples>Common Use Case Examples</a></li></ul></li><li><a href=#space-complexity-memory-matters-too>Space Complexity: Memory Matters Too</a><ul><li><a href=#memory-optimization-strategies>Memory Optimization Strategies</a></li></ul></li><li><a href=#decision-framework-for-data-structure-selection>Decision Framework for Data Structure Selection</a></li><li><a href=#conclusion>Conclusion</a></li><li><a href=#references>References</a></li></ul></nav></div></div><style>.post-toc{background-color:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin:20px 0}.post-toc-title{font-weight:700;margin-bottom:10px;color:#00b0ff;font-size:1.2em}.post-toc-content ul{list-style-type:none;padding-left:15px}.post-toc-content ul li{margin-bottom:8px}.post-toc-content ul li a{text-decoration:none;color:#263238;transition:color .2s}.post-toc-content ul li a:hover{color:#00b0ff}@media(prefers-color-scheme:dark){.post-toc{background-color:#263238;border-color:#253031}.post-toc-content ul li a{color:#afbac4}}</style><div class=post-content><p>Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you&rsquo;ve missed
+Part 1 on Big O, you can read it
+<a href=https://blog.mikesahari.com/posts/dsa-part1-big-o/>here</a>.</p><p>Data structures form the foundation of computer science—they&rsquo;re how we organize, store,
+and manipulate information in ways that mirror how we think and solve problems. Far
+beyond mere implementation details, these abstractions shape how we conceptualize
+computational challenges. Whether you&rsquo;re building a search engine indexing billions of
+webpages, an operating system managing memory resources, or a mobile app tracking user
+interactions, choosing the right data structure can mean the difference between a
+solution that scales gracefully and one that becomes that legacy tech debt app that
+engineers share stories about, blaming the original designer (you know who you are).</p><p>Across every programming language and problem domain, the core principles of data
+organization remain the same: we seek the optimal balance between time efficiency,
+memory usage, and conceptual clarity. Master these fundamentals, and you gain the power
+to solve problems not just in Go, but in any computational context.</p><p>Let&rsquo;s explore the essential data structures (in Go), to understand their inner workings,
+and learn exactly when to use each one to enhance your code. Please note that code
+examples are meant for readability and not the most optimized leetcode examples.</p><style>.admonition{border-radius:5px;padding:0;border-left:5px solid #00bcf6;box-shadow:0 0 .5rem .2rem #00000025}.admonition-title-container{background-color:#00bcf6;border-top-right-radius:5px}.admonition-title{font-weight:bolder;font-size:large;backdrop-filter:grayscale(50%)brightness(150%);-webkit-backdrop-filter:grayscale(50%)brightness(150%);padding:5px 0 5px 30px;border-top-right-radius:5px}@media(prefers-color-scheme:dark){.admonition-title{backdrop-filter:grayscale(40%)brightness(40%);-webkit-backdrop-filter:grayscale(40%)brightness(40%)}}.admonition-content{padding:10px 0 10px 15px}</style><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>This guide assumes you&rsquo;re familiar
+with Go basics and looking to level up your data structure knowledge. If you&rsquo;re new to
+Go, check out the <a href=https://tour.golang.org/>official Go tour</a> first! In addition, check
+out my blogs on <a href=https://blog.mikesahari.com/tags/fundamentals/>Go Fundamentals</a>.</div></div><h2 id=understanding-big-o-the-language-of-performance>Understanding Big O: The Language of Performance</h2><p>Before we can dive into specific data structures, we need to review what we know of Big
+O.</p><p>At its core, Big O measures how operation count scales as data size increases:</p><pre class=mermaid>flowchart LR
+    A[&#34;O(1): Constant&#34;] --&gt; B[&#34;O(log n): Logarithmic&#34;]
+    B --&gt; C[&#34;O(n): Linear&#34;]
+    C --&gt; D[&#34;O(n log n): Linearithmic&#34;]
+    D --&gt; E[&#34;O(n²): Quadratic&#34;]
+    E --&gt; F[&#34;O(2^n): Exponential&#34;]
+
+    style A fill:#4CAF50,stroke:#388E3C,color:#E8F5E9
+    style B fill:#2196F3,stroke:#1976D2,color:#E3F2FD
+    style C fill:#FFC107,stroke:#FFA000,color:#FFF8E1
+    style D fill:#FF9800,stroke:#F57C00,color:#FFF3E0
+    style E fill:#F44336,stroke:#D32F2F,color:#FFEBEE
+    style F fill:#9C27B0,stroke:#7B1FA2,color:#F3E5F5
+</pre><p>Here&rsquo;s what these notations mean in practical terms:</p><table><thead><tr><th>Notation</th><th>Name</th><th>Technical Impact</th></tr></thead><tbody><tr><td>O(1)</td><td>Constant</td><td>Operation count doesn&rsquo;t increase with data size</td></tr><tr><td>O(log n)</td><td>Logarithmic</td><td>Operation count increases logarithmically (very slowly)</td></tr><tr><td>O(n)</td><td>Linear</td><td>Operation count increases proportionally to data size</td></tr><tr><td>O(n log n)</td><td>Linearithmic</td><td>Common in efficient sorting algorithms</td></tr><tr><td>O(n²)</td><td>Quadratic</td><td>Operation count increases with the square of data size</td></tr><tr><td>O(2^n)</td><td>Exponential</td><td>Operation count doubles with each new element</td></tr></tbody></table><p>Now that we have our performance vocabulary sorted out, let&rsquo;s see how these concepts
+apply to real Go data structures!</p><h2 id=arrays-and-slices-the-foundation-of-sequential-data>Arrays and Slices: The Foundation of Sequential Data</h2><p>Our first stop in the Go data structure tour is the humble array and its flexible
+cousin, the slice. These are the workhorses of Go programming, and understanding their
+little nuances are essential for writing performant code.</p><p>In Go, arrays and slices represent contiguous memory blocks that enable extremely fast
+indexed access. While arrays have fixed sizes determined at compile time, slices provide
+dynamic sizing with three key components: a pointer to the underlying array, a length,
+and a capacity.</p><p>Here&rsquo;s how to declare them:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Fixed-size array (size is part of the type)</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>fixed</span> <span style=color:#f92672>:=</span> [<span style=color:#ae81ff>5</span>]<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>5</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Dynamic slices with make</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>dynamicWithCapacity</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>0</span>, <span style=color:#ae81ff>5</span>) <span style=color:#75715e>// Length 0, capacity 5</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>dynamicWithLength</span> <span style=color:#f92672>:=</span> make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>5</span>)      <span style=color:#75715e>// Length 5, capacity 5</span>
+</span></span></code></pre></div><p>The three-part structure of slices (pointer, length, capacity) looks like this:</p><pre class=mermaid>graph TD
+    A[Slice Header] --&gt; B[Pointer to Array]
+    A --&gt; C[Length]
+    A --&gt; D[Capacity]
+    B --&gt; E[Underlying Array]
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style E fill:#311b92,stroke:#5e35b1,color:#ede7f6
+</pre><h3 id=technical-performance-analysis>Technical Performance Analysis</h3><p>Here&rsquo;s a detailed breakdown of array/slice operation complexity:</p><table><thead><tr><th>Operation</th><th>Time Complexity</th><th>Technical Explanation</th></tr></thead><tbody><tr><td>Access by index</td><td>O(1)</td><td>Direct memory address calculation via base address + (index * element_size)</td></tr><tr><td>Search (unsorted)</td><td>O(n)</td><td>Requires sequential examination of each element until target is found</td></tr><tr><td>Append</td><td>O(1) amortized</td><td>Fast when capacity is available; requires O(n) reallocation when capacity is exceeded</td></tr><tr><td>Insert at middle</td><td>O(n)</td><td>Requires shifting all elements after insertion point</td></tr><tr><td>Delete</td><td>O(n)</td><td>Requires shifting all elements after deletion point</td></tr></tbody></table><h3 id=practical-examples>Practical Examples</h3><p>Let&rsquo;s explore two practical examples that demonstrate the most common slice operations:</p><h4 id=example-1-dynamic-collection-with-append>Example 1: Dynamic Collection with Append</h4><p>Here&rsquo;s a simple score tracker that uses slice append operations:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// ScoreTracker keeps track of a series of scores with unlimited capacity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>ScoreTracker</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>scores</span> []<span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewScoreTracker creates a new tracker with initial capacity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewScoreTracker</span>(<span style=color:#a6e22e>initialCapacity</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>ScoreTracker</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>ScoreTracker</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>scores</span>: make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>initialCapacity</span>),
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// AddScore appends a new score to the collection - O(1) amortized</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>st</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ScoreTracker</span>) <span style=color:#a6e22e>AddScore</span>(<span style=color:#a6e22e>score</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span> = append(<span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span>, <span style=color:#a6e22e>score</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// AverageScore calculates the average of all scores - O(n)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>st</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ScoreTracker</span>) <span style=color:#a6e22e>AverageScore</span>() <span style=color:#66d9ef>float64</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>sum</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>score</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>sum</span> <span style=color:#f92672>+=</span> <span style=color:#a6e22e>score</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> float64(<span style=color:#a6e22e>sum</span>) <span style=color:#f92672>/</span> float64(len(<span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span>))
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage:</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tracker</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewScoreTracker</span>(<span style=color:#ae81ff>10</span>) <span style=color:#75715e>// Start with capacity for 10 scores</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Add some scores (using O(1) amortized append operations)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tracker</span>.<span style=color:#a6e22e>AddScore</span>(<span style=color:#ae81ff>85</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tracker</span>.<span style=color:#a6e22e>AddScore</span>(<span style=color:#ae81ff>92</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tracker</span>.<span style=color:#a6e22e>AddScore</span>(<span style=color:#ae81ff>78</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tracker</span>.<span style=color:#a6e22e>AddScore</span>(<span style=color:#ae81ff>95</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Average score: %.2f\n&#34;</span>, <span style=color:#a6e22e>tracker</span>.<span style=color:#a6e22e>AverageScore</span>())
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This example demonstrates the efficient append operation:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// O(1) amortized time complexity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>st</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>ScoreTracker</span>) <span style=color:#a6e22e>AddScore</span>(<span style=color:#a6e22e>score</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span> = append(<span style=color:#a6e22e>st</span>.<span style=color:#a6e22e>scores</span>, <span style=color:#a6e22e>score</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h4 id=example-2-fixed-size-collection-with-insertions>Example 2: Fixed-Size Collection with Insertions</h4><p>For contrast, here&rsquo;s an example that uses a fixed-size array and requires element
+shifting:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// TopScores maintains a fixed-size sorted list of the highest scores</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>TopScores</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>scores</span> [<span style=color:#ae81ff>5</span>]<span style=color:#66d9ef>int</span>  <span style=color:#75715e>// Fixed-size array of top 5 scores (highest first)</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Initialize with zeros</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewTopScores</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>TopScores</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>TopScores</span>{}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TryAddScore adds a score if it&#39;s high enough to make the top 5 - O(n)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>ts</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TopScores</span>) <span style=color:#a6e22e>TryAddScore</span>(<span style=color:#a6e22e>newScore</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Find position where this score belongs (if any)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>pos</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span>, <span style=color:#a6e22e>score</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>ts</span>.<span style=color:#a6e22e>scores</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>newScore</span> &gt; <span style=color:#a6e22e>score</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>pos</span> = <span style=color:#a6e22e>i</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>break</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If not in top 5, we&#39;re done</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>pos</span> <span style=color:#f92672>==</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Shift lower scores down (this is an O(n) operation)</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>i</span> <span style=color:#f92672>:=</span> len(<span style=color:#a6e22e>ts</span>.<span style=color:#a6e22e>scores</span>) <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>; <span style=color:#a6e22e>i</span> &gt; <span style=color:#a6e22e>pos</span>; <span style=color:#a6e22e>i</span><span style=color:#f92672>--</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ts</span>.<span style=color:#a6e22e>scores</span>[<span style=color:#a6e22e>i</span>] = <span style=color:#a6e22e>ts</span>.<span style=color:#a6e22e>scores</span>[<span style=color:#a6e22e>i</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>]
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Insert the new score</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ts</span>.<span style=color:#a6e22e>scores</span>[<span style=color:#a6e22e>pos</span>] = <span style=color:#a6e22e>newScore</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage:</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>topScores</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewTopScores</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Add some scores (each requires O(n) operations when shifting is needed)</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>TryAddScore</span>(<span style=color:#ae81ff>85</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>TryAddScore</span>(<span style=color:#ae81ff>92</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>TryAddScore</span>(<span style=color:#ae81ff>78</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>TryAddScore</span>(<span style=color:#ae81ff>95</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>TryAddScore</span>(<span style=color:#ae81ff>88</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Try adding a score too low to make the cut</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>wasAdded</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>TryAddScore</span>(<span style=color:#ae81ff>70</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> !<span style=color:#a6e22e>wasAdded</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Score 70 didn&#39;t make the top 5&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Top scores:&#34;</span>, <span style=color:#a6e22e>topScores</span>.<span style=color:#a6e22e>scores</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><div class=admonition style="border-left:5px solid #01579b"><div class=admonition-title-container style=background-color:#01579b><div class=admonition-title>📌 Important</div></div><div class=admonition-content>The amortized O(1) complexity
+of append() comes from the reallocation strategy. When capacity is exceeded, Go
+allocates a new underlying array with approximately double the capacity. This O(n)
+operation happens infrequently enough that when averaged across many append operations,
+the effective cost approaches O(1) per operation.</div></div><h3 id=optimal-usage-scenarios>Optimal Usage Scenarios</h3><p>Arrays and slices are ideal when:</p><ul><li>Random access by index is the primary operation</li><li>Data is processed sequentially from start to finish</li><li>Cache locality provides performance benefits</li><li>Insertion and deletion operations at the middle are infrequent</li></ul><p>But what if you need frequent insertions and deletions at arbitrary positions? That&rsquo;s
+where our next data structure comes into play..</p><h2 id=linked-lists-the-chain-of-nodes>Linked Lists: The Chain of Nodes</h2><p>So arrays and slices are great when you need fast random access, but they fall apart
+when you&rsquo;re constantly inserting and removing elements in the middle. Enter linked
+lists - the data structure that laughs in the face of insertion complexity (hue hue
+hue).</p><p>Linked lists represent a fundamental departure from array-based structures. Instead of
+contiguous memory, linked lists consist of individual nodes where each node contains
+both data and a reference to the next node in the sequence.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Node</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Value</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Next</span>  <span style=color:#f92672>*</span><span style=color:#a6e22e>Node</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>LinkedList</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Head</span>   <span style=color:#f92672>*</span><span style=color:#a6e22e>Node</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Length</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>A linked list&rsquo;s structural organization looks like this:</p><pre class=mermaid>graph LR
+    Head --&gt; A[&#34;Node (data + next)&#34;]
+    A --&gt; B[&#34;Node (data + next)&#34;]
+    B --&gt; C[&#34;Node (data + next)&#34;]
+    C --&gt; D[&#34;Node (data + next)&#34;]
+    D --&gt; Tail
+
+    style Head fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style A fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style Tail fill:#880e4f,stroke:#d81b60,color:#fce4ec
+</pre><h3 id=technical-performance-analysis-1>Technical Performance Analysis</h3><p>Here&rsquo;s a detailed breakdown of linked list operation complexity:</p><table><thead><tr><th>Operation</th><th>Time Complexity</th><th>Technical Explanation</th></tr></thead><tbody><tr><td>Access by index</td><td>O(n)</td><td>Requires traversing the list from head to desired position</td></tr><tr><td>Search</td><td>O(n)</td><td>Requires examining each node sequentially</td></tr><tr><td>Insert at beginning</td><td>O(1)</td><td>Only requires updating the head pointer and one node</td></tr><tr><td>Insert at end</td><td>O(n) or O(1)</td><td>O(n) with only head pointer (requires traversal), O(1) with tail pointer</td></tr><tr><td>Delete</td><td>O(n)</td><td>Requires finding the node and updating pointers</td></tr></tbody></table><h3 id=practical-example-linked-list-operations>Practical Example: Linked List Operations</h3><p>Let&rsquo;s implement a basic linked list with its core operations:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Create a new linked list</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewLinkedList</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkedList</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>LinkedList</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Head</span>:   <span style=color:#66d9ef>nil</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Length</span>: <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Insert at beginning - O(1) time complexity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkedList</span>) <span style=color:#a6e22e>InsertAtBeginning</span>(<span style=color:#a6e22e>val</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>newNode</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Node</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>val</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Next</span>:  <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span> = <span style=color:#a6e22e>newNode</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Length</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Insert at end - O(n) time complexity without tail pointer</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkedList</span>) <span style=color:#a6e22e>InsertAtEnd</span>(<span style=color:#a6e22e>val</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>newNode</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Node</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>val</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Next</span>:  <span style=color:#66d9ef>nil</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If list is empty, new node becomes the head</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span> = <span style=color:#a6e22e>newNode</span>
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Traverse to the last node</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>current</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Link the last node to the new node</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span> = <span style=color:#a6e22e>newNode</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Length</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Search for a value - O(n) time complexity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkedList</span>) <span style=color:#a6e22e>Search</span>(<span style=color:#a6e22e>val</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>current</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>current</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Value</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>val</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Delete a node with given value - O(n) time complexity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkedList</span>) <span style=color:#a6e22e>Delete</span>(<span style=color:#a6e22e>val</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If list is empty</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If head is the target</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>.<span style=color:#a6e22e>Value</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>val</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span> = <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>.<span style=color:#a6e22e>Next</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Length</span><span style=color:#f92672>--</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Search for the value in the rest of the list</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>current</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span>.<span style=color:#a6e22e>Value</span> <span style=color:#f92672>!=</span> <span style=color:#a6e22e>val</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If value was found</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span>.<span style=color:#a6e22e>Next</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Length</span><span style=color:#f92672>--</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>false</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>list</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewLinkedList</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Add some values</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>InsertAtBeginning</span>(<span style=color:#ae81ff>10</span>)  <span style=color:#75715e>// List: 10</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>InsertAtBeginning</span>(<span style=color:#ae81ff>20</span>)  <span style=color:#75715e>// List: 20 -&gt; 10</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>InsertAtEnd</span>(<span style=color:#ae81ff>30</span>)        <span style=color:#75715e>// List: 20 -&gt; 10 -&gt; 30</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Search for values</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Contains 20:&#34;</span>, <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>Search</span>(<span style=color:#ae81ff>20</span>))  <span style=color:#75715e>// true</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Contains 25:&#34;</span>, <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>Search</span>(<span style=color:#ae81ff>25</span>))  <span style=color:#75715e>// false</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Delete a value</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>Delete</span>(<span style=color:#ae81ff>10</span>)             <span style=color:#75715e>// List: 20 -&gt; 30</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Print the list</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>current</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>list</span>.<span style=color:#a6e22e>Head</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>current</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%d -&gt; &#34;</span>, <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Value</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Next</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;nil&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Let&rsquo;s examine the insert at beginning operation, which showcases the linked list&rsquo;s
+strength:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Insert at beginning - O(1) time complexity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>l</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>LinkedList</span>) <span style=color:#a6e22e>InsertAtBeginning</span>(<span style=color:#a6e22e>val</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>newNode</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Node</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>val</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Next</span>:  <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span>,  <span style=color:#75715e>// Point to current head</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Head</span> = <span style=color:#a6e22e>newNode</span>   <span style=color:#75715e>// Update head to the new node</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>l</span>.<span style=color:#a6e22e>Length</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This operation is constant time (O(1)) because it requires only a fixed number of steps
+regardless of the list size:</p><ol><li>Create a new node</li><li>Point the new node&rsquo;s Next to the current head</li><li>Update the head pointer to the new node</li><li>Increment the length counter</li></ol><h3 id=real-world-application-transaction-history>Real-world application: Transaction History</h3><p>To see how linked lists can be useful in practical applications, let&rsquo;s look at a
+transaction history implementation:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Transaction represents a single financial transaction</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Transaction</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ID</span>          <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Amount</span>      <span style=color:#66d9ef>float64</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Description</span> <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Timestamp</span>   <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Time</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Next</span>        <span style=color:#f92672>*</span><span style=color:#a6e22e>Transaction</span>  <span style=color:#75715e>// Pointer to the next transaction</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TransactionHistory manages a linked list of transactions</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>TransactionHistory</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Head</span>        <span style=color:#f92672>*</span><span style=color:#a6e22e>Transaction</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Size</span>        <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// AddTransaction adds a new transaction to the beginning (most recent first) - O(1)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>th</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TransactionHistory</span>) <span style=color:#a6e22e>AddTransaction</span>(<span style=color:#a6e22e>amount</span> <span style=color:#66d9ef>float64</span>, <span style=color:#a6e22e>desc</span> <span style=color:#66d9ef>string</span>) <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Generate a transaction ID</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>id</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>generateID</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Create a new transaction</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>newTransaction</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Transaction</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ID</span>:          <span style=color:#a6e22e>id</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Amount</span>:      <span style=color:#a6e22e>amount</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Description</span>: <span style=color:#a6e22e>desc</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Timestamp</span>:   <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>(),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Next</span>:        <span style=color:#a6e22e>th</span>.<span style=color:#a6e22e>Head</span>,  <span style=color:#75715e>// Point to current head (same pattern as our generic linked list)</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Update the head</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>th</span>.<span style=color:#a6e22e>Head</span> = <span style=color:#a6e22e>newTransaction</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>th</span>.<span style=color:#a6e22e>Size</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>id</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Helper function (in a real implementation, this would be more sophisticated)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>generateID</span>() <span style=color:#66d9ef>string</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Sprintf</span>(<span style=color:#e6db74>&#34;TX-%d&#34;</span>, <span style=color:#a6e22e>time</span>.<span style=color:#a6e22e>Now</span>().<span style=color:#a6e22e>UnixNano</span>())
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Notice that the <code>AddTransaction</code> method follows the exact same pattern as our
+<code>InsertAtBeginning</code> method from the generic linked list - it&rsquo;s an O(1) operation that
+makes linked lists particularly well-suited for this kind of application.</p><h3 id=technical-implementation-considerations>Technical Implementation Considerations</h3><p>When implementing linked lists in Go, consider these technical aspects:</p><ol><li><strong>Memory Management</strong>: Each node requires additional memory for pointers (8 bytes per
+pointer on 64-bit systems)</li><li><strong>Cache Locality</strong>: Nodes can be scattered throughout memory, reducing cache
+efficiency</li><li><strong>Tail Pointers</strong>: Adding a tail pointer transforms end insertions from O(n) to O(1)</li><li><strong>Doubly-Linked Variants</strong>: Adding previous pointers enables backwards traversal at
+the cost of additional memory</li></ol><div class=admonition style="border-left:5px solid #004d40"><div class=admonition-title-container style=background-color:#004d40><div class=admonition-title>💡 Tip</div></div><div class=admonition-content>For specialized linked list needs,
+consider using the container/list package from the standard library, which provides a
+doubly-linked list implementation with constant-time insertions and deletions.</div></div><p>But wait, what if we need fast lookups by a specific identifier rather than by position?
+That&rsquo;s when we need to reach for a different tool.</p><h2 id=hash-tables-maps-in-go-key-value-access-masters>Hash Tables (Maps in Go): Key-Value Access Masters</h2><p>When you need lightning-fast lookups by key, hash tables are your best friend. Forget
+about traversing through elements one by one - hash tables use mathematical magic to
+zoom directly to the value you need.</p><p>Hash tables provide exceptional key-value lookup performance through a clever
+mathematical trick: they convert keys into array indices using a hash function. Go
+implements hash tables as the built-in <code>map</code> type.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Creating an empty map</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ages</span> <span style=color:#f92672>:=</span> make(<span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// (Alternatively) Creating with initial values</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>ages</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>{
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;Argo&#34;</span>: <span style=color:#ae81ff>32</span>,
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;Bumpkin&#34;</span>: <span style=color:#ae81ff>28</span>,
+</span></span><span style=display:flex><span>	<span style=color:#e6db74>&#34;Cassandra&#34;</span>: <span style=color:#ae81ff>45</span>,
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Hash tables achieve their speed through a clever combination of arrays and hash
+functions:</p><ol><li>A hash function converts your key into a number (the hash code)</li><li>This hash code is used to determine the index in an underlying array (the bucket)</li><li>The key-value pair is stored at that location</li><li>When looking up a value, the same hash function is applied to find the bucket</li></ol><pre class=mermaid>graph TD
+    A[&#34;Key (e.g., &#39;Argo&#39;)&#34;] --&gt; B[&#34;Hash Function&#34;]
+    B --&gt; C[&#34;Hash Code (e.g., 5234)&#34;]
+    C --&gt; D[&#34;Bucket Index (e.g., 42)&#34;]
+    D --&gt; E[&#34;Bucket in Underlying Array&#34;]
+    E --&gt; F[&#34;Key-Value Pair (&#39;Argo&#39;: 32)&#34;]
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style E fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style F fill:#880e4f,stroke:#d81b60,color:#fce4ec
+</pre><h3 id=technical-performance-analysis-2>Technical Performance Analysis</h3><table><thead><tr><th>Operation</th><th>Average Time</th><th>Worst Case</th><th>Technical Explanation</th></tr></thead><tbody><tr><td>Access</td><td>O(1)</td><td>O(n)</td><td>Direct bucket access via hash; worst case occurs with many collisions</td></tr><tr><td>Insert</td><td>O(1)</td><td>O(n)</td><td>Direct bucket placement; worst case requires traversing a collision chain</td></tr><tr><td>Delete</td><td>O(1)</td><td>O(n)</td><td>Direct bucket access; worst case requires traversing a collision chain</td></tr></tbody></table><h3 id=practical-example-user-age-lookup>Practical Example: User Age Lookup</h3><p>Let&rsquo;s build a simple system to store and retrieve user ages:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Creating a map to store user ages</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewUserAgeSystem</span>() <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> make(<span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Add or update a user&#39;s age</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>AddUser</span>(<span style=color:#a6e22e>users</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>name</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>age</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>users</span>[<span style=color:#a6e22e>name</span>] = <span style=color:#a6e22e>age</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Get a user&#39;s age with error handling</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>GetUserAge</span>(<span style=color:#a6e22e>users</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>string</span>]<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>name</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>bool</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>users</span>[<span style=color:#a6e22e>name</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>exists</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage:</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>userAges</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewUserAgeSystem</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Add some users</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AddUser</span>(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Argo&#34;</span>, <span style=color:#ae81ff>32</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AddUser</span>(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Bumpkin&#34;</span>, <span style=color:#ae81ff>28</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AddUser</span>(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Cassandra&#34;</span>, <span style=color:#ae81ff>45</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Retrieve and display Argo&#39;s age</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>GetUserAge</span>(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Argo&#34;</span>); <span style=color:#a6e22e>exists</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Argo is %d years old\n&#34;</span>, <span style=color:#a6e22e>age</span>)
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Argo not found in the system&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Try to get a non-existent user</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>GetUserAge</span>(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Mahindra&#34;</span>); <span style=color:#a6e22e>exists</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;Mahindra is %d years old\n&#34;</span>, <span style=color:#a6e22e>age</span>)
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Mahindra not found in the system&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Update Bumpkin&#39;s age</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>AddUser</span>(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Bumpkin&#34;</span>, <span style=color:#ae81ff>29</span>) <span style=color:#75715e>// Bumpkin aged because of a birthday</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Remove Cassandra from the system</span>
+</span></span><span style=display:flex><span>    delete(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Cassandra&#34;</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This example directly matches the basic map operations:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Insert or update - O(1) average case</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>userAges</span>[<span style=color:#e6db74>&#34;Argo&#34;</span>] = <span style=color:#ae81ff>32</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Access with existence check - O(1) average case</span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>exists</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>userAges</span>[<span style=color:#e6db74>&#34;Bumpkin&#34;</span>]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Delete - O(1) average case</span>
+</span></span><span style=display:flex><span>delete(<span style=color:#a6e22e>userAges</span>, <span style=color:#e6db74>&#34;Cassandra&#34;</span>)
+</span></span></code></pre></div><h3 id=technical-implementation-details>Technical Implementation Details</h3><p>Go&rsquo;s map implementation includes several sophisticated features:</p><ol><li><strong>Dynamic Resizing</strong>: Maps automatically grow when they become too full, keeping
+operations fast</li><li><strong>Good Hash Distribution</strong>: Go uses high-quality hash functions to minimize
+collisions</li><li><strong>Memory Efficiency</strong>: The implementation balances memory usage with performance</li><li><strong>Zero Values</strong>: Accessing a non-existent key returns the zero value for that type</li></ol><div class=admonition style="border-left:5px solid ZgotmplZ"><div class=admonition-title-container style=background-color:ZgotmplZ><div class=admonition-title>📝 Note</div></div><div class=admonition-content>Maps in Go are unordered
+collections. When you iterate through a map using a for-range loop, the elements appear
+in a random order. This randomization is deliberate to prevent developers from relying
+on any specific order. If you need ordered elements, you&rsquo;ll need to pair your map with a
+separate slice to track insertion order.</div></div><p>Maps excel at key-based lookups, but what if we need both fast lookups and a specific
+ordering? That&rsquo;s where our next data structure comes in.</p><h2 id=binary-trees-hierarchical-ordered-data>Binary Trees: Hierarchical Ordered Data</h2><p>Have you ever needed to both lookup data quickly AND maintain a specific order? Enter
+binary trees - the elegant data structure that lets you have your cake and eat it too
+(at least most of the time).</p><p>Binary trees organize data in a hierarchical structure where each node has at most two
+children. Binary Search Trees (BSTs) enforce an ordering: values in left subtrees are
+smaller than the node&rsquo;s value, while values in right subtrees are larger.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>TreeNode</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Value</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Left</span>  <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Right</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>BinarySearchTree</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Root</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The hierarchical structure of a balanced binary search tree looks like this:</p><pre class=mermaid>graph TD
+    A[8] --&gt; B[3]
+    A --&gt; C[10]
+    B --&gt; D[1]
+    B --&gt; E[6]
+    C --&gt; F[9]
+    C --&gt; G[14]
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+    style B fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style C fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style D fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style E fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style F fill:#311b92,stroke:#5e35b1,color:#ede7f6
+    style G fill:#311b92,stroke:#5e35b1,color:#ede7f6
+</pre><h3 id=technical-performance-analysis-3>Technical Performance Analysis</h3><p>The performance characteristics of binary search trees depend critically on their
+balance:</p><table><thead><tr><th>Operation</th><th>Balanced Tree</th><th>Unbalanced Tree</th><th>Technical Explanation</th></tr></thead><tbody><tr><td>Search</td><td>O(log n)</td><td>O(n)</td><td>Eliminates half the remaining nodes at each step when balanced</td></tr><tr><td>Insert</td><td>O(log n)</td><td>O(n)</td><td>Requires finding the correct leaf position</td></tr><tr><td>Delete</td><td>O(log n)</td><td>O(n)</td><td>Requires finding node and potentially restructuring</td></tr></tbody></table><h3 id=basic-bst-implementation>Basic BST Implementation</h3><p>Let&rsquo;s implement a basic Binary Search Tree with core operations:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Create a new BST</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewBinarySearchTree</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>BinarySearchTree</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>BinarySearchTree</span>{<span style=color:#a6e22e>Root</span>: <span style=color:#66d9ef>nil</span>}
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Insert a value into the BST</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>bst</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>BinarySearchTree</span>) <span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>value</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>newNode</span> <span style=color:#f92672>:=</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>TreeNode</span>{<span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>value</span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If tree is empty, new node becomes root</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span> = <span style=color:#a6e22e>newNode</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Otherwise, find the correct position</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>insertNode</span>(<span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span>, <span style=color:#a6e22e>newNode</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Helper function for insertion</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>insertNode</span>(<span style=color:#a6e22e>node</span>, <span style=color:#a6e22e>newNode</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Go left if new value is smaller</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>newNode</span>.<span style=color:#a6e22e>Value</span> &lt; <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Value</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Left</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Left</span> = <span style=color:#a6e22e>newNode</span>
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>insertNode</span>(<span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Left</span>, <span style=color:#a6e22e>newNode</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Go right if new value is greater or equal</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Right</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Right</span> = <span style=color:#a6e22e>newNode</span>
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>insertNode</span>(<span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Right</span>, <span style=color:#a6e22e>newNode</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Search for a value in the BST</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>bst</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>BinarySearchTree</span>) <span style=color:#a6e22e>Search</span>(<span style=color:#a6e22e>value</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>searchNode</span>(<span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span>, <span style=color:#a6e22e>value</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Helper function for searching (recursive approach)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>searchNode</span>(<span style=color:#a6e22e>node</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span>, <span style=color:#a6e22e>value</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Base cases: not found or found</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>node</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> <span style=color:#f92672>||</span> <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Value</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>value</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>node</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Recursive case: search in left or right subtree</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>value</span> &lt; <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Value</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>searchNode</span>(<span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Left</span>, <span style=color:#a6e22e>value</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>searchNode</span>(<span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Right</span>, <span style=color:#a6e22e>value</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Search iteratively (alternative implementation)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>bst</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>BinarySearchTree</span>) <span style=color:#a6e22e>SearchIterative</span>(<span style=color:#a6e22e>value</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>current</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Traverse down the tree</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>current</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Value found</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Value</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>value</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>current</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Navigate left or right</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>value</span> &lt; <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Value</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Left</span>
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Right</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Value not found</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// In-order traversal (left, root, right)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>bst</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>BinarySearchTree</span>) <span style=color:#a6e22e>InOrderTraversal</span>() []<span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>result</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>int</span>{}
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>inOrder</span>(<span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span>, <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>result</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>inOrder</span>(<span style=color:#a6e22e>node</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span>, <span style=color:#a6e22e>result</span> <span style=color:#f92672>*</span>[]<span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>node</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>inOrder</span>(<span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Left</span>, <span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>        <span style=color:#f92672>*</span><span style=color:#a6e22e>result</span> = append(<span style=color:#f92672>*</span><span style=color:#a6e22e>result</span>, <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Value</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>inOrder</span>(<span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Right</span>, <span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>bst</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewBinarySearchTree</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Insert values</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>values</span> <span style=color:#f92672>:=</span> []<span style=color:#66d9ef>int</span>{<span style=color:#ae81ff>8</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>6</span>, <span style=color:#ae81ff>9</span>, <span style=color:#ae81ff>14</span>}
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>v</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>values</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>v</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Search for a value</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>node</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Search</span>(<span style=color:#ae81ff>6</span>); <span style=color:#a6e22e>node</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Found value:&#34;</span>, <span style=color:#a6e22e>node</span>.<span style=color:#a6e22e>Value</span>)
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Value not found&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Print all values in order</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;In-order traversal:&#34;</span>, <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>InOrderTraversal</span>())
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>The search operation demonstrates the divide-and-conquer approach of binary trees:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Search iteratively</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>bst</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>BinarySearchTree</span>) <span style=color:#a6e22e>SearchIterative</span>(<span style=color:#a6e22e>value</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>TreeNode</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>current</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>bst</span>.<span style=color:#a6e22e>Root</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Traverse down the tree</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>current</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Value found</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Value</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>value</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>current</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Navigate left or right based on value comparison</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>value</span> &lt; <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Value</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Left</span>
+</span></span><span style=display:flex><span>        } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>current</span> = <span style=color:#a6e22e>current</span>.<span style=color:#a6e22e>Right</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Value not found</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Each comparison eliminates roughly half of the remaining nodes from consideration,
+giving us the O(log n) complexity for balanced trees.</p><h3 id=real-world-application-word-frequency-counter>Real-World Application: Word Frequency Counter</h3><p>Binary search trees can be adapted for specialized use cases. Here&rsquo;s an example of using
+a BST to count and sort word frequencies in text:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// A specialized tree for counting word occurrences</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>WordCount</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Word</span>  <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Count</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>WordCountTree</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Value</span> <span style=color:#a6e22e>WordCount</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Left</span>  <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Right</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Insert or increment word count</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>t</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span>) <span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>word</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span> {
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// If tree is empty, create a new node</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>t</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>WordCountTree</span>{
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>Value</span>: <span style=color:#a6e22e>WordCount</span>{<span style=color:#a6e22e>Word</span>: <span style=color:#a6e22e>word</span>, <span style=color:#a6e22e>Count</span>: <span style=color:#ae81ff>1</span>},
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Compare words lexicographically</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>word</span> &lt; <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Value</span>.<span style=color:#a6e22e>Word</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Insert into left subtree</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Left</span> = <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Left</span>.<span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>word</span>)
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>word</span> &gt; <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Value</span>.<span style=color:#a6e22e>Word</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Insert into right subtree</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Right</span> = <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Right</span>.<span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>word</span>)
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Word already exists, increment count</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Value</span>.<span style=color:#a6e22e>Count</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>t</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Process text and build a word frequency tree</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>BuildWordFrequencyTree</span>(<span style=color:#a6e22e>text</span> <span style=color:#66d9ef>string</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>root</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Split text into words and clean them</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>words</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Fields</span>(<span style=color:#a6e22e>text</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>word</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>words</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Clean the word (remove punctuation, lowercase)</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>word</span> = <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>ToLower</span>(<span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Trim</span>(<span style=color:#a6e22e>word</span>, <span style=color:#e6db74>&#34;,.!?:;\&#34;&#39;()&#34;</span>))
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>word</span> <span style=color:#f92672>!=</span> <span style=color:#e6db74>&#34;&#34;</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>root</span> = <span style=color:#a6e22e>root</span>.<span style=color:#a6e22e>Insert</span>(<span style=color:#a6e22e>word</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>root</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Print the words in alphabetical order with their counts</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>t</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>WordCountTree</span>) <span style=color:#a6e22e>PrintSorted</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>t</span> <span style=color:#f92672>==</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span>
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// In-order traversal: left, root, right</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Left</span>.<span style=color:#a6e22e>PrintSorted</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Printf</span>(<span style=color:#e6db74>&#34;%s: %d\n&#34;</span>, <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Value</span>.<span style=color:#a6e22e>Word</span>, <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Value</span>.<span style=color:#a6e22e>Count</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>t</span>.<span style=color:#a6e22e>Right</span>.<span style=color:#a6e22e>PrintSorted</span>()
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Notice how this specialized implementation follows the same principles as our generic
+BST, but adapts the tree for a specific use case:</p><ol><li>The comparison is based on string values instead of integers</li><li>The nodes store both a word and its count</li><li>Duplicate words increment the count rather than adding a new node</li><li>The tree remains ordered alphabetically, allowing for sorted output</li></ol><p>We&rsquo;ve covered data structures that manage their elements in different ways, but what
+about when we need strict control over the order of additions and removals? Let&rsquo;s look
+at two specialized structures designed for exactly that.</p><h2 id=stacks-and-queues-sequential-access-patterns>Stacks and Queues: Sequential Access Patterns</h2><p>Sometimes we need strict control over the order of processing elements. When I&rsquo;m
+debugging a complex algorithm or implementing a breadth-first search, two data
+structures consistently save my bacon: stacks and queues.</p><p>Stacks and queues implement specific access patterns that model many real-world
+scenarios:</p><ul><li><strong>Stacks</strong>: LIFO (Last In, First Out) - like a stack of plates where you can only take
+from the top</li><li><strong>Queues</strong>: FIFO (First In, First Out) - like people waiting in line at a coffee shop</li></ul><p>Both are easily implemented using slices in Go:</p><h3 id=stack-implementation>Stack Implementation</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Stack is a LIFO (Last In, First Out) data structure</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Stack</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>items</span> []<span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewStack creates a new stack</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewStack</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>Stack</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Stack</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>items</span>: make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>0</span>),
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Push adds an item to the top of the stack</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Stack</span>) <span style=color:#a6e22e>Push</span>(<span style=color:#a6e22e>item</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span> = append(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>, <span style=color:#a6e22e>item</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Pop removes and returns the top item from the stack</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Stack</span>) <span style=color:#a6e22e>Pop</span>() (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;stack is empty&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>lastIdx</span> <span style=color:#f92672>:=</span> len(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>item</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>[<span style=color:#a6e22e>lastIdx</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span> = <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>[:<span style=color:#a6e22e>lastIdx</span>]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>item</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Peek returns the top item without removing it</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Stack</span>) <span style=color:#a6e22e>Peek</span>() (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;stack is empty&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>[len(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>)<span style=color:#f92672>-</span><span style=color:#ae81ff>1</span>], <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// IsEmpty returns true if the stack has no items</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Stack</span>) <span style=color:#a6e22e>IsEmpty</span>() <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> len(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Size returns the number of items in the stack</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>s</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Stack</span>) <span style=color:#a6e22e>Size</span>() <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> len(<span style=color:#a6e22e>s</span>.<span style=color:#a6e22e>items</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=queue-implementation>Queue Implementation</h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Queue is a FIFO (First In, First Out) data structure</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Queue</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>items</span> []<span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewQueue creates a new queue</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewQueue</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>Queue</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>Queue</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>items</span>: make([]<span style=color:#66d9ef>int</span>, <span style=color:#ae81ff>0</span>),
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Enqueue adds an item to the back of the queue</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Queue</span>) <span style=color:#a6e22e>Enqueue</span>(<span style=color:#a6e22e>item</span> <span style=color:#66d9ef>int</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span> = append(<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>, <span style=color:#a6e22e>item</span>)
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Dequeue removes and returns the front item from the queue</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Queue</span>) <span style=color:#a6e22e>Dequeue</span>() (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;queue is empty&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>item</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span> = <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>[<span style=color:#ae81ff>1</span>:]
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>item</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Front returns the front item without removing it</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Queue</span>) <span style=color:#a6e22e>Front</span>() (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> len(<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;queue is empty&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>[<span style=color:#ae81ff>0</span>], <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// IsEmpty returns true if the queue has no items</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Queue</span>) <span style=color:#a6e22e>IsEmpty</span>() <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> len(<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>) <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Size returns the number of items in the queue</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Queue</span>) <span style=color:#a6e22e>Size</span>() <span style=color:#66d9ef>int</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> len(<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=comparison-visualized>Comparison (visualized)</h3><p>From a structural perspective, they operate as follows:</p><pre class=mermaid>graph TD
+    subgraph &#34;Stack (LIFO)&#34;
+    A1[Push] --&gt; B1[3]
+    B1 --&gt; C1[2]
+    C1 --&gt; D1[1]
+    E1[Pop] --&gt; B1
+    end
+
+    subgraph &#34;Queue (FIFO)&#34;
+    A2[Enqueue] --&gt; B2[3]
+    B2 --&gt; C2[2]
+    C2 --&gt; D2[1]
+    E2[Dequeue] --&gt; D2
+    end
+
+    style A1 fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style E1 fill:#b71c1c,stroke:#e53935,color:#ffebee
+    style A2 fill:#004d40,stroke:#00796b,color:#e0f2f1
+    style E2 fill:#004d40,stroke:#00796b,color:#e0f2f1
+</pre><h3 id=technical-performance-analysis-4>Technical Performance Analysis</h3><table><thead><tr><th>Operation</th><th>Stack</th><th>Queue (slice implementation)</th><th>Technical Explanation</th></tr></thead><tbody><tr><td>Push/Enqueue</td><td>O(1) amortized</td><td>O(1) amortized</td><td>Both use slice append()</td></tr><tr><td>Pop</td><td>O(1)</td><td>-</td><td>Removing from end doesn&rsquo;t require element shifting</td></tr><tr><td>Dequeue</td><td>-</td><td>O(n)</td><td>Removing from start requires shifting all elements</td></tr><tr><td>Peek/Front</td><td>O(1)</td><td>O(1)</td><td>Direct access to first/last element</td></tr></tbody></table><h3 id=practical-example-postfix-expression-evaluator>Practical Example: Postfix Expression Evaluator</h3><p>Here&rsquo;s our <code>Stack</code> in action for evaluating a postfix (Reverse Polish Notation)
+expression:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// EvaluatePostfix evaluates a postfix expression like &#34;3 4 + 5 *&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>EvaluatePostfix</span>(<span style=color:#a6e22e>expression</span> <span style=color:#66d9ef>string</span>) (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>stack</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewStack</span>()
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tokens</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strings</span>.<span style=color:#a6e22e>Fields</span>(<span style=color:#a6e22e>expression</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>token</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>tokens</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>token</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;+&#34;</span>, <span style=color:#e6db74>&#34;-&#34;</span>, <span style=color:#e6db74>&#34;*&#34;</span>, <span style=color:#e6db74>&#34;/&#34;</span>:
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Need at least two operands</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Size</span>() &lt; <span style=color:#ae81ff>2</span> {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;invalid expression: not enough operands&#34;</span>)
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Pop the two operands (remember: LIFO order)</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>b</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Pop</span>()
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>a</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Pop</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Perform the operation and push result</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>result</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>switch</span> <span style=color:#a6e22e>token</span> {
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;+&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>result</span> = <span style=color:#a6e22e>a</span> <span style=color:#f92672>+</span> <span style=color:#a6e22e>b</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;-&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>result</span> = <span style=color:#a6e22e>a</span> <span style=color:#f92672>-</span> <span style=color:#a6e22e>b</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;*&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>result</span> = <span style=color:#a6e22e>a</span> <span style=color:#f92672>*</span> <span style=color:#a6e22e>b</span>
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;/&#34;</span>:
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>b</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>                    <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;division by zero&#34;</span>)
+</span></span><span style=display:flex><span>                }
+</span></span><span style=display:flex><span>                <span style=color:#a6e22e>result</span> = <span style=color:#a6e22e>a</span> <span style=color:#f92672>/</span> <span style=color:#a6e22e>b</span>
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Push</span>(<span style=color:#a6e22e>result</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>default</span>:
+</span></span><span style=display:flex><span>            <span style=color:#75715e>// Must be a number, convert and push</span>
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>num</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>strconv</span>.<span style=color:#a6e22e>Atoi</span>(<span style=color:#a6e22e>token</span>)
+</span></span><span style=display:flex><span>            <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>                <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;invalid token: %s&#34;</span>, <span style=color:#a6e22e>token</span>)
+</span></span><span style=display:flex><span>            }
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Push</span>(<span style=color:#a6e22e>num</span>)
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// The result should be the only item on the stack</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Size</span>() <span style=color:#f92672>!=</span> <span style=color:#ae81ff>1</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;invalid expression: too many operands&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>stack</span>.<span style=color:#a6e22e>Pop</span>()
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage:</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// result, _ := EvaluatePostfix(&#34;3 4 + 5 *&#34;) // (3 + 4) * 5 = 35</span>
+</span></span></code></pre></div><p>This example demonstrates how a stack is perfect for expression evaluation because of
+its LIFO nature. When we see a number, we push it onto the stack. When we see an
+operator, we pop the required operands, perform the calculation, and push the result
+back.</p><h3 id=practical-example-simple-task-queue>Practical Example: Simple Task Queue</h3><p>Now let&rsquo;s see how our <code>Queue</code> can be used to process tasks in order:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// Task represents a simple task with an ID and a function to execute</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Task</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>ID</span>      <span style=color:#66d9ef>string</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>Execute</span> <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// TaskQueue manages a queue of tasks to be executed in FIFO order</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>TaskQueue</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tasks</span> []<span style=color:#a6e22e>Task</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewTaskQueue creates a new task queue</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewTaskQueue</span>() <span style=color:#f92672>*</span><span style=color:#a6e22e>TaskQueue</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>TaskQueue</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>tasks</span>: make([]<span style=color:#a6e22e>Task</span>, <span style=color:#ae81ff>0</span>),
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// AddTask adds a new task to the queue</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>tq</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TaskQueue</span>) <span style=color:#a6e22e>AddTask</span>(<span style=color:#a6e22e>id</span> <span style=color:#66d9ef>string</span>, <span style=color:#a6e22e>execute</span> <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tq</span>.<span style=color:#a6e22e>tasks</span> = append(<span style=color:#a6e22e>tq</span>.<span style=color:#a6e22e>tasks</span>, <span style=color:#a6e22e>Task</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>ID</span>:      <span style=color:#a6e22e>id</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>Execute</span>: <span style=color:#a6e22e>execute</span>,
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ProcessAllTasks processes all tasks in the queue in FIFO order</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>tq</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>TaskQueue</span>) <span style=color:#a6e22e>ProcessAllTasks</span>() []<span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>errors</span> []<span style=color:#66d9ef>error</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> len(<span style=color:#a6e22e>tq</span>.<span style=color:#a6e22e>tasks</span>) &gt; <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Get the next task (from the front of the queue)</span>
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>task</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>tq</span>.<span style=color:#a6e22e>tasks</span>[<span style=color:#ae81ff>0</span>]
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>tq</span>.<span style=color:#a6e22e>tasks</span> = <span style=color:#a6e22e>tq</span>.<span style=color:#a6e22e>tasks</span>[<span style=color:#ae81ff>1</span>:] <span style=color:#75715e>// Dequeue operation</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// Execute the task</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>task</span>.<span style=color:#a6e22e>Execute</span>(); <span style=color:#a6e22e>err</span> <span style=color:#f92672>!=</span> <span style=color:#66d9ef>nil</span> {
+</span></span><span style=display:flex><span>            <span style=color:#a6e22e>errors</span> = append(<span style=color:#a6e22e>errors</span>, <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Errorf</span>(<span style=color:#e6db74>&#34;task %s failed: %v&#34;</span>, <span style=color:#a6e22e>task</span>.<span style=color:#a6e22e>ID</span>, <span style=color:#a6e22e>err</span>))
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Example usage:</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>taskQueue</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>NewTaskQueue</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Add some tasks</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>taskQueue</span>.<span style=color:#a6e22e>AddTask</span>(<span style=color:#e6db74>&#34;task1&#34;</span>, <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Executing task 1&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>taskQueue</span>.<span style=color:#a6e22e>AddTask</span>(<span style=color:#e6db74>&#34;task2&#34;</span>, <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Executing task 2&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;task 2 failed&#34;</span>)
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>taskQueue</span>.<span style=color:#a6e22e>AddTask</span>(<span style=color:#e6db74>&#34;task3&#34;</span>, <span style=color:#66d9ef>func</span>() <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Executing task 3&#34;</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Process all tasks</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>errors</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>taskQueue</span>.<span style=color:#a6e22e>ProcessAllTasks</span>()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// Report any errors</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> <span style=color:#a6e22e>_</span>, <span style=color:#a6e22e>err</span> <span style=color:#f92672>:=</span> <span style=color:#66d9ef>range</span> <span style=color:#a6e22e>errors</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#e6db74>&#34;Error:&#34;</span>, <span style=color:#a6e22e>err</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>In this example, the queue ensures that tasks are processed in the exact order they were
+added - a classic FIFO operation.</p><h3 id=implementation-alternatives-for-efficient-queues>Implementation Alternatives for Efficient Queues</h3><p>The slice-based queue implementation above has a significant limitation: O(n) dequeue
+operations. More efficient alternatives include:</p><ol><li><strong>Circular Buffer</strong>: Using an array with head and tail pointers that wrap around</li><li><strong>Linked List Queue</strong>: Using a linked list with head and tail pointers</li><li><strong>Double-Ended Queue</strong>: Using container/list from the standard library</li></ol><p>Here&rsquo;s a simple implementation of a circular buffer queue:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#75715e>// CircularQueue implements a queue using a circular buffer</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>CircularQueue</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>items</span> []<span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>head</span>  <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>tail</span>  <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>size</span>  <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>cap</span>   <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// NewCircularQueue creates a new circular queue with the given capacity</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>NewCircularQueue</span>(<span style=color:#a6e22e>capacity</span> <span style=color:#66d9ef>int</span>) <span style=color:#f92672>*</span><span style=color:#a6e22e>CircularQueue</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#f92672>&amp;</span><span style=color:#a6e22e>CircularQueue</span>{
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>items</span>: make([]<span style=color:#66d9ef>int</span>, <span style=color:#a6e22e>capacity</span>),
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>head</span>:  <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>tail</span>:  <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>size</span>:  <span style=color:#ae81ff>0</span>,
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>cap</span>:   <span style=color:#a6e22e>capacity</span>,
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Enqueue adds an item to the queue - O(1)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>CircularQueue</span>) <span style=color:#a6e22e>Enqueue</span>(<span style=color:#a6e22e>item</span> <span style=color:#66d9ef>int</span>) <span style=color:#66d9ef>error</span> {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>size</span> <span style=color:#f92672>==</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>cap</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;queue is full&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>[<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>tail</span>] = <span style=color:#a6e22e>item</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>tail</span> = (<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>tail</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>%</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>cap</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>size</span><span style=color:#f92672>++</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// Dequeue removes and returns the front item - O(1)</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>q</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>CircularQueue</span>) <span style=color:#a6e22e>Dequeue</span>() (<span style=color:#66d9ef>int</span>, <span style=color:#66d9ef>error</span>) {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>size</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>errors</span>.<span style=color:#a6e22e>New</span>(<span style=color:#e6db74>&#34;queue is empty&#34;</span>)
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>item</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>items</span>[<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>head</span>]
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>head</span> = (<span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>head</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>) <span style=color:#f92672>%</span> <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>cap</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>q</span>.<span style=color:#a6e22e>size</span><span style=color:#f92672>--</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> <span style=color:#a6e22e>item</span>, <span style=color:#66d9ef>nil</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>This circular queue implementation gives us O(1) operations for both enqueue and
+dequeue, eliminating the need to shift elements.</p><div class=admonition style="border-left:5px solid #283593"><div class=admonition-title-container style=background-color:#283593><div class=admonition-title>📝 Note</div></div><div class=admonition-content>The standard library&rsquo;s
+container/list provides a generic doubly-linked list implementation that can efficiently
+serve as a queue with O(1) operations for both insertions and removals from either end.</div></div><h2 id=practical-comparisons-choosing-the-right-tool>Practical Comparisons: Choosing the Right Tool</h2><p>Alright, so you&rsquo;ve got a toolbox full of data structures, but which one should you reach
+for? Let&rsquo;s break down exactly when to use each one - just practical advice for
+real-world Go code.</p><p>Here&rsquo;s a cheat sheet comparing our data structures side-by-side:</p><table><thead><tr><th>Data Structure</th><th>Best For</th><th>Not Great For</th><th>Technical Trade-offs</th></tr></thead><tbody><tr><td>Arrays/Slices</td><td>Random access, sequential processing, cache-friendly operations</td><td>Frequent insertions/deletions in the middle</td><td>Fast access (O(1)) vs. slow modifications (O(n))</td></tr><tr><td>Linked Lists</td><td>Constant-time insertions/deletions at known positions</td><td>Random access or cache locality</td><td>Fast modifications at known positions vs. slow traversal</td></tr><tr><td>Hash Maps</td><td>Key-value lookups, existence checks, counting</td><td>Maintaining order, range queries</td><td>Near-constant lookups vs. randomized iteration order</td></tr><tr><td>Binary Trees</td><td>Ordered data, range scans, floor/ceiling operations</td><td>Simple lookups where order doesn&rsquo;t matter</td><td>Logarithmic operations vs. implementation complexity</td></tr><tr><td>Stacks</td><td>Tracking state for backtracking, expression parsing</td><td>Random access to elements</td><td>Simple LIFO interface vs. limited access patterns</td></tr><tr><td>Queues</td><td>Ordered processing, breadth-first traversals</td><td>Priority-based processing</td><td>Simple FIFO interface vs. limited access patterns</td></tr></tbody></table><h3 id=common-use-case-examples>Common Use Case Examples</h3><p>I can&rsquo;t count how many times I&rsquo;ve seen engineers, who know just enough to be dangerous,
+reach for the wrong data structure and then wonder why their code crawls when given more
+than a hundred elements! Here are some example problems matched with their ideal data
+structure:</p><ol><li><strong>Login system with username lookups</strong>: Hash map - <code>map[string]UserData</code></li><li><strong>Undo functionality in a text editor</strong>: Stack - push state changes, pop to undo</li><li><strong>Account metadata with prefix search</strong>: Trie (specialized tree) - efficient prefix
+matching</li><li><strong>Graph traversal with BFS</strong>: Queue - keeps track of the &ldquo;frontier&rdquo; nodes</li><li><strong>Task scheduling by priority</strong>: Heap (priority queue) - O(log n) for
+highest-priority extraction</li></ol><p>Let&rsquo;s visualize the decision process:</p><pre class=mermaid>flowchart TD
+    A[What&#39;s your primary operation?] --&gt;|Lookup by key| B[Hash Map]
+    A --&gt;|Ordered operations| C[Need range queries?]
+    A --&gt;|Sequential access| D[Need to track order?]
+    A --&gt;|Random access by index| E[Arrays/Slices]
+
+    C --&gt;|Yes| F[Binary Tree]
+    C --&gt;|No| G[Does order matter?]
+
+    D --&gt;|LIFO| H[Stack]
+    D --&gt;|FIFO| I[Queue]
+
+    G --&gt;|Yes| J[Ordered Map or Array+Map]
+    G --&gt;|No| B
+
+    style A fill:#1a237e,stroke:#3949ab,color:#e8eaf6
+</pre><h2 id=space-complexity-memory-matters-too>Space Complexity: Memory Matters Too</h2><p>Time complexity gets all the glory, but space complexity can make or break your
+application, especially in constrained environments. Here&rsquo;s how our data structures
+stack up:</p><table><thead><tr><th>Data Structure</th><th>Space Complexity</th><th>Memory Overhead</th><th>Technical Details</th></tr></thead><tbody><tr><td>Arrays/Slices</td><td>O(n)</td><td>Low</td><td>Contiguous memory allocation with minimal metadata</td></tr><tr><td>Linked Lists</td><td>O(n)</td><td>High</td><td>Each node requires additional pointer storage (8 bytes per pointer on 64-bit systems)</td></tr><tr><td>Hash Maps</td><td>O(n)</td><td>Medium-High</td><td>Requires extra space for buckets to minimize collisions</td></tr><tr><td>Binary Trees</td><td>O(n)</td><td>Medium</td><td>Each node contains two child pointers plus value</td></tr><tr><td>Stacks/Queues</td><td>O(n)</td><td>Depends on implementation</td><td>Inherits from underlying data structure</td></tr></tbody></table><h3 id=memory-optimization-strategies>Memory Optimization Strategies</h3><p>When memory becomes a bottleneck, consider these technical approaches:</p><ol><li><strong>Custom allocators</strong>: Implement arena allocation for many small objects</li><li><strong>Bit packing</strong>: Use bit fields to compress data when working with small values</li><li><strong>Immutable data structures</strong>: Share memory between instances using structural
+sharing</li><li><strong>Lazy loading</strong>: Only load data when needed, especially for tree structures</li><li><strong>Memory pools</strong>: Pre-allocate fixed-size blocks to reduce allocation overhead</li></ol><div class=admonition style="border-left:5px solid #01579b"><div class=admonition-title-container style=background-color:#01579b><div class=admonition-title>📌 Important</div></div><div class=admonition-content>When implementing recursive
+algorithms, be mindful of stack space. Each recursive call consumes additional stack
+frames, which can lead to stack overflow for deep recursion. Consider iterative
+alternatives using an explicit stack when processing large datasets.</div></div><h2 id=decision-framework-for-data-structure-selection>Decision Framework for Data Structure Selection</h2><p>When you&rsquo;re staring at a new problem and trying to decide which data structure to use,
+ask yourself these questions:</p><ol><li><strong>Access pattern</strong>: How will the data be accessed? (randomly, sequentially, by key)</li><li><strong>Modification frequency</strong>: Is the data mostly static or frequently modified?</li><li><strong>Ordering requirements</strong>: Does the natural order of elements matter?</li><li><strong>Size considerations</strong>: How large will the dataset grow?</li><li><strong>Operation frequency</strong>: Which operations will be performed most often?</li><li><strong>Memory constraints</strong>: Are there limitations on memory usage?</li></ol><p>These questions form a decision tree that can guide you to the optimal data structure
+for your specific scenario.</p><h2 id=conclusion>Conclusion</h2><p>By understanding data structures and their characteristics, strengths, and limitations
+at a deep technical level, you can make informed decisions that dramatically impact your
+application&rsquo;s performance.</p><p>The Go standard library provides excellent implementations of the most commonly used
+data structures, with well-defined performance characteristics. For specialized needs,
+there are plenty of third-party packages offering advanced implementations.</p><p>Remember that theoretical performance is just one factor in the decision. Practical
+considerations like readability, maintainability, and the specific patterns of your data
+are equally important for building efficient systems.</p><p>Now get out there and crush those performance bottlenecks with the right data structure
+for the job!</p><h2 id=references>References</h2><ul><li><a href=https://golang.org/pkg/>Go Standard Library</a></li><li><a href=https://www.gopl.io/>The Go Programming Language</a> by Alan A. A. Donovan and Brian W.
+Kernighan</li><li><a href=https://www.bigocheatsheet.com/>Big O Cheat Sheet</a></li></ul></div><div class=post-footer></div></article></main><script>document.addEventListener("DOMContentLoaded",function(){const e=document.querySelector(".menu-button"),t=document.querySelector(".menu-dropdown");e&&t&&(e.addEventListener("click",function(){e.classList.toggle("active"),t.classList.toggle("active")}),document.addEventListener("click",function(n){!e.contains(n.target)&&!t.contains(n.target)&&(e.classList.remove("active"),t.classList.remove("active"))}));const s=document.getElementById("scroll-indicator");function n(){const e=document.body.scrollTop||document.documentElement.scrollTop,t=document.documentElement.scrollHeight-document.documentElement.clientHeight,n=e/t*100;s.style.width=n+"%"}window.addEventListener("scroll",n),n()})</script><script type=module>
+      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: 'dark',  
+        securityLevel: 'loose',
+        
+        themeVariables: {
+          
+          primaryColor: '#BB2528',
+          primaryTextColor: '#fff',
+          primaryBorderColor: '#7C0000',
+
+          
+          secondaryColor: '#006100',
+          secondaryTextColor: '#fff',
+          secondaryBorderColor: '#004d00',
+
+          
+          mainBkg: '#1f2020',
+          textColor: '#ddd',
+          lineColor: '#999',
+
+          
+          nodeBorder: '#777',
+          titleColor: '#F8F8F8'
+        }
+      });
+    </script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
