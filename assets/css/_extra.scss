@@ -71,3 +71,59 @@ strong, b {
   background-color: $primary-color; // Using your theme's primary color
   transition: width 0.1s ease-out;
 }
+
+// Table styles
+table {
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: collapse;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th {
+  background-color: $primary-color;
+  color: #ffffff;
+  font-weight: 700;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 2px solid darken($primary-color, 10%);
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+tr:hover {
+  background-color: rgba(0, 176, 255, 0.05);
+}
+
+// Dark mode adjustments
+@media (prefers-color-scheme: dark) {
+  table {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  th {
+    background-color: darken($primary-color, 15%);
+    border-bottom: 2px solid $primary-color;
+  }
+
+  td {
+    border-bottom: 1px solid #444;
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  tr:hover {
+    background-color: rgba(0, 176, 255, 0.1);
+  }
+}
