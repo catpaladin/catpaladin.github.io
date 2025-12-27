@@ -6,15 +6,15 @@ tags = ["go", "commandline", "cli", "charmbracelet"]
 featured_image = "/images/gophers/go-fish.svg"
 +++
 
-*Hey there, fellow Go enthusiasts! Today, I'm going to share something that completely changed my CLI development game. Buckle up – we're diving deep into making CLIs that users will actually enjoy using!*
+_Hey there, fellow Go enthusiasts! Today, I'm going to share something that completely changed my CLI development game. Buckle up – we're diving deep into making CLIs that users will actually enjoy using!_
 
 ## The CLI Development Evolution
 
 You know how we all instinctively reach for [cobra](https://github.com/spf13/cobra) when building command-line tools in Go? Well, here is the perfect companion that's transformed how I think about CLI interactions: [huh](https://github.com/charmbracelet/huh) by Charmbracelet.
 
-![huh](/images/gifs/huh-cat.gif "huh")
+![huh](/images/gifs/huh-cat.gif 'huh')
 
-*Here's the thing that got me excited:* While `cobra` handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), `huh` brings something entirely different to the table. It's all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.
+_Here's the thing that got me excited:_ While `cobra` handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), `huh` brings something entirely different to the table. It's all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.
 
 ## Getting Started with huh
 
@@ -24,7 +24,7 @@ First things first, let's get the package:
 go get github.com/charmbracelet/huh
 ```
 
-*This is where the magic starts.* Here's the simplest way to get going with a basic input prompt:
+_This is where the magic starts._ Here's the simplest way to get going with a basic input prompt:
 
 ```go
 var name string
@@ -41,7 +41,7 @@ If you're already using `cobra`'s `StringVarP` for flags, you can create this sw
 
 ## The Real MVP: Select Prompts
 
-*Okay, this is where things get really interesting.* Remember struggling with [promptui](https://github.com/manifoldco/promptui) for selection menus? (I sure do, and let me tell you, it wasn't pretty.) Check this out:
+_Okay, this is where things get really interesting._ Remember struggling with [promptui](https://github.com/manifoldco/promptui) for selection menus? (I sure do, and let me tell you, it wasn't pretty.) Check this out:
 
 ```go
 huh.NewSelect[string]().
@@ -63,7 +63,7 @@ Let me walk you through a real-world project where I put all this into practice.
 
 ### The Dig Command: Simple but Powerful
 
-*Here's where validation really shines:*
+_Here's where validation really shines:_
 
 ```go
 func interactiveDig() {
@@ -83,13 +83,14 @@ func interactiveDig() {
     )
 }
 ```
+
 {{<admonition title="📝 NOTE" bg-color="#283593">}}
 That validation function isn't just error checking - it's about guiding users to success.
 {{</admonition>}}
 
 ### The IP Command: Elegant Selection
 
-*This is where select forms really shine:*
+_This is where select forms really shine:_
 
 ```go
 func interactiveIP() {
@@ -111,7 +112,6 @@ func interactiveIP() {
 #### Extra: Dynamic Selection Options
 
 ![you hardcoded..](/images/2025/02/20250207-meme1.png)
-
 
 {{<admonition title="📝 NOTE" bg-color="#283593">}}
 This section is a little advanced and requires some knowledge on generics. I thought I would share because I couldn't find much documentation online about this.
@@ -157,17 +157,19 @@ Let me break down why these functions are game-changers:
 
 - **Type-Safe Generics**: The `[T comparable]` constraint ensures our functions work with any comparable type (This means you can use it with strings, ints, or even custom types!)
 - **Simplified Form Creation**: Using the above, we can do the following:
+
 ```go
 // Example usage with a slice of strings
 protocols := []string{"HTTP", "HTTPS", "FTP", "SSH"}
 options := GenerateGenericOptions(protocols)
 selectedProtocol, err := NewSelectForm(options, "Select Protocol")
 ```
+
 - **Dynamic Option Generation**: You can feed it any slice of comparable items. This will automatically generate the display keys and values (Remember, the Key is what users see, Value is what your code gets!).
 
 ### The Netcat Command: Advanced Form Handling
 
-*Now this is where we really level up our game with multiple inputs and sophisticated validation:*
+_Now this is where we really level up our game with multiple inputs and sophisticated validation:_
 
 ```go
 func interactiveNetcat() {
@@ -224,17 +226,17 @@ Let's break down what makes this netcat implementation special:
 
 1. **Form Structure**:
    - A single `NewGroup` contains two inputs - IP/hostname and port
-   - *Grouping related inputs makes the UX more intuitive!*
+   - _Grouping related inputs makes the UX more intuitive!_
 
 2. **IP/Hostname Validation**:
    - Fast-tracks "localhost" for quick local testing
    - Handles both direct IP addresses and domain names
-   - *Gotcha alert:* Don't forget the DNS lookup for hostnames!
+   - _Gotcha alert:_ Don't forget the DNS lookup for hostnames!
 
 3. **Port Validation**:
    - Converts string input to numeric port
    - Validates against the full port range (1-65535)
-   - *Fun fact:* This prevents those "why isn't it working?" moments when someone tries port 0!
+   - _Fun fact:_ This prevents those "why isn't it working?" moments when someone tries port 0!
 
 4. **Error Handling**:
    - Blocking `form.Run()` ensures valid input
@@ -246,6 +248,7 @@ Let's break down what makes this netcat implementation special:
 Want to make your CLI even more professional? Meet [lipgloss](https://github.com/charmbracelet/lipgloss) - think of it as CSS for your terminal apps. It works seamlessly with `huh`!
 
 Here's some suggestions on using `lipgloss`:
+
 - Green for successful operations
 - Red for errors and warnings
 - Clear visual hierarchy for scan results
@@ -253,6 +256,7 @@ Here's some suggestions on using `lipgloss`:
 ## Why This Matters
 
 Remember: great CLIs aren't just about functionality - they're about creating an experience that makes users actually want to use your tools. With `huh`, you're:
+
 - Reducing user errors through validation
 - Providing intuitive interfaces
 - Making your tools more approachable

@@ -1,0 +1,7 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+Disallow: /about/
+Disallow: /tags/
+Sitemap: https://blog.mikesahari.com/sitemap.xml
+Crawl-delay: 1

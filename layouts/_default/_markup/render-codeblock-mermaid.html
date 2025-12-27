@@ -1,4 +1,4 @@
-<pre class="mermaid">
+<div class="mermaid" data-mermaid="{{ .Inner | base64Encode }}">
   {{- .Inner | htmlEscape | safeHTML }}
-</pre>
+</div>
 {{ .Page.Store.Set "hasMermaid" true }}

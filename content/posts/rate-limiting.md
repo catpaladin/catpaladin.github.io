@@ -54,7 +54,7 @@ If your RPS is set to 10:
 - Your bucket gets 10 new tokens every second
 - That's one new token every 0.1 seconds
 - This is your long-term, guaranteed throughput capacity
-{{</admonition>}}
+  {{</admonition>}}
 
 The following charts visualize this:
 
@@ -86,7 +86,7 @@ If your burst is 30:
 - Your bucket has a maximum capacity of 30 tokens
 - A client can make up to 30 requests immediately
 - After burst capacity is exhausted, they're throttled to your RPS
-{{</admonition>}}
+  {{</admonition>}}
 
 The following visualization describes this:
 
@@ -315,6 +315,7 @@ func getRealIP(r *http.Request) string {
 	return ip
 }
 ```
+
 {{<admonition title="📌 IMPORTANT" bg-color="#01579B">}}
 Don't forget to add `strings` and `net` to your imports!
 {{</admonition>}}
@@ -466,6 +467,7 @@ func main() {
 You should see something like:
 
 {{<admonition title="🧪 Test Results" bg-color="#00897B">}}
+
 ```
 Sending 20 requests with 10 concurrent workers...
 [0.010s] Request 2: SUCCESS (Status: 200)
@@ -495,6 +497,7 @@ Sending 20 requests with 10 concurrent workers...
 Completed in 0.01 seconds
 Average RPS attempted: 1757.1
 ```
+
 {{</admonition>}}
 
 The first nine requests should succeed and then you'll start seeing 429 errors as the rate limit kicks in.
@@ -511,6 +514,7 @@ go run cmd/rate-limit-proxy/main.go
 And then re-run our tests, we would get an output like:
 
 {{<admonition title="🧪 Test Results" bg-color="#00897B">}}
+
 ```
 Sending 20 requests with 10 concurrent workers...
 [0.199s] Request 6: SUCCESS (Status: 200)
@@ -547,6 +551,7 @@ Sending 20 requests with 10 concurrent workers...
 Completed in 0.20 seconds
 Average RPS attempted: 100.1
 ```
+
 {{</admonition>}}
 
 </br>

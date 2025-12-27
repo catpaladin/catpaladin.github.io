@@ -10,7 +10,6 @@ Have you ever wondered how modern web applications handle user authentication an
 
 For those who need to see the whole code before diving in, you can find all of this on [Github](https://github.com/catpaladin/go-api-example)
 
-
 ## Technology Stack Overview
 
 Our API implementation uses three main technologies:
@@ -18,7 +17,6 @@ Our API implementation uses three main technologies:
 - **Go**: A programming language designed for building efficient, secure network services with built-in concurrency support (My language of choice).
 - **Gin**: A high-performance web framework for Go that provides excellent routing capabilities and middleware support.
 - **SQLite**: A lightweight database that's ideal for development and applications with moderate traffic requirements.
-
 
 ## Understanding Our Project Structure
 
@@ -58,7 +56,6 @@ I like to separate domain specific logic. That way when another engineer starts 
 I have opted to build out my models rather than use something like an ORM because this is a simple example. You can use something like [ent](https://github.com/ent/ent) for bigger and more complex projects.
 {{</admonition>}}
 
-
 ## Setting Up Your Development Environment
 
 First, let's gather our ingredients (dependencies). Open your terminal and run:
@@ -72,7 +69,6 @@ go get github.com/gin-gonic/gin         # Our web framework
 go get github.com/mattn/go-sqlite3      # Database driver
 go get github.com/golang-jwt/jwt/v4     # For secure user tokens
 ```
-
 
 ## Define the Model
 
@@ -194,7 +190,6 @@ The models package provides several important features:
 4. **Security**: The Password field is explicitly excluded from JSON serialization using the "-" tag.
 5. **Domain Errors**: Custom error types help with precise error handling throughout the application.
 
-
 ## Creating the Database
 
 Next create the `db` directory. We will put all the database domain logic here.
@@ -254,7 +249,6 @@ func CloseDB() error {
 {{<admonition title="📝 NOTE" bg-color="#283593">}}
 This expects that you have sqlite3 on your machine.
 {{</admonition>}}
-
 
 ## Define Database Operations
 
@@ -326,7 +320,6 @@ func (s *UserStore) GetUserByUsername(username string) (*models.User, error) {
 }
 ```
 
-
 ## JWT Token
 
 The `jwt` internal package will contain all our jwt auth logic. Create the directory structure.
@@ -382,7 +375,6 @@ func ValidateToken(tokenStr string) (*Claims, error) {
 }
 ```
 
-
 ## JWT Middleware
 
 Now to add some Gin middleware for our auth. Create the `internal/jwt/middleware.go` with this function.
@@ -424,7 +416,6 @@ func AuthMiddleware() gin.HandlerFunc {
 	}
 }
 ```
-
 
 ## Create the handlers for the API
 
@@ -591,7 +582,6 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 }
 ```
 
-
 ## Core Application Setup
 
 The `main.go` file initializes the server and configures routing. It separates public and authenticated routes.
@@ -642,7 +632,6 @@ func main() {
 }
 ```
 
-
 ## Running Your API
 
 Simply tidy things up and run with
@@ -652,12 +641,12 @@ go mod tidy
 go run main.go
 ```
 
-
 ## Testing Your API
 
 Now that everything's set up, you can test your API using curl or any API testing tool:
 
 1. Create a new user:
+
 ```bash
 curl -X POST http://localhost:8080/signup \
   -H "Content-Type: application/json" \
@@ -665,6 +654,7 @@ curl -X POST http://localhost:8080/signup \
 ```
 
 2. Log in to get a token:
+
 ```bash
 curl -X POST http://localhost:8080/login \
   -H "Content-Type: application/json" \
@@ -672,11 +662,11 @@ curl -X POST http://localhost:8080/login \
 ```
 
 3. Use the token to access protected routes:
+
 ```bash
 curl http://localhost:8080/user \
   -H "Authorization: Bearer <your-token-here>"
 ```
-
 
 ## Summary
 

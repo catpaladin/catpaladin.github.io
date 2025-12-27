@@ -88,7 +88,7 @@ This setup is perfect for keeping your work-specific Neovim configuration privat
 Do not version control your secrets or private keys in plaintext! (Even to a private repository!)
 {{</admonition>}}
 
-*The beauty of this approach is that it lets you share your dotfiles publicly while keeping sensitive configs completely separate.*
+_The beauty of this approach is that it lets you share your dotfiles publicly while keeping sensitive configs completely separate._
 
 ## The Smart Setup Script
 
@@ -136,7 +136,7 @@ for app in ${base[@]}; do
 done
 ```
 
-*Here's the deal with `stow` and how it fits into our dotfiles management...*
+_Here's the deal with `stow` and how it fits into our dotfiles management..._
 
 Stow is the secret sauce in my setup script that handles all the symlinking of configuration files to their correct locations. Instead of manually creating symlinks or copying files around, my `setup.sh` script uses Stow to automatically create the necessary symlinks based on the directory structure.
 
@@ -149,6 +149,7 @@ Seeing as I made a conditional to handle Alacritty, the same can be done with Ne
 To maintain separate configurations:
 
 1. First, adjust your setup script to detect the environment:
+
 ```bash
 if [ -f ~/.work_machine ]; then
     NVIM_CONFIG="nvim-work"
@@ -158,6 +159,7 @@ fi
 ```
 
 2. Modify the base array to use the correct config:
+
 ```bash
 base=(
     $NVIM_CONFIG    # This will be either nvim-work or nvim-personal
@@ -170,7 +172,7 @@ base=(
 )
 ```
 
-*When working with private repositories, always use SSH URLs in your .gitmodules file - it makes authentication much smoother.*
+_When working with private repositories, always use SSH URLs in your .gitmodules file - it makes authentication much smoother._
 
 ### Getting Started
 

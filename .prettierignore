@@ -1,0 +1,6 @@
+node_modules
+assets/dist
+public
+resources
+.hugo_build.lock
+layouts/

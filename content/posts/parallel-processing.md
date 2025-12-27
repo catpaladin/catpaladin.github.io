@@ -15,7 +15,7 @@ I was inspired to write this article after a recent discussion about programming
 
 But preferences often face challenges. Some argue, "Python now has concurrency, so you should switch to Python." I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).
 
-![python simps be like](/images/2025/02/20250201-meme1.png "be like that huh")
+![python simps be like](/images/2025/02/20250201-meme1.png 'be like that huh')
 
 This debate sparked my curiosity: how does Python 3.13's new GIL-disabled feature actually perform compared to Go's native concurrency? Let's run through an experiment and find out.
 
@@ -29,6 +29,7 @@ Before we compare Go and Python, let's clarify **two important terms**:
 Think of **concurrency** as multitasking (switching between tasks quickly) and **parallelism** as multiple workers doing different tasks at the same time. I find this important to talk about since I find engineers (or people who like to talk technical) using these interchangeably.
 
 ### **Concurrency Example (Go)**
+
 Go allows multiple tasks (goroutines) to be **scheduled efficiently**, even if they're not running in parallel.
 
 ```go
@@ -37,6 +38,7 @@ go doTaskB()  // Runs independently
 ```
 
 ### **Parallelism Example (Python)**
+
 Python uses **multiple processes** to achieve parallelism, where each process runs on a different CPU core.
 
 {{<admonition title="📝 NOTE" bg-color="#283593">}}
@@ -56,9 +58,12 @@ with Pool(4) as p:  # 4 parallel workers
 ## The Fundamental Difference: GIL/Gill-Free vs Native Concurrency
 
 Before I get into the Python analysis, I want to talk about the GIL. For those of you unfamiliar with Python, or those of you that only know enough of it to be dangerous, the GIL is the Global Interpreter Lock. You can read up more on it online, but two key features of it are:
+
 - increased speed of single threaded programs
 - easy integration with C libraries
+
 ### **Python: Evolution Beyond the GIL**
+
 Starting with Python 3.13, there are two significant approaches to parallel execution:
 
 1. **Traditional GIL-Based Threading**:
@@ -76,6 +81,7 @@ Let's perform a benchmark to show average time with GIL-Based Threading vs GIL-F
 {{<admonition title="📝 NOTE" bg-color="#283593">}}
 Turning off the GIL requires that you either compile it with flags or download it. I just installed it using [pyenv](https://github.com/pyenv/pyenv) and appending `t` to the version.
 {{</admonition>}}
+
 ```bash
 # install 1.13.1 (GIL enabled by default)
 pyenv install 1.13.1
@@ -85,6 +91,7 @@ pyenv install 1.13.1t
 ```
 
 Then you can verify in python with
+
 ```python
 import sys
 print(sys._is_gil_enabled())
@@ -94,6 +101,7 @@ print(sys._is_gil_enabled())
 Anyways, here's how to leverage both approaches. First we need a script to test multiprocessing. We'll run it with the GIL enabled first. Then disabled second.
 
 ### `cpu_test.py`
+
 ```python
 import sys
 import time
@@ -168,6 +176,7 @@ if __name__ == "__main__":
 Again, I use `pyenv` to switch between my python versions, but choose whatever method works best.
 
 `GIL Enabled Example`
+
 ```bash
 # set my local terminal to use 3.13.1 GIL enabled
 pyenv local 3.13.1
@@ -176,6 +185,7 @@ python cpu_test.py
 ```
 
 For me, this had an output of:
+
 ```
 Python Version: 3.13.1
 CPU Cores: 16
@@ -188,6 +198,7 @@ Average Time per Thread: 4.95 seconds
 Next I tested with GIL disabled. This was pretty interesting since I never experimented with it when this first became available.
 
 `GIL Disabled Example`
+
 ```bash
 # set my local terminal to use 3.13.1 GIL disabled
 pyenv local 3.13.1t
@@ -196,6 +207,7 @@ python cpu_test.py
 ```
 
 The GIL-free had the output,
+
 ```
 Python Version: 3.13.1 experimental free-threading build
 CPU Cores: 16
@@ -207,21 +219,24 @@ Average Time per Thread: 1.01 seconds
 
 That was cool and pretty fast. But realistically, when are you going to get a team at work to embrace something experimental because it's faster?
 
-![reality](/images/2025/02/20250201-meme2.png "reality")
+![reality](/images/2025/02/20250201-meme2.png 'reality')
 
 ### **Go: Goroutines and Channels**
 
 Here are some basics on Go's native concurrency:
+
 - Go uses **goroutines**, which are **lightweight** threads managed by the Go runtime.
 - Goroutines **do not require OS threads** and have very low memory overhead (~2KB per goroutine).
 - **Channels** are used to safely share data between goroutines (though I don't think I'll go into them in this blog).
 
 Let's create a simple Go script. Setup the project and create a Go file.
+
 ```bash
 go mod init cputest
 ```
 
 ### `main.go`
+
 ```go
 package main
 
@@ -294,6 +309,7 @@ func main() {
 ```
 
 Next run `go run main.go` and you should see the output. My example:
+
 ```
 Go Version: go1.23.4
 CPU Cores: 16
@@ -302,7 +318,7 @@ Execution Time: 0.11 seconds
 Average Time per Goroutine: 0.01 seconds
 ```
 
-![lets GO](/images/2025/02/20250201-meme3.png "lets GO")
+![lets GO](/images/2025/02/20250201-meme3.png 'lets GO')
 
 ## Comparisons
 

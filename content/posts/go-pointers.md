@@ -19,6 +19,7 @@ If you're coming from Python, you might be wondering why we even need pointers. 
 In Python, all variables are essentially references to objects. When you pass a variable to a function, you're passing a reference, but you don't get explicit control over whether something is passed by reference or by value. This is why you can modify a list inside a function, but not an integer.
 
 Here's an example:
+
 ```python
 # In Python, you can change mutable objects in functions
 def add_cat(cat_list):

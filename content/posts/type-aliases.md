@@ -68,6 +68,7 @@ graph TD
     style I fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
     style J fill:#388E3C,stroke:#A5D6A7,stroke-width:2px,color:#fff
 ```
+
 <!-- ![Type Aliases](/images/2025/02/20250215-mermaid1.png) -->
 
 Generic type aliases allow us to create type synonyms that can work with different data types while maintaining Go's strong type safety.
@@ -184,6 +185,7 @@ func main() {
 ```
 
 The real power of these generic type aliases becomes apparent when you need to:
+
 1. Handle different data types with the same logic
 2. Provide type safety without code duplication
 3. Build reusable components that work across your codebase
@@ -225,10 +227,9 @@ func main() {
 }
 ```
 
-
 ## Language Comparison: Generic Type Aliases Across Other Languages
 
-Let's explore how TypeScript and Python handle generic type aliases compared to Go 1.24. This should help those of you reading who are familiar with other languages, but have never touched type aliases (*let alone generics!*).
+Let's explore how TypeScript and Python handle generic type aliases compared to Go 1.24. This should help those of you reading who are familiar with other languages, but have never touched type aliases (_let alone generics!_).
 
 ### TypeScript: Type Aliases
 
@@ -237,43 +238,44 @@ TypeScript's type system is like that overachieving friend who always does extra
 ```typescript
 // The classic Result type - TypeScript style
 type Result<T> = {
-    data: T;              // Generic data of any type
-    success: boolean;     // Operation status
-    error: Error | null;  // Notice the union type - very TypeScript!
-}
+  data: T; // Generic data of any type
+  success: boolean; // Operation status
+  error: Error | null; // Notice the union type - very TypeScript!
+};
 
 // Sets with TypeScript's powerful type constraints
 type Set<T extends string | number | symbol> = {
-    [key in T]: boolean;  // Using mapped types - a TypeScript specialty
-}
+  [key in T]: boolean; // Using mapped types - a TypeScript specialty
+};
 
 // Optional values using union types
 type Optional<T> = {
-    value: T;
-    hasValue: boolean;
-} | null;  // Union with null - TypeScript's way of handling optional values
+  value: T;
+  hasValue: boolean;
+} | null; // Union with null - TypeScript's way of handling optional values
 
 // Let's put these to work
 const userResult: Result<string> = {
-    data: "John Doe",
-    success: true,
-    error: null
+  data: 'John Doe',
+  success: true,
+  error: null
 };
 
 // TypeScript's type inference is pretty smart
 const numberSet: Set<number> = {
-    1: true,
-    2: true
-    // Try adding a string here - TypeScript will yell at you!
+  1: true,
+  2: true
+  // Try adding a string here - TypeScript will yell at you!
 };
 
 // The compiler catches type mismatches
 const invalidSet: Set<number> = {
-    "one": true  // Error: string key in number set
+  one: true // Error: string key in number set
 };
 ```
 
 What makes TypeScript special:
+
 1. Union types (`Error | null`)
 2. Mapped types (`[key in T]`)
 3. Type constraints (`extends string | number | symbol`)
@@ -330,6 +332,7 @@ number_set: Set[int] = {
 ```
 
 Python's approach is unique because:
+
 1. Type hints are optional
 2. Runtime behavior isn't affected by types
 3. External type checkers (like mypy) do the heavy lifting
@@ -371,10 +374,10 @@ type Result[T any] = struct {
 ```typescript
 // TypeScript
 type Result<T> = {
-    data: T;
-    success: boolean;
-    error: Error | null;
-}
+  data: T;
+  success: boolean;
+  error: Error | null;
+};
 ```
 
 ```python

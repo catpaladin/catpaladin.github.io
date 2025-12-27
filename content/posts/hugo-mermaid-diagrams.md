@@ -15,6 +15,7 @@ After spending way too many hours banging my head against this particular wall w
 If you're coming to this blog post and don't know what Mermaid diagrams are, they're a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.
 
 ### Sankey Diagrams
+
 ```mermaid
 sankey-beta
 
@@ -56,6 +57,7 @@ Search, Products, 5
 ````
 
 ### Sequence Diagrams
+
 ```mermaid
 sequenceDiagram
     participant Client
@@ -93,6 +95,7 @@ sequenceDiagram
 ````
 
 ### Class Diagrams
+
 ```mermaid
 classDiagram
     class Animal {
@@ -136,6 +139,7 @@ classDiagram
 ````
 
 ### State Diagrams
+
 ```mermaid
 stateDiagram-v2
     [*] --> Pending
@@ -165,6 +169,7 @@ stateDiagram-v2
 ````
 
 ### Entity Relationship Diagrams
+
 ```mermaid
 erDiagram
     USER ||--o{ POST : writes
@@ -212,6 +217,7 @@ erDiagram
 ````
 
 ### Gantt Chart Diagrams
+
 ```mermaid
 gantt
     title Project Timeline
@@ -273,35 +279,35 @@ Next, modify your override to include the Mermaid library. Add this code just be
 ```html
 <!-- Add Mermaid support - must be placed before closing body tag -->
 {{ if .Store.Get "hasMermaid" }}
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: 'dark',  // Options: default, forest, dark, neutral
-      securityLevel: 'loose',
-      // Add custom theme properties
-      themeVariables: {
-        // Primary colors
-        primaryColor: '#BB2528',
-        primaryTextColor: '#fff',
-        primaryBorderColor: '#7C0000',
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: true,
+    theme: 'dark', // Options: default, forest, dark, neutral
+    securityLevel: 'loose',
+    // Add custom theme properties
+    themeVariables: {
+      // Primary colors
+      primaryColor: '#BB2528',
+      primaryTextColor: '#fff',
+      primaryBorderColor: '#7C0000',
 
-        // Secondary colors
-        secondaryColor: '#006100',
-        secondaryTextColor: '#fff',
-        secondaryBorderColor: '#004d00',
+      // Secondary colors
+      secondaryColor: '#006100',
+      secondaryTextColor: '#fff',
+      secondaryBorderColor: '#004d00',
 
-        // Other colors as needed
-        mainBkg: '#1f2020',
-        textColor: '#ddd',
-        lineColor: '#999',
+      // Other colors as needed
+      mainBkg: '#1f2020',
+      textColor: '#ddd',
+      lineColor: '#999',
 
-        // Specific diagram colors
-        nodeBorder: '#777',
-        titleColor: '#F8F8F8'
-      }
-    });
-  </script>
+      // Specific diagram colors
+      nodeBorder: '#777',
+      titleColor: '#F8F8F8'
+    }
+  });
+</script>
 {{ end }}
 ```
 

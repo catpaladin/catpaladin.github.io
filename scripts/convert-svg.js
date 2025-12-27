@@ -1,0 +1,115 @@
+import sharp from 'sharp';
+import { readdir, readFile } from 'fs/promises';
+import { join } from 'path';
+// import { join, dirname } from 'path';
+// import { fileURLToPath } from 'url';
+
+// Get current directory
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = dirname(__filename);
+
+/**
+ * Find all SVG files recursively in a directory
+ * @param {string} dir Directory to search
+ * @param {Array} fileList Array to store results
+ * @returns {Promise<Array>} List of SVG files
+ */
+async function findSvgFiles(dir, fileList = []) {
+  try {
+    const files = await readdir(dir, { withFileTypes: true });
+
+    for (const file of files) {
+      const path = join(dir, file.name);
+
+      if (file.isDirectory()) {
+        // Recursively search directories
+        await findSvgFiles(path, fileList);
+      } else if (file.name.toLowerCase().endsWith('.svg')) {
+        fileList.push(path);
+      }
+    }
+
+    return fileList;
+  } catch (error) {
+    console.error(`Error searching directory ${dir}:`, error);
+    return fileList;
+  }
+}
+
+/**
+ * Convert SVG to PNG
+ * @param {string} svgPath Path to SVG file
+ * @returns {Promise<void>}
+ */
+async function convertSvgToPng(svgPath) {
+  try {
+    // Create PNG file in the exact same directory
+    const pngPath = svgPath.replace(/\.svg$/i, '.png');
+    console.log(`Converting ${svgPath} to ${pngPath}`);
+
+    try {
+      // Read SVG file
+      const svgBuffer = await readFile(svgPath);
+
+      // Convert to PNG using sharp
+      await sharp(svgBuffer, { density: 300 }) // Higher density for better quality
+        .resize({
+          width: 1200,
+          height: 630,
+          fit: 'contain',
+          background: { r: 255, g: 255, b: 255, alpha: 1 }
+        })
+        .png()
+        .toFile(pngPath);
+
+      console.log(`✅ Successfully converted ${svgPath} to PNG`);
+      return true;
+    } catch (err) {
+      console.error(`❌ Error converting ${svgPath}:`, err);
+      return false;
+    }
+  } catch (err) {
+    console.error(`❌ Error processing ${svgPath}:`, err);
+    return false;
+  }
+}
+
+/**
+ * Main function
+ */
+async function main() {
+  try {
+    // Find all SVG files in static directory
+    console.log('Searching for SVG files in static directory...');
+    const files = await findSvgFiles('static');
+
+    console.log(`Found ${files.length} SVG files`);
+
+    if (files.length === 0) {
+      console.log('No SVG files found to convert');
+      process.exit(0);
+    }
+
+    // Process each SVG file
+    const results = await Promise.all(files.map((file) => convertSvgToPng(file)));
+
+    // Count successful conversions
+    const successCount = results.filter((result) => result).length;
+    console.log(`Converted ${successCount} of ${files.length} SVG files to PNG`);
+
+    if (successCount < files.length) {
+      console.warn('⚠️ Some conversions failed. Check the logs for details.');
+    } else {
+      console.log('✅ All conversions completed successfully!');
+    }
+  } catch (error) {
+    console.error('❌ Error in main process:', error);
+    process.exit(1);
+  }
+}
+
+// Run the main function
+main().catch((error) => {
+  console.error('❌ Unhandled error:', error);
+  process.exit(1);
+});

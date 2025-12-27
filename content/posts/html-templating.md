@@ -92,6 +92,7 @@ example-templ-project/
 ├── go.sum
 └── Makefile
 ```
+
 {{<admonition title="💡 Tip" bg-color="#004D40">}}
 Keep your `.templ` files and their generated `.go` files in separate packages to avoid circular dependencies. The generated code should be in a different package from your application code.
 {{</admonition>}}
@@ -104,6 +105,7 @@ In a Go + Templ project, it's important to follow these principles:
 4. **Idiomatic Go**: Follow standard Go project layouts and conventions
 
 To make this process easier, let's create the following:
+
 - A `generate-templ.sh` for generating `.templ` files and putting our templated `_templ.go` files under our `internal/` directory.
 - A `Makefile` to simplify our all our commands.
 - A `.air.toml` for using Air to hot reload our app as we work on it.

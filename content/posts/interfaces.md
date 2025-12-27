@@ -6,13 +6,13 @@ tags = ["go", "interfaces", "python", "typescript", "mocks", "aws", "fundamental
 featured_image = "/images/gophers/go-learn.svg"
 +++
 
-I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (*weekend project*) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go's interface system hit me like a revelation.
+I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (_weekend project_) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go's interface system hit me like a revelation.
 
 It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.
 
 ![interfaces](/images/2025/03/20250315-meme1.png)
 
-If you're coming from other languages, Go's interfaces might seem too simple to be powerful. Trust me, that simplicity is deceptive. It's like discovering that the unassuming Swiss Army knife in your pocket can also transform into a top of the line commercial espresso grinder (*I wish this was possible*).
+If you're coming from other languages, Go's interfaces might seem too simple to be powerful. Trust me, that simplicity is deceptive. It's like discovering that the unassuming Swiss Army knife in your pocket can also transform into a top of the line commercial espresso grinder (_I wish this was possible_).
 
 It can be a hard concept for folks. I still remember at a previous job, a couple of coworkers were complaining to me about another coworker saying, "BlahBlah doesn't understand interfaces. Just look at the codebase." My opinion on this is that interfaces should be implemented the way they are designed for their language, and not some anti-pattern. Oh, and yes, BlahBlah did not understand interfaces for the language. They were using an anti-pattern. 😆
 
@@ -47,14 +47,14 @@ const fileLogger = {
 function processData(data: string, logger: Logger): void {
   try {
     // Process data...
-    logger.log("Data processed successfully");
+    logger.log('Data processed successfully');
   } catch (e) {
     logger.error(`Failed to process data: ${e.message}`);
   }
 }
 
 // This works! TypeScript uses duck typing to verify that fileLogger matches the Logger interface
-processData("some data", fileLogger);
+processData('some data', fileLogger);
 ```
 
 In TypeScript land, you're constantly dealing with:
@@ -110,17 +110,17 @@ const customLogger = {
 function processData(data: string, logger: Logger): void {
   try {
     // Process data...
-    logger.log("Data processed successfully");
+    logger.log('Data processed successfully');
   } catch (e) {
     logger.error(`Failed to process data: ${e.message}`);
   }
 }
 
 // Works with our custom logger
-processData("some data", customLogger);
+processData('some data', customLogger);
 
 // We can also still access the extra methods
-customLogger.warn("This is a warning"); // This works!
+customLogger.warn('This is a warning'); // This works!
 ```
 
 Which looks like:
@@ -185,6 +185,7 @@ Python's approach is:
 The Protocol system is similar to Go's interfaces but lives primarily in the type checking realm – your code will run even if types don't match, potentially leading to runtime errors. Of course it's totally possible you're working on a cloud team using Python that doesn't understand interfaces, and simply write Python like scripts or commit full AI generated code. In that case, you're less likely to see use of interfaces benefiting the codebase. Let it languish.
 
 Let's visualize Protocol use:
+
 ```mermaid
 flowchart TD
     subgraph "Python"
@@ -238,6 +239,7 @@ Go's approach is:
 - Zero runtime overhead for interface checks
 
 We can visualize this as:
+
 ```mermaid
 flowchart TD
     subgraph "Go"
@@ -299,7 +301,6 @@ The fundamental difference is in who defines the interfaces and how they're conn
 2. **Python**: Library authors expect method signatures, application developers provide matching objects. Type checkers optionally verify. ↔️ _Loose coupling with optional checking_
 3. **Go**: Application developers define interfaces based on what they need, and any library that happens to have matching methods automatically works. ↔️ _Perfect decoupling_
 
-
 {{<admonition title="💡 Tip" bg-color="#004D40">}}
 Go's approach inverts the dependency relationship!
 Instead of libraries dictating interfaces that your code must implement, your code defines interfaces that any library can satisfy without modification.
@@ -310,7 +311,7 @@ This design means:
 - Interfaces can be added to existing code without modifying it
 - Dependencies flow in the direction you want (toward interfaces, not implementations)
 - Your code becomes naturally more testable and modular (HUGE!)
-{{</admonition>}}
+  {{</admonition>}}
 
 Let's dive deeper into why Go's interfaces are so incredible and how you can leverage their full power.
 
@@ -334,6 +335,7 @@ func (p Person) String() string {
     return fmt.Sprintf("%s (%d years)", p.Name, p.Age)
 }
 ```
+
 {{<admonition title="💡 Tip" bg-color="#004D40">}}
 Think of Go interfaces as describing what a type can _do_, not what a type _is_. This subtle shift will change how you design your code.
 {{</admonition>}}
@@ -858,9 +860,9 @@ So go forth and interface all the things - just keep 'em small!
 
 ## References
 
-* [1] [Rob Pike, "Go Proverbs"](https://go-proverbs.github.io/)
-* [2] [Go Documentation, "Interfaces"](https://golang.org/doc/effective_go#interfaces)
-* [3] [The Go Authors, "Effective Go"](https://golang.org/doc/effective_go)
-* [4] [The Go Team, "Standard Library Documentation"](https://pkg.go.dev/std)
-* [5] [The Go Blog, "The Laws of Reflection"](https://go.dev/blog/laws-of-reflection)
-* [6] [Ian Lance Taylor, "Go Interfaces"](https://research.swtch.com/interfaces)
+- [1] [Rob Pike, "Go Proverbs"](https://go-proverbs.github.io/)
+- [2] [Go Documentation, "Interfaces"](https://golang.org/doc/effective_go#interfaces)
+- [3] [The Go Authors, "Effective Go"](https://golang.org/doc/effective_go)
+- [4] [The Go Team, "Standard Library Documentation"](https://pkg.go.dev/std)
+- [5] [The Go Blog, "The Laws of Reflection"](https://go.dev/blog/laws-of-reflection)
+- [6] [Ian Lance Taylor, "Go Interfaces"](https://research.swtch.com/interfaces)

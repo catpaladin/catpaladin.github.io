@@ -1,15 +1,12 @@
-{{ $title := .Get "title" | default "Table of Contents" }}
-{{ $class := .Get "class" | default "toc" }}
+{{ $title := .Get "title" | default "Table of Contents" }} {{ $class := .Get "class" | default "toc"
+}}
 
 <div class="{{ $class }}">
   <div class="toc-title">{{ $title }}</div>
-  <div class="toc-content">
-    {{ .Page.TableOfContents }}
-  </div>
+  <div class="toc-content">{{ .Page.TableOfContents }}</div>
 </div>
 
-{{ if not (.Page.Scratch.Get "hasTocStyles") }}
-{{ .Page.Scratch.Set "hasTocStyles" "True" }}
+{{ if not (.Page.Scratch.Get "hasTocStyles") }} {{ .Page.Scratch.Set "hasTocStyles" "True" }}
 <style>
   .toc {
     background-color: #f9f9f9;

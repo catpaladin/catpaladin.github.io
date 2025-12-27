@@ -107,21 +107,23 @@ Create an `index.html` file in your project root. This template will handle our 
 {{define "index"}}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Hello World</title>
-        <!-- Include TailwindCSS for styling -->
-        <script src="https://cdn.tailwindcss.com"></script>
-        <!-- Include HTMX for dynamic interactions -->
-        <script src="https://unpkg.com/htmx.org@1.9.7"
-          integrity="sha384-EAzY246d6BpbWR7sQ8+WEm40J8c3dHFsqC58IgPlh4kMbRRI6P6WA+LA/qGAyAu8"
-          crossorigin="anonymous"></script>
-    </head>
-    <body>
-        <!-- Display the message passed from our Go handler -->
-        <p>{{.Message}}</p>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hello World</title>
+    <!-- Include TailwindCSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Include HTMX for dynamic interactions -->
+    <script
+      src="https://unpkg.com/htmx.org@1.9.7"
+      integrity="sha384-EAzY246d6BpbWR7sQ8+WEm40J8c3dHFsqC58IgPlh4kMbRRI6P6WA+LA/qGAyAu8"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <!-- Display the message passed from our Go handler -->
+    <p>{{.Message}}</p>
+  </body>
 </html>
 {{end}}
 ```
@@ -135,6 +137,7 @@ go run main.go
 ```
 
 You can now access your application:
+
 - Visit `http://localhost:31000` to see the basic "Hello, World!" message
 - Navigate to `http://localhost:31000/hello` to see the template-rendered message with HTMX capabilities
 

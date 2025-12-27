@@ -1,4 +1,3 @@
-theme = "m10c"
 baseURL = "https://blog.mikesahari.com/"
 languageCode = "en-us"
 title = "It's Go time!"
@@ -78,4 +77,16 @@ title = "It's Go time!"
   tag = "tags"
 
 [outputs]
-  home = ["HTML", "RSS"]
+  home = ["HTML", "RSS", "JSON"]
+
+[related]
+  threshold = 80
+  includeNewer = true
+  toLower = true
+
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+  [[related.indices]]
+    name = "date"
+    weight = 10

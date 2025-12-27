@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     {{ hugo.Generator }}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="author" content="{{ .Site.Params.author | default "John Doe" }}" />
+    <meta name="author" content="{{ .Site.Params.author | default "Mike Sahari" }}" />
     <meta name="description" content="{{ if .IsHome }}{{ .Site.Params.description }}{{ else }}{{ .Description }}{{ end }}" />
 
     <!-- Open Graph tags -->
@@ -16,321 +16,55 @@
     <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}" />
     <meta property="og:url" content="{{ .Permalink }}" />
 
-    <!-- Featured image handling with SVG conversion -->
-    {{ if .Params.featured_image }}
-      {{ $featured_image := .Params.featured_image }}
-      {{ $image_ext := path.Ext $featured_image }}
-
-      {{ if eq $image_ext ".svg" }}
-        {{ $png_version := replace $featured_image ".svg" ".png" }}
-        <!-- Check if a PNG version exists, otherwise use a default image -->
-        {{ if fileExists (printf "static%s" $png_version) }}
-          <meta property="og:image" content="{{ $png_version | absURL }}" />
-          <meta property="og:image:secure_url" content="{{ $png_version | absURL }}" />
-        {{ else }}
-          <!-- If no PNG version exists, use default image -->
-          <meta property="og:image" content="{{ .Site.Params.default_og_image | default "/images/default-og-image.png" | absURL }}" />
-          <meta property="og:image:secure_url" content="{{ .Site.Params.default_og_image | default "/images/default-og-image.png" | absURL }}" />
-        {{ end }}
-      {{ else }}
-        <!-- Not an SVG, use the image directly -->
-        <meta property="og:image" content="{{ $featured_image | absURL }}" />
-        <meta property="og:image:secure_url" content="{{ $featured_image | absURL }}" />
-      {{ end }}
-
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-    {{ end }}
-
-    {{ $style := resources.Get "css/main.scss" | resources.ExecuteAsTemplate "css/main.scss" . | css.Sass | resources.Minify | resources.Fingerprint -}}
+    <!-- Vite Assets -->
+    {{ $style := resources.Get "dist/catpaladin-blog.css" }}
+    {{ if $style }}
     <link rel="stylesheet" href="{{ $style.RelPermalink }}" />
-
-    <!-- Enhanced top navigation bar styling -->
-    <style>
-      /* Top navigation bar */
-      .top-nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 24px; /* Increased padding for larger height */
-        background-color: #2c3e50;
-        background-image: linear-gradient(to right, #2c3e50, #4a6785); /* Gradient background */
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
-      }
-
-      .top-nav-title-link {
-        text-decoration: none;
-        color: inherit;
-        transition: opacity 0.2s;
-        display: flex;
-        align-items: center;
-        margin-right: auto;
-      }
-
-      .top-nav-title-link:hover {
-        opacity: 0.85;
-      }
-
-      .top-nav-title {
-        font-weight: bold;
-        padding-right: 20px;
-        font-size: 1.2rem;
-        letter-spacing: 0.5px;
-        color: #fff;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-      }
-
-      .top-nav-social {
-        display: flex;
-        align-items: center;
-        margin-right: 20px; /* More space between social icons and menu */
-      }
-
-      .top-nav-social a {
-        margin-left: 15px; /* More space between icons */
-        color: #fff;
-        font-size: 1.25rem; /* Larger icons */
-        transition: transform 0.2s, color 0.2s;
-      }
-
-      .top-nav-social a:hover {
-        transform: scale(1.15); /* Slightly enlarge on hover */
-        color: #64b5f6; /* Highlight color on hover */
-      }
-
-      /* Menu container styling */
-      .menu-container {
-        position: relative;
-        z-index: 1000;
-      }
-
-      .menu-button {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        width: 30px; /* Larger button */
-        height: 24px; /* Larger button */
-        background: transparent;
-        border: none;
-        cursor: pointer;
-        padding: 0;
-        transition: transform 0.2s;
-      }
-
-      .menu-button:hover {
-        transform: scale(1.1); /* Slightly enlarge on hover */
-      }
-
-      .menu-button-line {
-        display: block;
-        width: 100%;
-        height: 3px; /* Thicker lines */
-        background-color: #fff;
-        border-radius: 3px;
-        transition: all 0.3s linear;
-      }
-
-      .menu-button.active .menu-button-line:nth-child(1) {
-        transform: translateY(10.5px) rotate(45deg);
-      }
-
-      .menu-button.active .menu-button-line:nth-child(2) {
-        opacity: 0;
-      }
-
-      .menu-button.active .menu-button-line:nth-child(3) {
-        transform: translateY(-10.5px) rotate(-45deg);
-      }
-
-      .menu-dropdown {
-        position: absolute;
-        top: 35px; /* Adjusted for larger button */
-        right: 0;
-        background-color: #2c3e50;
-        border-radius: 6px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        min-width: 180px; /* Wider dropdown */
-        display: none;
-        padding: 10px 0;
-        border-top: 3px solid #64b5f6; /* Accent color at top */
-      }
-
-      .menu-dropdown.active {
-        display: block;
-        animation: fadeIn 0.2s ease-in-out; /* Smooth fade-in animation */
-      }
-
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-
-      .menu-dropdown a {
-        display: block;
-        padding: 10px 20px; /* Larger padding for menu items */
-        text-decoration: none;
-        color: #fff;
-        font-size: 1rem; /* Larger font */
-        transition: background-color 0.2s;
-      }
-
-      .menu-dropdown a:hover {
-        background-color: rgba(100, 181, 246, 0.2); /* Highlight color with transparency */
-        padding-left: 24px; /* Slight indent on hover */
-      }
-
-      /* Responsive adjustments */
-      @media (max-width: 600px) {
-        .top-nav {
-          padding: 10px 16px;
-        }
-
-        .top-nav-title {
-          font-size: 1rem;
-        }
-
-        .top-nav-social a {
-          margin-left: 12px;
-        }
-      }
-    </style>
-
-    {{ with .OutputFormats.Get "rss" -}}
-    {{ printf `<link rel=%q type=%q href=%q title=%q>` .Rel .MediaType.Type .Permalink site.Title | safeHTML }}
     {{ end }}
+
+    <script>
+      // Prevent FOUC and handle dark mode (Default to browser settings)
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+
+      // Pass data to Svelte - Use safeJS to prevent string escaping
+      window.BLOG_DATA = {
+        siteTitle: {{ .Site.Title | jsonify | safeJS }},
+        menu: {{ .Site.Menus.main | jsonify | safeJS }},
+        socials: {{ .Site.Params.social | jsonify | safeJS }},
+        description: {{ .Site.Params.description | jsonify | safeJS }},
+        author: {{ .Site.Params.author | jsonify | safeJS }},
+        isPage: {{ .IsPage | jsonify | safeJS }},
+        section: {{ .Section | jsonify | safeJS }}
+      };
+    </script>
 
     {{ template "_internal/google_analytics.html" . }}
     {{ template "_internal/twitter_cards.html" . }}
     {{ template "_internal/opengraph.html" . }}
-
   </head>
-  <body>
-    {{ partial "scroll-indicator.html" . }}
-
-    <!-- Enhanced top navigation bar -->
-    <div class="top-nav">
-      <a href="{{ "" | relURL }}" class="top-nav-title-link">
-        <span class="top-nav-title">{{ .Site.Title }}</span>
-      </a>
-
-      <!-- Social icons -->
-      {{- with .Site.Params.social }}
-      <div class="top-nav-social">
-        {{ range . }}
-          <a href="{{ .url }}" target="_blank" rel="noreferrer noopener me" aria-label="{{ .name }}">
-            {{ partial "icon.html" (dict "ctx" $ "name" .icon "title" .name) }}
-          </a>
+  <body class="transition-colors duration-300">
+    <!-- Source for Svelte content - hidden using hidden attribute to avoid style leakage -->
+    <div id="hugo-content" style="display: none;" aria-hidden="true">
+      <div id="hugo-toc">{{ .TableOfContents }}</div>
+      <main class="max-w-4xl mx-auto px-4 py-12">
+        {{ block "main" . }}
+          {{ .Content }}
         {{ end }}
-      </div>
-      {{- end }}
-
-      <!-- Menu container -->
-      <div class="menu-container">
-        <button class="menu-button" aria-label="Toggle menu">
-          <span class="menu-button-line"></span>
-          <span class="menu-button-line"></span>
-          <span class="menu-button-line"></span>
-        </button>
-
-        <div class="menu-dropdown">
-          {{- range .Site.Menus.main }}
-          <a href="{{ .URL }}">{{ .Name }}</a>
-          {{- end }}
-        </div>
-      </div>
+      </main>
     </div>
 
-    <main class="app-container">
-      {{ block "main" . }}
-        {{ .Content }}
-      {{ end }}
-    </main>
+    <!-- Svelte Target -->
+    <div id="app"></div>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const menuButton = document.querySelector('.menu-button');
-        const menuDropdown = document.querySelector('.menu-dropdown');
+    {{ $script := resources.Get "dist/app.js" }}
+    {{ if $script }}
+    <script src="{{ $script.RelPermalink }}" defer></script>
+    {{ end }}
 
-        if (menuButton && menuDropdown) {
-          // Toggle menu when button is clicked
-          menuButton.addEventListener('click', function() {
-            menuButton.classList.toggle('active');
-            menuDropdown.classList.toggle('active');
-          });
-
-          // Close menu when clicking outside
-          document.addEventListener('click', function(event) {
-            if (!menuButton.contains(event.target) && !menuDropdown.contains(event.target)) {
-              menuButton.classList.remove('active');
-              menuDropdown.classList.remove('active');
-            }
-          });
-        }
-
-        // Get the scroll indicator element
-        const scrollIndicator = document.getElementById('scroll-indicator');
-
-        // Function to update the scroll indicator
-        function updateScrollIndicator() {
-          // Calculate scroll progress
-          const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-          const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-          const scrolled = (winScroll / height) * 100;
-
-          // Update width of scroll indicator
-          scrollIndicator.style.width = scrolled + '%';
-        }
-
-        // Add scroll event listener
-        window.addEventListener('scroll', updateScrollIndicator);
-
-        // Initial update
-        updateScrollIndicator();
-      });
-    </script>
-
-  {{ if or (.Store.Get "hasMermaid") (.Store.Get "hasAnimatedMermaid") }}
-    <script type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({
-        startOnLoad: true,
-        theme: 'dark',  // Options: default, forest, dark, neutral
-        securityLevel: 'loose',
-        // Add custom theme properties
-        themeVariables: {
-          // Primary colors
-          primaryColor: '#BB2528',
-          primaryTextColor: '#fff',
-          primaryBorderColor: '#7C0000',
-
-          // Secondary colors
-          secondaryColor: '#006100',
-          secondaryTextColor: '#fff',
-          secondaryBorderColor: '#004d00',
-
-          // Other colors as needed
-          mainBkg: '#1f2020',
-          textColor: '#ddd',
-          lineColor: '#999',
-
-          // Specific diagram colors
-          nodeBorder: '#777',
-          titleColor: '#F8F8F8'
-        }
-      });
-    </script>
-  {{ end }}
-
-  {{ if .Store.Get "hasAnimatedMermaid" }}
-    {{ $animatedMermaidJS := resources.Get "js/animated-mermaid.js" | resources.Minify | resources.Fingerprint }}
-    <script src="{{ $animatedMermaidJS.RelPermalink }}"></script>
-  {{ end }}
-
-  <script data-goatcounter="https://msahari-blog.goatcounter.com/count"
-          async src="//gc.zgo.at/count.js"></script>
-
+    <script data-goatcounter="https://msahari-blog.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
   </body>
 </html>

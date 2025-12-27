@@ -1,56 +1,16 @@
-{{ $title := .Get "title" | default "My Tech Stack" }}
-{{ $bgColor := .Get "bgColor" | default "linear-gradient(145deg, #f6f8fa, #e8eaed)" }}
-
 <style>
-  .tech-stack-container-{{ anchorize $title }} {
-    background: {{ $bgColor }};
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-    margin: 20px 0;
+  .tech-stack-container {
+    @apply my-8 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 shadow-sm transition-all;
   }
-
   .tech-stack-title {
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 16px;
-    color: #333;
+    @apply text-lg font-bold text-slate-900 dark:text-white mb-6 text-center;
   }
-
   .tech-stack-icons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .tech-icon {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transition: transform 0.2s ease;
-  }
-
-  .tech-icon:hover {
-    transform: translateY(-5px);
-  }
-
-  .tech-icon img {
-    width: 48px;
-    height: 48px;
-  }
-
-  .tech-icon span {
-    font-size: 12px;
-    margin-top: 5px;
-    color: #444;
+    @apply flex flex-wrap gap-6 items-center justify-center;
   }
 </style>
 
-<div class="tech-stack-container-{{ anchorize $title }}">
-  <h3 class="tech-stack-title">{{ $title }}</h3>
-  <div class="tech-stack-icons">
-    {{ .Inner }}
-  </div>
+<div class="tech-stack-container">
+  <h3 class="tech-stack-title">{{ .Get "title" | default "Tech Stack" }}</h3>
+  <div class="tech-stack-icons">{{ .Inner }}</div>
 </div>

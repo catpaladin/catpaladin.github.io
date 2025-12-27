@@ -22,6 +22,7 @@ For project Kilonova to be complete, your engineers need to meet to chat and exc
 Analogy out of the way, this blog post is full of material because I have tons of notes (I use [Obsidian](https://obsidian.md/) btw) on Go Channels. Let's dive in.
 
 ## Table of Contents
+
 - [Understanding Go Channels](#understanding-go-channels)
   - [Basic Channel Operations](#basic-channel-operations)
   - [Example: Sending and Receiving Data](#example-sending-and-receiving-data)
@@ -119,6 +120,7 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 Buy more coffee!
 ```
@@ -173,6 +175,7 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 All jobs sent!
 Received job: 1
@@ -182,6 +185,7 @@ All jobs received!
 ```
 
 If the code was a little to dense, this flow chart shows the logic:
+
 ```mermaid
 flowchart TD
     A[Start] --> B{Receive from Channel}
@@ -247,6 +251,7 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 Got message: Orange
 Got message: LaCroix
@@ -257,6 +262,7 @@ Channel closed, no more messages.
 Using `range` with channels eliminates the need for manual checking with the comma-ok syntax, resulting in more readable code.
 
 Here is a flowchart to help understand the above code:
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Create Channel]
@@ -310,6 +316,7 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 Goroutine: Ready to send message
 Main: Ready to receive
@@ -321,6 +328,7 @@ Main: Received: Synchronous Message
 The receiver waits for the sender, and the sender doesn't continue until the receiver has taken the message. This demonstrates the synchronization that unbuffered channels provide.
 
 The flowchart breaks down the logic:
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Create Unbuffered Channel]
@@ -357,6 +365,7 @@ flowchart TD
 ### When to Use Unbuffered Channels
 
 Unbuffered channels are particularly useful when:
+
 - You need a strict handshake between goroutines
 - The timing of operations is critical
 - You want to limit concurrent operations
@@ -404,6 +413,7 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 Sending message 1: First
 Sent message 1
@@ -419,6 +429,7 @@ Received: Third
 The first two sends complete immediately, but the third one has to wait until we receive a message and free up buffer space. This demonstrates how buffered channels work.
 
 Logic Flowchart:
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Create Buffered Channel with capacity N]
@@ -502,11 +513,13 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 Timeout: operation took too long!
 ```
 
 The logic for this example is as follows:
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Create channel for operation]
@@ -568,12 +581,14 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 No message available
 Cannot send: no receiver ready
 ```
 
 Here's what the non-blocking logic looks like:
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Create channel]
@@ -611,7 +626,6 @@ flowchart TD
 ```
 
 The `default` case in `select` makes channel operations non-blocking, which is useful when implementing complex event processing systems.
-
 
 ---
 
@@ -660,6 +674,7 @@ func main() {
 ```
 
 **Output:**
+
 ```bash
 Consumed: Message 1
 Consumed: Message 2
@@ -667,6 +682,7 @@ Consumed: Message 3
 ```
 
 We can see the logic as:
+
 ```mermaid
 flowchart TD
     A[Start] --> B[Create bidirectional channel: chan T]
@@ -1340,11 +1356,13 @@ func main() {
 ```
 
 **Output:**
+
 ```
 fatal error: all goroutines are asleep - deadlock!
 ```
 
 Another sneaky source of deadlocks is **nil channels**. A nil channel blocks forever and can cause your program to hang silently:
+
 ```go
 func main() {
     var ch chan string  // Declared but not initialized - nil channel
@@ -1365,6 +1383,7 @@ func main() {
 ```
 
 Notice the declaration of the channel. I read somewhere online that `make` is your friend and you should always use it when using either a `chan` or `map`. Let's take a look at the wrong vs right way to implement this:
+
 ```go
 // WRONG - might leave channel as nil
 var ch chan string
@@ -1451,6 +1470,7 @@ Using a dedicated goroutine to manage state and communicating with it via channe
 Go channels transform concurrent programming from a complex, error-prone endeavor into an elegant, manageable process. By enforcing the philosophy of "communicating by sharing memory" rather than "sharing memory to communicate," Go helps developers build robust concurrent systems with fewer bugs.
 
 Key takeaways:
+
 1. **Unbuffered channels** provide synchronization when both sender and receiver need to coordinate
 2. **Buffered channels** allow for asynchronous operations with controlled capacity
 3. The **select statement** enables managing multiple channels simultaneously

@@ -1,7 +1,6 @@
-{{ $name := .Get "name" }}
-{{ $src := .Get "src" }}
-
-<div class="tech-icon">
-  <img src="{{ $src }}" alt="{{ $name }}" />
-  <span>{{ $name }}</span>
+<div class="flex flex-col items-center group">
+  <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 group-hover:bg-primary/10 transition-colors">
+    <img src="{{ .Get "src" }}" alt="{{ .Get "name" }}" class="w-10 h-10 grayscale group-hover:grayscale-0 transition-all duration-300" />
+  </div>
+  <span class="mt-2 text-[10px] font-bold uppercase tracking-wider text-slate-500 group-hover:text-primary transition-colors">{{ .Get "name" }}</span>
 </div>

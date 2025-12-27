@@ -7,7 +7,12 @@ body {
   line-height: 1.6;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: $primary-color;
   font-family: 'Merriweather', serif; // Change to your preferred heading font
   font-weight: 700;
@@ -20,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 code {
-  color: #FF8C00; // This is a dark orange color
+  color: #ff8c00; // This is a dark orange color
   // background-color: rgba(255, 140, 0, 0.1);
   padding: 2px 4px;
   border-radius: 3px;
@@ -49,7 +54,8 @@ pre code {
   font-weight: 700; // Optional: make the font weight bolder
 }
 
-strong, b {
+strong,
+b {
   color: $primary-color;
   font-weight: 700;
 }
