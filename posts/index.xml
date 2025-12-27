@@ -84,47 +84,15 @@ course, in Go!</p>
 </span></span><span style="display:flex;"><span>    │   ├── paths.zsh
 </span></span><span style="display:flex;"><span>    │   └── prompt.zsh
 </span></span><span style="display:flex;"><span>    └── .zshrc
-</span></span></code></pre></div>
-
-<style>
-    
-    .admonition{
-        border-radius: 5px;
-        padding: 0px;
-        border-left: 5px solid #00bcf6;
-        box-shadow: 0 0 .5rem .2rem #00000025;
-    }
-    .admonition-title-container{
-        background-color: #00bcf6;
-        border-top-right-radius: 5px;
-    }
-    .admonition-title {
-        font-weight: bolder;
-        font-size: large;
-        backdrop-filter: grayscale(50%) brightness(150%);
-        -webkit-backdrop-filter: grayscale(50%) brightness(150%);
-        padding: 5px 0 5px 30px;
-        border-top-right-radius: 5px;
-    }
-    @media (prefers-color-scheme: dark) {
-        .admonition-title {
-            backdrop-filter: grayscale(40%) brightness(40%);
-            -webkit-backdrop-filter: grayscale(40%) brightness(40%);
-        }
-    }
-    .admonition-content{
-        padding: 10px 0 10px 15px
-    }
-</style>
-
-
-<div class="admonition" style="border-left: 5px solid #283593;">
-    <div class="admonition-title-container" style="background-color: #283593;">
-        <div class="admonition-title">
-            📝 NOTE
-        </div>
-    </div>
-        <div class="admonition-content">This directory structure is setup for <code>stow</code> (mentioned further below) to symlink configs.</div>
+</span></span></code></pre></div><div
+  class="my-8 rounded-2xl border-l-4 overflow-hidden shadow-lg border-primary bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 transition-all"
+>
+  
+  <div class="px-6 py-3 font-bold text-white bg-primary">📝 NOTE</div>
+  
+  <div class="p-6 text-slate-700 dark:text-slate-200 leading-relaxed prose-sm dark:prose-invert">
+    This directory structure is setup for <code>stow</code> (mentioned further below) to symlink configs.
+  </div>
 </div>
 
 <h2 id="neovim-the-development-environment">Neovim: The Development Environment</h2>
