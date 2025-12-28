@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import Navbar from './Navbar.svelte';
   import Footer from './Footer.svelte';
   import ScrollIndicator from './ScrollIndicator.svelte';
@@ -32,6 +33,11 @@
     $props();
 
   let mermaidBusy = false;
+  let appContainer: HTMLDivElement;
+
+  onMount(() => {
+    appContainer = document.querySelector('#app') as HTMLDivElement;
+  });
 
   $effect(() => {
     // These dependencies trigger the effect on content, TOC, or theme changes
@@ -119,6 +125,51 @@
     const rafId = requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setTimeout(renderMermaid, 200);
+
+        // Add TOC event listeners after content is rendered
+        setTimeout(() => {
+          const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
+
+          // Add click handlers to query within app container only
+          tocLinks.forEach((link) => {
+            // Only add event listener if it hasn't been added already
+            if (!(link as HTMLElement).dataset.tocListenerAdded) {
+              (link as HTMLElement).dataset.tocListenerAdded = 'true';
+
+              link.addEventListener('click', (event: Event) => {
+                const target = event.currentTarget as HTMLAnchorElement;
+                const targetHash = target.hash;
+
+                if (!targetHash) {
+                  return;
+                }
+
+                // Find the target element WITHIN the Svelte app container
+                const targetElement = appContainer ? appContainer.querySelector(targetHash) : null;
+
+                if (!targetElement) {
+                  return;
+                }
+
+                event.preventDefault();
+
+                // Force scroll with offset
+                const navbar = document.querySelector('nav');
+                const navbarHeight = navbar ? navbar.offsetHeight : 64;
+                const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = elementPosition - navbarHeight;
+
+                window.scrollTo({
+                  top: offsetPosition,
+                  behavior: 'smooth'
+                });
+
+                // Update URL hash
+                history.pushState(null, '', targetHash);
+              });
+            }
+          });
+        }, 500); // Increased timeout to ensure DOM is ready
       });
     });
 
