@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&family=Merriweather:wght@400;700&display=swap');
 
 body {
-  font-family: 'Montserrat', sans-serif; // Change to your preferred body font
+  font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   line-height: 1.6;
 }
@@ -14,9 +14,19 @@ h4,
 h5,
 h6 {
   color: $primary-color;
-  font-family: 'Merriweather', serif; // Change to your preferred heading font
+  font-family: 'Merriweather', serif;
   font-weight: 700;
-  scroll-margin-top: 5.5rem; /* Account for sticky navbar */
+}
+
+// Critical: Add scroll margin to ALL headers with IDs
+h1[id],
+h2[id],
+h3[id],
+h4[id],
+h5[id],
+h6[id] {
+  scroll-margin-top: 6rem !important;
+  scroll-snap-margin-top: 6rem !important; /* Safari fallback */
 }
 
 .content {
@@ -26,14 +36,13 @@ h6 {
 }
 
 code {
-  color: #ff8c00; // This is a dark orange color
-  // background-color: rgba(255, 140, 0, 0.1);
+  color: #ff8c00;
   padding: 2px 4px;
   border-radius: 3px;
 }
 
 pre {
-  border-radius: 8px; // Adjust this value to control the roundness
+  border-radius: 8px;
   overflow-x: auto;
   white-space: pre;
   word-wrap: normal;
@@ -43,16 +52,16 @@ pre {
 }
 
 pre code {
-  color: inherit; // Keeps the color from the theme
+  color: inherit;
   background-color: transparent;
   word-wrap: normal;
 }
 
 .post-title {
   color: $primary-color;
-  font-size: 2.5rem; // Adjust this value as needed
-  line-height: 1.2; // Adjust line height for better spacing
-  font-weight: 700; // Optional: make the font weight bolder
+  font-size: 2.5rem;
+  line-height: 1.2;
+  font-weight: 700;
 }
 
 strong,
@@ -75,7 +84,7 @@ b {
 #scroll-indicator {
   height: 100%;
   width: 0;
-  background-color: $primary-color; // Using your theme's primary color
+  background-color: $primary-color;
   transition: width 0.1s ease-out;
 }
 

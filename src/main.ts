@@ -23,6 +23,9 @@ if (source) {
   // Get the inner main content
   const mainContent = source.querySelector('main');
   initialContent = mainContent ? mainContent.innerHTML : source.innerHTML;
+
+  // Remove the source element after extraction to avoid conflicts
+  source.remove();
 }
 
 const app = mount(App as any, {

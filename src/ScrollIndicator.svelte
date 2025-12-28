@@ -20,7 +20,7 @@
   });
 </script>
 
-<div class="fixed top-0 left-0 w-full h-1 z-[60] pointer-events-none bg-transparent">
+<div class="fixed top-0 left-0 w-full h-1 z-[150] pointer-events-none">
   <div
     class="h-full bg-primary shadow-[0_0_10px_rgba(0,176,255,0.5)] transition-all duration-75 ease-out"
     style="width: {progress}%"

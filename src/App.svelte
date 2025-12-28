@@ -34,20 +34,32 @@
   let mermaidBusy = false;
 
   $effect(() => {
-    // These dependencies trigger the effect on content, TOC, or theme changes
     void content;
     void tocHtml;
     void document.documentElement.classList.contains('dark');
 
-    // Initial check for hash in URL on load - ensures page scrolls to section after Svelte renders
+    // Handle initial page load with hash in URL
     if (window.location.hash) {
-      setTimeout(() => {
-        const id = decodeURIComponent(window.location.hash.slice(1));
+      const scrollToHash = () => {
+        const id = window.location.hash.substring(1);
         const element = document.getElementById(id);
+
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          // Check if element has dimensions
+          const rect = element.getBoundingClientRect();
+
+          if (rect.height > 0) {
+            // Element is rendered, scroll to it
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            // Element not ready, try again
+            setTimeout(scrollToHash, 100);
+          }
         }
-      }, 500);
+      };
+
+      // Wait for content to render
+      setTimeout(scrollToHash, 300);
     }
 
     const renderMermaid = async () => {
@@ -114,7 +126,6 @@
       mermaidBusy = false;
     };
 
-    // Double-RAF + a small delay to ensure DOM and styles are fully applied
     const rafId = requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (!mermaidBusy) {
@@ -130,18 +141,20 @@
   });
 </script>
 
-<div class="min-h-screen flex flex-col relative">
+<div class="min-h-screen flex flex-col">
   <ScrollIndicator />
   <Navbar {siteTitle} {menu} />
 
-  <div class="flex-grow max-w-4xl mx-auto px-4 py-12 w-full relative min-h-screen">
-    {#if isPage && section === 'posts'}
-      <TableOfContents {tocHtml} />
-    {/if}
-    {@html content}
-  </div>
-
-  <div class="flex-grow"></div>
+  <main class="flex-1 w-full">
+    <div class="max-w-4xl mx-auto px-4 py-12">
+      {#if isPage && section === 'posts'}
+        <TableOfContents {tocHtml} />
+      {/if}
+      <div class="content-wrapper">
+        {@html content}
+      </div>
+    </div>
+  </main>
 
   <Footer {socials} {siteTitle} {description} {author} />
 </div>
@@ -149,14 +162,58 @@
 <style>
   :global(html) {
     scroll-behavior: smooth;
-    overflow-y: scroll;
   }
 
   :global(body) {
     overflow-y: auto;
   }
 
-  /* Hide Hugo-injected TOCs to avoid duplication with the Svelte TOC */
+  /* Force proper layout for injected content */
+  :global(.content-wrapper) {
+    display: block;
+    position: relative;
+    width: 100%;
+    min-height: 100px;
+  }
+
+  /* Ensure all headers have proper dimensions and scroll offset */
+  :global(.content-wrapper h1),
+  :global(.content-wrapper h2),
+  :global(.content-wrapper h3),
+  :global(.content-wrapper h4),
+  :global(.content-wrapper h5),
+  :global(.content-wrapper h6) {
+    display: block !important;
+    position: relative !important;
+    scroll-margin-top: 6rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    min-height: 1.5rem !important;
+    line-height: 1.4 !important;
+  }
+
+  /* Ensure anchor links within headers work */
+  :global(.content-wrapper h1 a),
+  :global(.content-wrapper h2 a),
+  :global(.content-wrapper h3 a),
+  :global(.content-wrapper h4 a),
+  :global(.content-wrapper h5 a),
+  :global(.content-wrapper h6 a) {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Ensure all content has proper flow */
+  :global(.content-wrapper p),
+  :global(.content-wrapper ul),
+  :global(.content-wrapper ol),
+  :global(.content-wrapper pre),
+  :global(.content-wrapper blockquote) {
+    display: block;
+    position: relative;
+  }
+
   :global(.toc),
   :global(.post-toc) {
     display: none !important;

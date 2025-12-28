@@ -1,0 +1,6 @@
+<h{{ .Level }} id="{{ .Anchor | safeURL }}">
+  <a href="#{{ .Anchor | safeURL }}" class="anchor-link group flex items-center no-underline hover:no-underline">
+    {{ .Text | safeHTML }}
+    <span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span>
+  </a>
+</h{{ .Level }}>
