@@ -78,7 +78,7 @@
           // Check visibility and dimensions - more robust check
           const rect = el.getBoundingClientRect();
           if (rect.width === 0 || rect.height === 0) continue;
-
+          
           // Additional check: ensure element is actually visible in DOM
           const style = window.getComputedStyle(el);
           if (style.display === 'none' || style.visibility === 'hidden') continue;
@@ -123,54 +123,54 @@
 
     // Double-RAF + a small delay to ensure DOM and styles (like dark mode) are fully applied
     const rafId = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setTimeout(renderMermaid, 200);
+         requestAnimationFrame(() => {
+          setTimeout(renderMermaid, 200);
+          
+           // Add TOC event listeners after content is rendered
+          setTimeout(() => {
+            const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
 
-        // Add TOC event listeners after content is rendered
-        setTimeout(() => {
-          const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
+            // Add click handlers to query within app container only
+            tocLinks.forEach((link) => {
+              // Only add event listener if it hasn't been added already
+              if (!(link as HTMLElement).dataset.tocListenerAdded) {
+                (link as HTMLElement).dataset.tocListenerAdded = 'true';
 
-          // Add click handlers to query within app container only
-          tocLinks.forEach((link) => {
-            // Only add event listener if it hasn't been added already
-            if (!(link as HTMLElement).dataset.tocListenerAdded) {
-              (link as HTMLElement).dataset.tocListenerAdded = 'true';
+                link.addEventListener('click', (event: Event) => {
+                  const target = event.currentTarget as HTMLAnchorElement;
+                  const targetHash = target.hash;
 
-              link.addEventListener('click', (event: Event) => {
-                const target = event.currentTarget as HTMLAnchorElement;
-                const targetHash = target.hash;
+                  if (!targetHash) {
+                    return;
+                  }
 
-                if (!targetHash) {
-                  return;
-                }
+                  // Find the target element WITHIN the Svelte app container
+                  const targetElement = appContainer ? appContainer.querySelector(targetHash) : null;
 
-                // Find the target element WITHIN the Svelte app container
-                const targetElement = appContainer ? appContainer.querySelector(targetHash) : null;
+                  if (!targetElement) {
+                    return;
+                  }
 
-                if (!targetElement) {
-                  return;
-                }
+                  event.preventDefault();
 
-                event.preventDefault();
+                  // Force scroll with offset
+                  const navbar = document.querySelector('nav');
+                  const navbarHeight = navbar ? navbar.offsetHeight : 64;
+                  const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                  const offsetPosition = elementPosition - navbarHeight;
 
-                // Force scroll with offset
-                const navbar = document.querySelector('nav');
-                const navbarHeight = navbar ? navbar.offsetHeight : 64;
-                const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-                const offsetPosition = elementPosition - navbarHeight;
+                  window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                  });
 
-                window.scrollTo({
-                  top: offsetPosition,
-                  behavior: 'smooth'
+                  // Update URL hash
+                  history.pushState(null, '', targetHash);
                 });
-
-                // Update URL hash
-                history.pushState(null, '', targetHash);
-              });
-            }
-          });
-        }, 500); // Increased timeout to ensure DOM is ready
-      });
+              }
+            });
+          }, 500); // Increased timeout to ensure DOM is ready
+        });
     });
 
     return () => {
