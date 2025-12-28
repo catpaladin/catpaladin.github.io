@@ -116,6 +116,15 @@
             {item.name}
           </a>
         {/each}
+
+        <!-- Add Search and About to mobile menu always -->
+        <Search />
+        <a
+          href="/about/"
+          class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+        >
+          About
+        </a>
       </div>
     </div>
   {/if}

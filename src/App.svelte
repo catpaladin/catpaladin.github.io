@@ -78,7 +78,7 @@
           // Check visibility and dimensions - more robust check
           const rect = el.getBoundingClientRect();
           if (rect.width === 0 || rect.height === 0) continue;
-          
+
           // Additional check: ensure element is actually visible in DOM
           const style = window.getComputedStyle(el);
           if (style.display === 'none' || style.visibility === 'hidden') continue;
@@ -123,54 +123,54 @@
 
     // Double-RAF + a small delay to ensure DOM and styles (like dark mode) are fully applied
     const rafId = requestAnimationFrame(() => {
-         requestAnimationFrame(() => {
-          setTimeout(renderMermaid, 200);
-          
-           // Add TOC event listeners after content is rendered
-          setTimeout(() => {
-            const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
+      requestAnimationFrame(() => {
+        setTimeout(renderMermaid, 200);
 
-            // Add click handlers to query within app container only
-            tocLinks.forEach((link) => {
-              // Only add event listener if it hasn't been added already
-              if (!(link as HTMLElement).dataset.tocListenerAdded) {
-                (link as HTMLElement).dataset.tocListenerAdded = 'true';
+        // Add TOC event listeners after content is rendered
+        setTimeout(() => {
+          const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
 
-                link.addEventListener('click', (event: Event) => {
-                  const target = event.currentTarget as HTMLAnchorElement;
-                  const targetHash = target.hash;
+          // Add click handlers to query within app container only
+          tocLinks.forEach((link) => {
+            // Only add event listener if it hasn't been added already
+            if (!(link as HTMLElement).dataset.tocListenerAdded) {
+              (link as HTMLElement).dataset.tocListenerAdded = 'true';
 
-                  if (!targetHash) {
-                    return;
-                  }
+              link.addEventListener('click', (event: Event) => {
+                const target = event.currentTarget as HTMLAnchorElement;
+                const targetHash = target.hash;
 
-                  // Find the target element WITHIN the Svelte app container
-                  const targetElement = appContainer ? appContainer.querySelector(targetHash) : null;
+                if (!targetHash) {
+                  return;
+                }
 
-                  if (!targetElement) {
-                    return;
-                  }
+                // Find the target element WITHIN the Svelte app container
+                const targetElement = appContainer ? appContainer.querySelector(targetHash) : null;
 
-                  event.preventDefault();
+                if (!targetElement) {
+                  return;
+                }
 
-                  // Force scroll with offset
-                  const navbar = document.querySelector('nav');
-                  const navbarHeight = navbar ? navbar.offsetHeight : 64;
-                  const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-                  const offsetPosition = elementPosition - navbarHeight;
+                event.preventDefault();
 
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                  });
+                // Force scroll with offset
+                const navbar = document.querySelector('nav');
+                const navbarHeight = navbar ? navbar.offsetHeight : 64;
+                const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+                const offsetPosition = elementPosition - navbarHeight;
 
-                  // Update URL hash
-                  history.pushState(null, '', targetHash);
+                window.scrollTo({
+                  top: offsetPosition,
+                  behavior: 'smooth'
                 });
-              }
-            });
-          }, 500); // Increased timeout to ensure DOM is ready
-        });
+
+                // Update URL hash
+                history.pushState(null, '', targetHash);
+              });
+            }
+          });
+        }, 500); // Increased timeout to ensure DOM is ready
+      });
     });
 
     return () => {

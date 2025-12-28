@@ -5,7 +5,7 @@
 
 {#if tocHtml && tocHtml.trim().length > 0}
   <aside
-    class="hidden xl:block fixed left-[calc(50%-56rem)] top-32 w-64 max-h-[calc(100vh-10rem)] overflow-y-auto"
+    class="hidden lg:block fixed left-[calc(50%-56rem)] top-32 w-64 max-h-[calc(100vh-10rem)] overflow-y-auto"
   >
     <nav
       class="p-6 rounded-2xl bg-slate-50/50 dark:bg-dark-lighter/20 backdrop-blur-md border border-slate-200 dark:border-slate-800"
@@ -22,7 +22,7 @@
   </aside>
 
   <!-- Mobile Toggle -->
-  <div class="lg:hidden fixed bottom-6 right-6 z-40">
+  <div class="xl:hidden fixed bottom-6 right-6 z-40">
     <button
       onclick={() => (isOpen = !isOpen)}
       class="p-3 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform"
@@ -56,15 +56,15 @@
         >
           Table of Contents
         </h3>
-          <div
-            role="button"
-            tabindex="0"
-            class="toc-content prose prose-sm dark:prose-invert"
-            onclick={() => (isOpen = false)}
-            onkeydown={(e) => e.key === 'Enter' && (isOpen = false)}
-          >
-            {@html tocHtml}
-          </div>
+        <div
+          role="button"
+          tabindex="0"
+          class="toc-content prose prose-sm dark:prose-invert"
+          onclick={() => (isOpen = false)}
+          onkeydown={(e) => e.key === 'Enter' && (isOpen = false)}
+        >
+          {@html tocHtml}
+        </div>
       </div>
     {/if}
   </div>
