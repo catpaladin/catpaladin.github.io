@@ -1,6 +1,34 @@
 <script lang="ts">
   let { tocHtml = '' }: { tocHtml?: string } = $props();
   let isOpen = $state(false);
+
+  function handleTocClick(event: MouseEvent) {
+    const target = (event.target as HTMLElement).closest('a');
+    if (!target || !target.hash || !target.hash.startsWith('#')) return;
+
+    const id = target.hash.slice(1);
+    const element = document.getElementById(id);
+
+    if (element) {
+      event.preventDefault();
+
+      // Close mobile menu if open
+      isOpen = false;
+
+      const navbar = document.querySelector('nav');
+      const navbarHeight = navbar ? navbar.offsetHeight : 64;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - navbarHeight - 16; // Extra padding
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      // Update URL hash without jumping
+      history.pushState(null, '', `#${id}`);
+    }
+  }
 </script>
 
 {#if tocHtml && tocHtml.trim().length > 0}
@@ -15,7 +43,11 @@
       >
         Table of Contents
       </h3>
-      <div class="toc-content prose prose-sm dark:prose-invert">
+      <div
+        class="toc-content prose prose-sm dark:prose-invert"
+        onclick={handleTocClick}
+        role="presentation"
+      >
         {@html tocHtml}
       </div>
     </nav>
@@ -57,11 +89,9 @@
           Table of Contents
         </h3>
         <div
-          role="button"
-          tabindex="0"
           class="toc-content prose prose-sm dark:prose-invert"
-          onclick={() => (isOpen = false)}
-          onkeydown={(e) => e.key === 'Enter' && (isOpen = false)}
+          onclick={handleTocClick}
+          role="presentation"
         >
           {@html tocHtml}
         </div>
