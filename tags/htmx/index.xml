@@ -5,6 +5,11 @@
 <p>I was debating on if I would write out a full post for this initial one (to test, you know?).
 Instead, I decided to go through my collection of notes and found a topic to post; Go &amp; <a href="https://htmx.org/docs/#introduction">htmx</a>.</p>
 <p>However, if you&rsquo;d like to learn more about me, check out my <a href="https://blog.mikesahari.com/about/">about</a> page.</p>
-<h2 id="introduction">Introduction</h2>
+<h2 id="introduction">
+  <a href="#introduction" class="anchor-link group flex items-center no-underline hover:no-underline">
+    Introduction
+    <span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span>
+  </a>
+</h2>
 <p>When building modern web applications, we often seek solutions that combine the robustness of server-side programming with the interactivity of client-side applications. Today, I&rsquo;m excited to share my experience working with Go and HTMX, a powerful combination that achieves exactly this balance.</p>
       ]]></description></item></channel></rss>

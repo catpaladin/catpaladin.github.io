@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Dev on It's Go time!</title><link>https://blog.mikesahari.com/tags/dev/</link><description>Recent content in Dev on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>It's Go time!</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Fri, 07 Feb 2025 15:30:00 -0800</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/dev/index.xml" rel="self" type="application/rss+xml"/><item><title>Managing Development Environments with Dotfiles</title><link>https://blog.mikesahari.com/posts/dev-with-dotfiles/</link><pubDate>Fri, 07 Feb 2025 15:30:00 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/dev-with-dotfiles/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-magic.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
         <p>Hello readers! Today I bring you a little blog around my development environment, using dotfiles and Neovim configurations.</p>
 <p>Let me walk you through how I&rsquo;ve structured my <a href="https://github.com/catpaladin/dotfiles">dotfiles</a> for managing multiple environments while keeping everything clean and maintainable - and most importantly, version controlled.</p>
-<h2 id="the-core-structure">The Core Structure</h2>
+<h2 id="the-core-structure">
+  <a href="#the-core-structure" class="anchor-link group flex items-center no-underline hover:no-underline">
+    The Core Structure
+    <span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span>
+  </a>
+</h2>
 <p>First, let&rsquo;s look at how everything is organized:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./
 </span></span><span style="display:flex;"><span>├── alacritty-darwin/        <span style="color:#75715e"># MacOS terminal config</span>
@@ -34,6 +39,11 @@
   </div>
 </div>
 
-<h2 id="neovim-the-development-environment">Neovim: The Development Environment</h2>
+<h2 id="neovim-the-development-environment">
+  <a href="#neovim-the-development-environment" class="anchor-link group flex items-center no-underline hover:no-underline">
+    Neovim: The Development Environment
+    <span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span>
+  </a>
+</h2>
 <p>The Neovim configuration is simple - it&rsquo;s structured as a clean, modular setup:</p>
       ]]></description></item></channel></rss>

@@ -6,7 +6,12 @@
 <p>It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.</p>
       ]]></description></item><item><title>A Guide to Pointers in Go</title><link>https://blog.mikesahari.com/posts/go-pointers/</link><pubDate>Fri, 28 Feb 2025 22:14:22 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-pointers/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-learn.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
         <p>Let&rsquo;s get real about pointers in Go—they&rsquo;re not the scary beasts you might remember from C (if you came from that CS background). Go&rsquo;s pointer implementation strikes that perfect balance between giving you low-level control and keeping you from shooting yourself in the foot.</p>
-<h2 id="for-python-developers-why-care-about-pointers">For Python Developers: Why Care About Pointers?</h2>
+<h2 id="for-python-developers-why-care-about-pointers">
+  <a href="#for-python-developers-why-care-about-pointers" class="anchor-link group flex items-center no-underline hover:no-underline">
+    For Python Developers: Why Care About Pointers?
+    <span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span>
+  </a>
+</h2>
 <p>This blog introduces pointers, a fundamental programming concept many developers struggle with. Having worked with numerous senior Cloud Engineers, SREs, and Platform Engineers who, despite years of industry experience, have only Python knowledge and limited exposure to memory management concepts, I&rsquo;ve crafted this primer to establish essential context before diving into the main teachings.</p>
       ]]></description></item><item><title>Go Channels: A Concurrency Guide</title><link>https://blog.mikesahari.com/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-channels/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-learn.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
         <p>Hello fellow Gophers!</p>
