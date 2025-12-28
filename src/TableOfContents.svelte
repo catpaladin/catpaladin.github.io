@@ -1,11 +1,47 @@
 <script lang="ts">
-  let { tocHtml = '' }: { tocHtml?: string } = $props();
+  interface Props {
+    tocHtml?: string;
+  }
+
+  let { tocHtml = '' }: Props = $props();
+  let items = $derived(parseToc(tocHtml));
   let isOpen = $state(false);
+
+  // Parse the raw HTML into Svelte state
+  function parseToc(html: string) {
+    if (!html) return [];
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    const links = doc.querySelectorAll('a');
+
+    return Array.from(links)
+      .map((link) => {
+        const href = link.getAttribute('href') || '';
+        const text = link.textContent?.trim() || '';
+
+        // Calculate depth by counting parent <ul> tags
+        let level = 0;
+        let parent = link.parentElement;
+        while (parent && parent !== doc.body) {
+          if (parent.tagName === 'UL') level++;
+          parent = parent.parentElement;
+        }
+
+        return {
+          id: href.startsWith('#') ? decodeURIComponent(href.slice(1)) : href,
+          text,
+          level: Math.max(0, level - 1)
+        };
+      })
+      .filter((item) => item.id && item.text);
+  }
 </script>
 
-{#if tocHtml && tocHtml.trim().length > 0}
+{#if items.length > 0}
+  <!-- Desktop Sidebar -->
   <aside
-    class="hidden xl:block fixed left-[calc(50%-56rem)] top-32 w-64 max-h-[calc(100vh-10rem)] overflow-y-auto"
+    class="hidden lg:block fixed left-[calc(50%-56rem)] top-32 w-64 max-h-[calc(100vh-10rem)] overflow-y-auto"
   >
     <nav
       class="p-6 rounded-2xl bg-slate-50/50 dark:bg-dark-lighter/20 backdrop-blur-md border border-slate-200 dark:border-slate-800"
@@ -15,36 +51,36 @@
       >
         Table of Contents
       </h3>
-      <div class="toc-content prose prose-sm dark:prose-invert">
-        {@html tocHtml}
-      </div>
+      <ul class="space-y-2">
+        {#each items as item}
+          <li style="padding-left: {item.level * 0.75}rem">
+            <a
+              href="#{item.id}"
+              class="text-left text-sm text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white transition-colors leading-tight block"
+            >
+              {item.text}
+            </a>
+          </li>
+        {/each}
+      </ul>
     </nav>
   </aside>
 
-  <!-- Mobile Toggle -->
+  <!-- Mobile Floating Trigger -->
   <div class="lg:hidden fixed bottom-6 right-6 z-40">
     <button
       onclick={() => (isOpen = !isOpen)}
-      class="p-3 rounded-full bg-primary text-white shadow-lg hover:scale-110 transition-transform"
-      aria-label="Toggle Table of Contents"
+      class="p-4 rounded-full bg-primary text-white shadow-2xl hover:scale-110 active:scale-95 transition-all"
+      aria-label="Toggle Navigation"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        ><line x1="21" y1="10" x2="7" y2="10" /><line x1="21" y1="6" x2="3" y2="6" /><line
-          x1="21"
-          y1="14"
-          x2="3"
-          y2="14"
-        /><line x1="21" y1="18" x2="7" y2="18" /></svg
-      >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+      </svg>
     </button>
 
     {#if isOpen}
@@ -54,44 +90,30 @@
         <h3
           class="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-4"
         >
-          Table of Contents
+          Jump to Section
         </h3>
-          <div
-            role="button"
-            tabindex="0"
-            class="toc-content prose prose-sm dark:prose-invert"
-            onclick={() => (isOpen = false)}
-            onkeydown={(e) => e.key === 'Enter' && (isOpen = false)}
-          >
-            {@html tocHtml}
-          </div>
+        <ul class="space-y-4">
+          {#each items as item}
+            <li style="padding-left: {item.level * 0.75}rem">
+              <a
+                href="#{item.id}"
+                onclick={() => (isOpen = false)}
+                class="text-left text-base font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors leading-snug block"
+              >
+                {item.text}
+              </a>
+            </li>
+          {/each}
+        </ul>
       </div>
     {/if}
   </div>
 {/if}
 
 <style>
-  :global(.toc-content ul) {
+  ul {
     list-style: none;
-    padding-left: 0;
     margin: 0;
-  }
-  :global(.toc-content ul ul) {
-    padding-left: 1rem;
-    margin-top: 0.5rem;
-  }
-  :global(.toc-content li) {
-    margin-bottom: 0.5rem;
-  }
-  :global(.toc-content a) {
-    text-decoration: none;
-    color: inherit;
-    font-size: 0.875rem;
-    transition: color 0.2s;
-    display: block;
-    line-height: 1.25;
-  }
-  :global(.toc-content a:hover) {
-    color: var(--color-primary, #00b0ff);
+    padding: 0;
   }
 </style>

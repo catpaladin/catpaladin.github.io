@@ -108,14 +108,29 @@
     >
       <div class="pt-2 pb-3 space-y-1 px-4">
         {#each menu as item}
-          <a
-            href={item.url}
-            class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
-            onclick={() => (mobileMenuOpen = false)}
-          >
-            {item.name}
-          </a>
+          {#if item.name && item.name.toLowerCase() !== 'about'}
+            <a
+              href={item.url}
+              class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              onclick={() => (mobileMenuOpen = false)}
+            >
+              {item.name}
+            </a>
+          {/if}
         {/each}
+
+        <!-- mobile search -->
+        <div class="px-3 py-2">
+          <Search />
+        </div>
+
+        <a
+          href="/about/"
+          class="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-400 hover:text-primary hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+          onclick={() => (mobileMenuOpen = false)}
+        >
+          About
+        </a>
       </div>
     </div>
   {/if}

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import Navbar from './Navbar.svelte';
   import Footer from './Footer.svelte';
   import ScrollIndicator from './ScrollIndicator.svelte';
@@ -33,11 +32,6 @@
     $props();
 
   let mermaidBusy = false;
-  let appContainer: HTMLDivElement;
-
-  onMount(() => {
-    appContainer = document.querySelector('#app') as HTMLDivElement;
-  });
 
   $effect(() => {
     // These dependencies trigger the effect on content, TOC, or theme changes
@@ -45,7 +39,16 @@
     void tocHtml;
     void document.documentElement.classList.contains('dark');
 
-    if (mermaidBusy) return;
+    // Initial check for hash in URL on load - ensures page scrolls to section after Svelte renders
+    if (window.location.hash) {
+      setTimeout(() => {
+        const id = decodeURIComponent(window.location.hash.slice(1));
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
+    }
 
     const renderMermaid = async () => {
       const elements = document.querySelectorAll('.mermaid');
@@ -59,7 +62,7 @@
         theme: isDark ? 'dark' : 'default',
         securityLevel: 'loose',
         fontFamily: 'inherit',
-        htmlLabels: true, // Crucial for <br> support
+        htmlLabels: true,
         flowchart: {
           htmlLabels: true,
           useMaxWidth: false,
@@ -68,50 +71,40 @@
         sequence: { useMaxWidth: false }
       });
 
-      // Process each element individually for better control
       for (const el of Array.from(elements)) {
         try {
           if (!(el instanceof HTMLElement)) continue;
           const rawCode = el.getAttribute('data-mermaid');
           if (!rawCode) continue;
 
-          // Check visibility and dimensions - more robust check
           const rect = el.getBoundingClientRect();
           if (rect.width === 0 || rect.height === 0) continue;
-          
-          // Additional check: ensure element is actually visible in DOM
+
           const style = window.getComputedStyle(el);
           if (style.display === 'none' || style.visibility === 'hidden') continue;
 
-          // Reset the element
           let decodedCode = '';
           try {
-            // Decode base64 to handling unicode correctly
             const binString = atob(rawCode);
             const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0)!);
             decodedCode = new TextDecoder().decode(bytes);
           } catch {
-            // Fallback for non-base64 or failed decode
             const decoder = document.createElement('div');
             decoder.innerHTML = rawCode;
             decodedCode = decoder.textContent || decoder.innerText || rawCode;
           }
 
-          // Use standard newlines. Preserve <br> for Mermaid's internal node labels.
           decodedCode = decodedCode.replace(/\\n/g, '\n').replace(/\r/g, '').trim();
 
           el.innerHTML = decodedCode;
           el.removeAttribute('data-processed');
 
-          // Generate a unique ID for this render pass
           const id = 'mermaid-' + Math.random().toString(36).substring(2, 11);
           const { svg } = await mermaid.render(id, decodedCode);
           el.innerHTML = svg;
           el.setAttribute('data-processed', 'true');
         } catch (err) {
-          // If it's the "suitable point" error, it's usually transient layout issues
           if (err instanceof Error && err.message.includes('suitable point')) {
-            // Silent retry later or just skip this one
             continue;
           }
           console.error('Mermaid individual render error:', err);
@@ -121,56 +114,13 @@
       mermaidBusy = false;
     };
 
-    // Double-RAF + a small delay to ensure DOM and styles (like dark mode) are fully applied
+    // Double-RAF + a small delay to ensure DOM and styles are fully applied
     const rafId = requestAnimationFrame(() => {
-         requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (!mermaidBusy) {
           setTimeout(renderMermaid, 200);
-          
-           // Add TOC event listeners after content is rendered
-          setTimeout(() => {
-            const tocLinks = document.querySelectorAll('.toc-content a[href^="#"]');
-
-            // Add click handlers to query within app container only
-            tocLinks.forEach((link) => {
-              // Only add event listener if it hasn't been added already
-              if (!(link as HTMLElement).dataset.tocListenerAdded) {
-                (link as HTMLElement).dataset.tocListenerAdded = 'true';
-
-                link.addEventListener('click', (event: Event) => {
-                  const target = event.currentTarget as HTMLAnchorElement;
-                  const targetHash = target.hash;
-
-                  if (!targetHash) {
-                    return;
-                  }
-
-                  // Find the target element WITHIN the Svelte app container
-                  const targetElement = appContainer ? appContainer.querySelector(targetHash) : null;
-
-                  if (!targetElement) {
-                    return;
-                  }
-
-                  event.preventDefault();
-
-                  // Force scroll with offset
-                  const navbar = document.querySelector('nav');
-                  const navbarHeight = navbar ? navbar.offsetHeight : 64;
-                  const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-                  const offsetPosition = elementPosition - navbarHeight;
-
-                  window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                  });
-
-                  // Update URL hash
-                  history.pushState(null, '', targetHash);
-                });
-              }
-            });
-          }, 500); // Increased timeout to ensure DOM is ready
-        });
+        }
+      });
     });
 
     return () => {
@@ -191,14 +141,14 @@
     {@html content}
   </div>
 
+  <div class="flex-grow"></div>
+
   <Footer {socials} {siteTitle} {description} {author} />
 </div>
 
-<!-- Add CSS for scroll offset -->
 <style>
   :global(html) {
     scroll-behavior: smooth;
-    scroll-padding-top: 6rem; /* Offset for fixed navbar (h-16 = 4rem, use 6rem for safety) */
     overflow-y: scroll;
   }
 
@@ -206,10 +156,9 @@
     overflow-y: auto;
   }
 
-  /* Ensure headers have scroll margin as backup */
-  :global(h2[id]),
-  :global(h3[id]),
-  :global(h4[id]) {
-    scroll-margin-top: 6rem;
+  /* Hide Hugo-injected TOCs to avoid duplication with the Svelte TOC */
+  :global(.toc),
+  :global(.post-toc) {
+    display: none !important;
   }
 </style>
