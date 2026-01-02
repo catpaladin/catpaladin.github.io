@@ -71,7 +71,58 @@
       const isDark = document.documentElement.classList.contains('dark');
       mermaid.initialize({
         startOnLoad: false,
-        theme: isDark ? 'dark' : 'default',
+        theme: 'base',
+        themeVariables: isDark
+          ? {
+              darkMode: true,
+              background: '#1e293b',
+              primaryColor: '#3b82f6',
+              primaryTextColor: '#f1f5f9',
+              primaryBorderColor: '#60a5fa',
+              lineColor: '#94a3b8',
+              secondaryColor: '#475569',
+              tertiaryColor: '#334155',
+              fontFamily: 'inherit',
+              fontSize: '16px',
+              flowchart: {
+                nodeTextColor: '#f1f5f9',
+                nodeBorder: '#60a5fa',
+                curve: 'basis'
+              },
+              sequence: {
+                actorTextColor: '#f1f5f9',
+                actorBkg: '#3b82f6',
+                actorBorder: '#60a5fa',
+                actorLineColor: '#94a3b8',
+                signalColor: '#94a3b8',
+                signalTextColor: '#f1f5f9'
+              }
+            }
+          : {
+              darkMode: false,
+              background: '#f8fafc',
+              primaryColor: '#3b82f6',
+              primaryTextColor: '#1e293b',
+              primaryBorderColor: '#2563eb',
+              lineColor: '#475569',
+              secondaryColor: '#e2e8f0',
+              tertiaryColor: '#cbd5e1',
+              fontFamily: 'inherit',
+              fontSize: '16px',
+              flowchart: {
+                nodeTextColor: '#1e293b',
+                nodeBorder: '#2563eb',
+                curve: 'basis'
+              },
+              sequence: {
+                actorTextColor: '#1e293b',
+                actorBkg: '#3b82f6',
+                actorBorder: '#2563eb',
+                actorLineColor: '#475569',
+                signalColor: '#475569',
+                signalTextColor: '#1e293b'
+              }
+            },
         securityLevel: 'loose',
         fontFamily: 'inherit',
         htmlLabels: true,
