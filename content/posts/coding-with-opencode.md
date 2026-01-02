@@ -793,6 +793,22 @@ Constraints:
 
 #### Example Usage
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant Agent
+    participant LLM
+    participant Subagent
+
+    User->>Agent: "Use the task tool with subagent @doc-generator..."
+    Agent->>LLM: Process task request and create prompt
+    LLM->>Agent: Return formatted prompt for subagent
+    Agent->>Subagent: Call task tool with generated prompt
+    Subagent->>Subagent: Execute task (e.g., create README.md)
+    Subagent-->>Agent: Return task results
+    Agent-->>User: Show completion summary
+```
+
 Direct Prompt:
 
 ```prompt
