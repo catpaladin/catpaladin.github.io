@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
 
 permissions:
   contents: write
@@ -18,20 +17,20 @@ jobs:
           submodules: true
           fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          node-version: '23'
-          cache: 'npm'
+          bun-version: latest
+          cache: 'bun'
 
       - name: Install dependencies
-        run: npm ci
+        run: bun install
 
       - name: Build Svelte App (Vite)
-        run: npm run build
+        run: bun run build
 
       - name: Run SVG to PNG conversion
-        run: npm run convert-svg
+        run: bun run convert-svg
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v3
