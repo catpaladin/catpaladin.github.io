@@ -6,17 +6,25 @@ tags = ["go", "programming", "data-structures", "fundamentals"]
 featured_image = "/images/gophers/go-learn.svg"
 +++
 
-If you've been diving into Go programming (or "Golang" as the cool kids say), you've definitely encountered structs. They're absolutely fundamental to how we organize and work with data in Go, and mastering them is crucial to writing clean, efficient Go code.
+If you've been diving into Go programming (or "Golang" as the cool kids say), you've definitely
+encountered structs. They're absolutely fundamental to how we organize and work with data in Go, and
+mastering them is crucial to writing clean, efficient Go code.
 
-I like to teach about structs, like other fundamentals, because of how powerful structs can be when used properly. Let's break down everything you need to know about structs, from the very basics to some advanced patterns I've learned the hard way.
+I like to teach about structs, like other fundamentals, because of how powerful structs can be when
+used properly. Let's break down everything you need to know about structs, from the very basics to
+some advanced patterns I've learned the hard way.
 
 ## What Are Structs in Go?
 
 ![your powers combined](/images/2025/03/20250329-meme1.png)
 
-At their core, structs in Go are composite data types that group together variables (called fields) under a single name. If you're coming from object-oriented languages, you might think of them as similar to classes, but with some key differences that make Go... well, Go!
+At their core, structs in Go are composite data types that group together variables (called fields)
+under a single name. If you're coming from object-oriented languages, you might think of them as
+similar to classes, but with some key differences that make Go... well, Go!
 
-{{<admonition title="📝 Note" bg-color="#283593">}} Unlike classes in OOP languages, Go structs don't support inheritance. This is by design - Go favors composition over inheritance, which leads to more straightforward, less entangled code. {{</admonition>}}
+{{<admonition title="📝 Note" bg-color="#283593">}} Unlike classes in OOP languages, Go structs
+don't support inheritance. This is by design - Go favors composition over inheritance, which leads
+to more straightforward, less entangled code. {{</admonition>}}
 
 Let's visualize the basic concept of a struct:
 
@@ -41,7 +49,8 @@ In Go, structs serve several important purposes:
 
 ## Setting Up a Go Project with Structs
 
-Let's start by setting up a simple Go project where we'll explore structs. First, create a new directory and initialize a Go module:
+Let's start by setting up a simple Go project where we'll explore structs. First, create a new
+directory and initialize a Go module:
 
 ```bash
 mkdir go-structs-tutorial
@@ -148,7 +157,9 @@ func main() {
 
 ![but which way](/images/2025/03/20250329-meme2.png)
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} Always use the field-name syntax when initializing structs with many fields. It makes your code more readable and protects against errors when struct definitions change. {{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Always use the field-name syntax when
+initializing structs with many fields. It makes your code more readable and protects against errors
+when struct definitions change. {{</admonition>}}
 
 ### Accessing and Modifying Struct Fields
 
@@ -246,7 +257,8 @@ func main() {
 
 ## Advanced Struct Techniques
 
-Now let's flex with some more intermediate to advanced concepts that make structs in Go truly powerful.
+Now let's flex with some more intermediate to advanced concepts that make structs in Go truly
+powerful.
 
 ### Struct Embedding and Composition
 
@@ -313,7 +325,9 @@ func main() {
 }
 ```
 
-{{<admonition title="📌 Important" bg-color="#01579B">}} With embedded structs, the fields of the embedded struct become "promoted" to the outer struct, allowing direct access. This is a powerful feature for building composable types in Go. {{</admonition>}}
+{{<admonition title="📌 Important" bg-color="#01579B">}} With embedded structs, the fields of the
+embedded struct become "promoted" to the outer struct, allowing direct access. This is a powerful
+feature for building composable types in Go. {{</admonition>}}
 
 ### Adding Methods to Structs
 
@@ -402,7 +416,9 @@ graph TD
     style E fill:#1f2020,color:#ddd
 ```
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} Use pointer receivers when you need to modify the struct or when the struct is large to avoid copying. Use value receivers for immutable operations on smaller structs. {{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Use pointer receivers when you need to modify the
+struct or when the struct is large to avoid copying. Use value receivers for immutable operations on
+smaller structs. {{</admonition>}}
 
 Another diagram to visualize this would be:
 
@@ -441,9 +457,10 @@ graph TD
 
 ## Event Sourcing with Structs
 
-Let's build a more complex example to demonstrate the power of structs in a real-world scenario (or perhaps a coding exam).
-For example, you get tasked to build a banking system. It must handle opening an account, depositing money, and withdrawing money.
-We'll implement a simple event sourcing system for the bank system here:
+Let's build a more complex example to demonstrate the power of structs in a real-world scenario (or
+perhaps a coding exam). For example, you get tasked to build a banking system. It must handle
+opening an account, depositing money, and withdrawing money. We'll implement a simple event sourcing
+system for the bank system here:
 
 `examples/event_sourcing.go`
 
@@ -662,11 +679,13 @@ This example demonstrates some powerful features of Go structs:
 - Using maps to store function handlers
 - Complex business logic using structs
 
-The event sourcing pattern is perfect for showing how structs can model both data and behavior in Go applications.
+The event sourcing pattern is perfect for showing how structs can model both data and behavior in Go
+applications.
 
 ## Wrapping Up
 
-Structs are one of Go's most fundamental and powerful features. They provide a clean, efficient way to structure your data and implement behavior in Go applications.
+Structs are one of Go's most fundamental and powerful features. They provide a clean, efficient way
+to structure your data and implement behavior in Go applications.
 
 We've covered:
 
@@ -676,9 +695,12 @@ We've covered:
 - Adding methods to structs
 - Advanced patterns with a real-world example
 
-Remember, in Go, composition is favored over inheritance, and structs are the primary tool for composition. Mastering structs will take your Go programming to the next level.
+Remember, in Go, composition is favored over inheritance, and structs are the primary tool for
+composition. Mastering structs will take your Go programming to the next level.
 
-{{<admonition title="📝 Note" bg-color="#283593">}} While structs are incredibly powerful, they're just one part of Go's type system. Interfaces work hand-in-hand with structs to create flexible, decoupled code. Consider exploring interfaces as your next step in mastering Go. {{</admonition>}}
+{{<admonition title="📝 Note" bg-color="#283593">}} While structs are incredibly powerful, they're
+just one part of Go's type system. Interfaces work hand-in-hand with structs to create flexible,
+decoupled code. Consider exploring interfaces as your next step in mastering Go. {{</admonition>}}
 
 ## References
 

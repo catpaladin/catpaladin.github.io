@@ -9,15 +9,22 @@ featured_image = "/images/gophers/go-space.svg"
 Hello readers. Welcome to my blog!
 
 I was debating on if I would write out a full post for this initial one (to test, you know?).
-Instead, I decided to go through my collection of notes and found a topic to post; Go & [htmx](https://htmx.org/docs/#introduction).
+Instead, I decided to go through my collection of notes and found a topic to post; Go &
+[htmx](https://htmx.org/docs/#introduction).
 
-However, if you'd like to learn more about me, check out my [about](https://blog.mikesahari.com/about/) page.
+However, if you'd like to learn more about me, check out my
+[about](https://blog.mikesahari.com/about/) page.
 
 ## Introduction
 
-When building modern web applications, we often seek solutions that combine the robustness of server-side programming with the interactivity of client-side applications. Today, I'm excited to share my experience working with Go and HTMX, a powerful combination that achieves exactly this balance.
+When building modern web applications, we often seek solutions that combine the robustness of
+server-side programming with the interactivity of client-side applications. Today, I'm excited to
+share my experience working with Go and HTMX, a powerful combination that achieves exactly this
+balance.
 
-HTMX is a lightweight JavaScript library that allows you to access modern browser features directly from HTML, without writing JavaScript. When paired with Go's excellent web capabilities, it creates a streamlined development experience that's both powerful and maintainable.
+HTMX is a lightweight JavaScript library that allows you to access modern browser features directly
+from HTML, without writing JavaScript. When paired with Go's excellent web capabilities, it creates
+a streamlined development experience that's both powerful and maintainable.
 
 ## Project Setup
 
@@ -27,7 +34,9 @@ Let's start by creating a new Go project. First, initialize your Go module:
 go mod init <project>
 ```
 
-For our web server, we'll use Echo, a high-performance, minimalist Go web framework. While Go's standard `net/http` package would work perfectly fine, Echo provides some nice quality-of-life features that will make our development smoother. Install it using:
+For our web server, we'll use Echo, a high-performance, minimalist Go web framework. While Go's
+standard `net/http` package would work perfectly fine, Echo provides some nice quality-of-life
+features that will make our development smoother. Install it using:
 
 ```bash
 go get github.com/labstack/echo/v4
@@ -35,7 +44,8 @@ go get github.com/labstack/echo/v4
 
 ## Creating the Server
 
-Create a `main.go` file in your project root. Here's our server implementation with detailed explanations of each component:
+Create a `main.go` file in your project root. Here's our server implementation with detailed
+explanations of each component:
 
 ```go
 package main
@@ -139,18 +149,26 @@ go run main.go
 You can now access your application:
 
 - Visit `http://localhost:31000` to see the basic "Hello, World!" message
-- Navigate to `http://localhost:31000/hello` to see the template-rendered message with HTMX capabilities
+- Navigate to `http://localhost:31000/hello` to see the template-rendered message with HTMX
+  capabilities
 
 ## Next Steps
 
-This is just the beginning of what you can do with Go and HTMX. For a more complex implementation, check out my chat application repository: [jenn-ai](https://github.com/So-Sahari/jenn-ai), which demonstrates advanced features like real-time updates and dynamic content loading.
+This is just the beginning of what you can do with Go and HTMX. For a more complex implementation,
+check out my chat application repository: [jenn-ai](https://github.com/So-Sahari/jenn-ai), which
+demonstrates advanced features like real-time updates and dynamic content loading.
 
 ## Conclusion
 
-The combination of Go and HTMX offers a powerful approach to building modern web applications. Go provides the robust backend we need, while HTMX allows us to add dynamic features without the complexity of a full JavaScript framework. This setup is particularly well-suited for applications that need to be both interactive and maintainable.
+The combination of Go and HTMX offers a powerful approach to building modern web applications. Go
+provides the robust backend we need, while HTMX allows us to add dynamic features without the
+complexity of a full JavaScript framework. This setup is particularly well-suited for applications
+that need to be both interactive and maintainable.
 
-I hope this guide helps you get started with your own Go and HTMX projects. Feel free to experiment with the code and adapt it to your needs.
+I hope this guide helps you get started with your own Go and HTMX projects. Feel free to experiment
+with the code and adapt it to your needs.
 
-You can see a more advanced version of all of this with a Chat App I wrote: [here](https://github.com/So-Sahari/jenn-ai)
+You can see a more advanced version of all of this with a Chat App I wrote:
+[here](https://github.com/So-Sahari/jenn-ai)
 
 That's all I had for this post. Thanks for reading.

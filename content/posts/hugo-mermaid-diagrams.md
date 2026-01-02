@@ -6,13 +6,17 @@ tags = ["hugo", "mermaid", "blogging"]
 featured_image = "/images/gophers/go-fish.svg"
 +++
 
-Let's be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it's often a frustrating experience. Most tutorials gloss over the critical theme-specific modifications required, leaving you with broken diagrams and cryptic errors.
+Let's be honest: adding Mermaid diagrams to your Hugo site should be straightforward, but it's often
+a frustrating experience. Most tutorials gloss over the critical theme-specific modifications
+required, leaving you with broken diagrams and cryptic errors.
 
-After spending way too many hours banging my head against this particular wall with the m10c theme, I'm documenting the actual working solution so you don't have to suffer through the same pain.
+After spending way too many hours banging my head against this particular wall with the m10c theme,
+I'm documenting the actual working solution so you don't have to suffer through the same pain.
 
 ## An Intro to Mermaid Through Examples
 
-If you're coming to this blog post and don't know what Mermaid diagrams are, they're a way to create diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.
+If you're coming to this blog post and don't know what Mermaid diagrams are, they're a way to create
+diagrams through code. Here are several visuals to give you an idea of what you can do with Mermaid.
 
 ### Sankey Diagrams
 
@@ -248,17 +252,21 @@ gantt
 ```
 ````
 
-Nice, huh? Diagrams make it easier for some readers to understand concepts. Through the work in this blog, I was able to implement the same Mermaid codeblocks as in my Obsidian notes.
+Nice, huh? Diagrams make it easier for some readers to understand concepts. Through the work in this
+blog, I was able to implement the same Mermaid codeblocks as in my Obsidian notes.
 
 ## The Problem with Standard Hugo Mermaid Tutorials
 
-The [official Hugo documentation](https://gohugo.io/content-management/diagrams/#mermaid-diagrams) provides a basic implementation that works great... if you're using the default theme with no customizations. But let's be real - who does that?
+The [official Hugo documentation](https://gohugo.io/content-management/diagrams/#mermaid-diagrams)
+provides a basic implementation that works great... if you're using the default theme with no
+customizations. But let's be real - who does that?
 
-Most of us are using custom themes (like m10c in my case), and that's where things break down. The standard implementation doesn't account for how themes structure their templates and load JavaScript.
+Most of us are using custom themes (like m10c in my case), and that's where things break down. The
+standard implementation doesn't account for how themes structure their templates and load
+JavaScript.
 
-{{<admonition title="💡 TIP" bg-color="#004D40">}}
-The key insight: You need to override your theme's base template, not just add the render hook.
-{{</admonition>}}
+{{<admonition title="💡 TIP" bg-color="#004D40">}} The key insight: You need to override your
+theme's base template, not just add the render hook. {{</admonition>}}
 
 ## The Solution: Theme-Specific Implementation
 
@@ -274,7 +282,8 @@ First, you need to override your theme's base template. For m10c, that means:
 
 ### Step 2: Add Mermaid Support to the Base Template
 
-Next, modify your override to include the Mermaid library. Add this code just before the closing `</body>` tag:
+Next, modify your override to include the Mermaid library. Add this code just before the closing
+`</body>` tag:
 
 ```html
 <!-- Add Mermaid support - must be placed before closing body tag -->
@@ -311,11 +320,13 @@ Next, modify your override to include the Mermaid library. Add this code just be
 {{ end }}
 ```
 
-This code checks if the page has Mermaid content (using Hugo's Store) and only loads the Mermaid library when needed. The custom theme variables ensure your diagrams match your site's dark theme.
+This code checks if the page has Mermaid content (using Hugo's Store) and only loads the Mermaid
+library when needed. The custom theme variables ensure your diagrams match your site's dark theme.
 
 ### Step 3: Create the Render Hook
 
-Now create a file at `layouts/_default/_markup/render-codeblock-mermaid.html` with the following content:
+Now create a file at `layouts/_default/_markup/render-codeblock-mermaid.html` with the following
+content:
 
 ```html
 <pre class="mermaid">
@@ -346,11 +357,13 @@ flowchart TD
     style G fill:#006100,stroke:#004d00,color:#ddd
 ```
 
-The key insight here is that the render hook and base template work together through Hugo's Store mechanism. Without either piece, the system breaks down.
+The key insight here is that the render hook and base template work together through Hugo's Store
+mechanism. Without either piece, the system breaks down.
 
 ## Using Mermaid in Your Content
 
-With this implementation in place, you can now add Mermaid diagrams to your Markdown content like this:
+With this implementation in place, you can now add Mermaid diagrams to your Markdown content like
+this:
 
 ````markdown
 ```mermaid
@@ -361,13 +374,13 @@ flowchart LR
 ```
 ````
 
-{{<admonition title="💡 TIP" bg-color="#004D40">}}
-Always use the explicit `mermaid` language identifier for your code blocks, not just triple backticks.
-{{</admonition>}}
+{{<admonition title="💡 TIP" bg-color="#004D40">}} Always use the explicit `mermaid` language
+identifier for your code blocks, not just triple backticks. {{</admonition>}}
 
 ## Why Your Theme Matters
 
-Different Hugo themes structure their templates differently. The approach I've outlined works for m10c, but you might need to adjust it for other themes. The general principles remain the same:
+Different Hugo themes structure their templates differently. The approach I've outlined works for
+m10c, but you might need to adjust it for other themes. The general principles remain the same:
 
 1. Override the base template that controls your HTML output
 2. Add conditional loading of the Mermaid library based on content
@@ -378,12 +391,16 @@ Different Hugo themes structure their templates differently. The approach I've o
 Here are some issues I encountered that aren't mentioned in most tutorials:
 
 1. **Missing the theme override**: Just adding the render hook isn't enough
-2. **Incorrect script loading**: Modern Mermaid uses ES modules, requiring the type="module" attribute
+2. **Incorrect script loading**: Modern Mermaid uses ES modules, requiring the type="module"
+   attribute
 3. **Theme incompatibility**: Dark-themed sites need custom Mermaid styling
 4. **Resource loading order**: The Mermaid library must load after your content is ready
 
 ## Conclusion
 
-Getting Mermaid diagrams working in Hugo requires understanding how your specific theme handles templates and JavaScript. The solution I've outlined for m10c addresses these theme-specific concerns and provides a robust implementation that works reliably.
+Getting Mermaid diagrams working in Hugo requires understanding how your specific theme handles
+templates and JavaScript. The solution I've outlined for m10c addresses these theme-specific
+concerns and provides a robust implementation that works reliably.
 
-By overriding the appropriate templates and leveraging Hugo's Store mechanism, you can seamlessly integrate Mermaid diagrams into your content without fighting with your theme.
+By overriding the appropriate templates and leveraging Hugo's Store mechanism, you can seamlessly
+integrate Mermaid diagrams into your content without fighting with your theme.

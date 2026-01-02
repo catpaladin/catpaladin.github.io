@@ -6,17 +6,24 @@ tags = ["go", "api", "rest", "jwt"]
 featured_image = "/images/gophers/go-work.svg"
 +++
 
-Have you ever wondered how modern web applications handle user authentication and data securely? In this guide, we'll explore building a secure REST API from the ground up using Go. Whether you're new to Go or an experienced developer, you'll learn how to create an API that handles user authentication.
+Have you ever wondered how modern web applications handle user authentication and data securely? In
+this guide, we'll explore building a secure REST API from the ground up using Go. Whether you're new
+to Go or an experienced developer, you'll learn how to create an API that handles user
+authentication.
 
-For those who need to see the whole code before diving in, you can find all of this on [Github](https://github.com/catpaladin/go-api-example)
+For those who need to see the whole code before diving in, you can find all of this on
+[Github](https://github.com/catpaladin/go-api-example)
 
 ## Technology Stack Overview
 
 Our API implementation uses three main technologies:
 
-- **Go**: A programming language designed for building efficient, secure network services with built-in concurrency support (My language of choice).
-- **Gin**: A high-performance web framework for Go that provides excellent routing capabilities and middleware support.
-- **SQLite**: A lightweight database that's ideal for development and applications with moderate traffic requirements.
+- **Go**: A programming language designed for building efficient, secure network services with
+  built-in concurrency support (My language of choice).
+- **Gin**: A high-performance web framework for Go that provides excellent routing capabilities and
+  middleware support.
+- **SQLite**: A lightweight database that's ideal for development and applications with moderate
+  traffic requirements.
 
 ## Understanding Our Project Structure
 
@@ -42,7 +49,8 @@ myapp/
 |   |-- errors.go
 ```
 
-I like to separate domain specific logic. That way when another engineer starts exploring the repository, they have some general idea where logic exists.
+I like to separate domain specific logic. That way when another engineer starts exploring the
+repository, they have some general idea where logic exists.
 
 `db` -> database logic
 
@@ -52,9 +60,9 @@ I like to separate domain specific logic. That way when another engineer starts 
 
 `models` -> contains my data models
 
-{{<admonition title="📝 NOTE" bg-color="#283593">}}
-I have opted to build out my models rather than use something like an ORM because this is a simple example. You can use something like [ent](https://github.com/ent/ent) for bigger and more complex projects.
-{{</admonition>}}
+{{<admonition title="📝 NOTE" bg-color="#283593">}} I have opted to build out my models rather than
+use something like an ORM because this is a simple example. You can use something like
+[ent](https://github.com/ent/ent) for bigger and more complex projects. {{</admonition>}}
 
 ## Setting Up Your Development Environment
 
@@ -78,7 +86,8 @@ Create the `models` directory.
 mkdir -p models
 ```
 
-Next we will start creating go files under `models`. The user model will be defined in the `models/user.go`.
+Next we will start creating go files under `models`. The user model will be defined in the
+`models/user.go`.
 
 ### `models/user.go`
 
@@ -144,7 +153,8 @@ func (u *User) MarshalJSON() ([]byte, error) {
 }
 ```
 
-If you have an IDE or your language server complaining right now, fear not. We will be defining the missing error variables.
+If you have an IDE or your language server complaining right now, fear not. We will be defining the
+missing error variables.
 
 Define the errors in the `models/errors.go`
 
@@ -184,11 +194,16 @@ func NewValidationError(field, message string) *ValidationError {
 
 The models package provides several important features:
 
-1. **Structured Data**: The User struct defines the shape of our user data with proper JSON and database tags.
-2. **Data Validation**: The ValidateForCreation method ensures data integrity before database operations.
-3. **Lifecycle Hooks**: BeforeCreate and BeforeUpdate methods handle timestamp management automatically.
-4. **Security**: The Password field is explicitly excluded from JSON serialization using the "-" tag.
-5. **Domain Errors**: Custom error types help with precise error handling throughout the application.
+1. **Structured Data**: The User struct defines the shape of our user data with proper JSON and
+   database tags.
+2. **Data Validation**: The ValidateForCreation method ensures data integrity before database
+   operations.
+3. **Lifecycle Hooks**: BeforeCreate and BeforeUpdate methods handle timestamp management
+   automatically.
+4. **Security**: The Password field is explicitly excluded from JSON serialization using the "-"
+   tag.
+5. **Domain Errors**: Custom error types help with precise error handling throughout the
+   application.
 
 ## Creating the Database
 
@@ -246,9 +261,8 @@ func CloseDB() error {
 }
 ```
 
-{{<admonition title="📝 NOTE" bg-color="#283593">}}
-This expects that you have sqlite3 on your machine.
-{{</admonition>}}
+{{<admonition title="📝 NOTE" bg-color="#283593">}} This expects that you have sqlite3 on your
+machine. {{</admonition>}}
 
 ## Define Database Operations
 
@@ -328,7 +342,8 @@ The `jwt` internal package will contain all our jwt auth logic. Create the direc
 mkdir -p internal/jwt
 ```
 
-The following is just quick and dirty logic for implementing it. Create the `internal/jwt/token.go` with the following contents.
+The following is just quick and dirty logic for implementing it. Create the `internal/jwt/token.go`
+with the following contents.
 
 ### `internal/jwt/token.go`
 
@@ -377,7 +392,8 @@ func ValidateToken(tokenStr string) (*Claims, error) {
 
 ## JWT Middleware
 
-Now to add some Gin middleware for our auth. Create the `internal/jwt/middleware.go` with this function.
+Now to add some Gin middleware for our auth. Create the `internal/jwt/middleware.go` with this
+function.
 
 ### `internal/jwt/middleware.go`
 
@@ -419,13 +435,17 @@ func AuthMiddleware() gin.HandlerFunc {
 
 ## Create the handlers for the API
 
-Start by defining a struct to pass a db pointer (and future inputs) to the handlers. Create the `handlers` directory.
+Start by defining a struct to pass a db pointer (and future inputs) to the handlers. Create the
+`handlers` directory.
 
 ```
 mkdir -p handlers
 ```
 
-And start by creating `handlers/auth.go` with the following. `auth.go` will be used for the signup and login methods. Technically we could just put all this domain logic in a single go file. But as the application grows, you will start to notice that finding specific logic could start getting scattered and inconsistent.
+And start by creating `handlers/auth.go` with the following. `auth.go` will be used for the signup
+and login methods. Technically we could just put all this domain logic in a single go file. But as
+the application grows, you will start to notice that finding specific logic could start getting
+scattered and inconsistent.
 
 ### `handlers/auth.go`
 
@@ -534,7 +554,8 @@ func (h *AuthHandler) Login(c *gin.Context) {
 }
 ```
 
-Finally all the user logic under `handlers/user.go`. This contains the protected api logic for users.
+Finally all the user logic under `handlers/user.go`. This contains the protected api logic for
+users.
 
 ### `handlers/user.go`
 
@@ -584,7 +605,8 @@ func (h *UserHandler) GetUser(c *gin.Context) {
 
 ## Core Application Setup
 
-The `main.go` file initializes the server and configures routing. It separates public and authenticated routes.
+The `main.go` file initializes the server and configures routing. It separates public and
+authenticated routes.
 
 ### `main.go`
 
@@ -679,11 +701,13 @@ Throughout this tutorial, we've followed several security best practices:
 5. Proper error handling without revealing system details
 6. Input validation and sanitization
 
-These are just some basics. A lot more can be done (e.g. Add password complexity requirements, rate limiting, better logging, etc). In addition, there's the whole containerization and deployment to consider.
+These are just some basics. A lot more can be done (e.g. Add password complexity requirements, rate
+limiting, better logging, etc). In addition, there's the whole containerization and deployment to
+consider.
 
-{{<admonition title="📝 NOTE" bg-color="#283593">}}
-Here are some further considerations. Remember that this is a development example. Remember to enable TLS, rotate passwords, and properly handle JWT secrets. Also consider creating roles to create some RBAC to the API.
-{{</admonition>}}
+{{<admonition title="📝 NOTE" bg-color="#283593">}} Here are some further considerations. Remember
+that this is a development example. Remember to enable TLS, rotate passwords, and properly handle
+JWT secrets. Also consider creating roles to create some RBAC to the API. {{</admonition>}}
 
 Again, you can find all this code on [Github](https://github.com/catpaladin/go-api-example).
 

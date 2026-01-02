@@ -3,11 +3,13 @@ import { mount } from 'svelte';
 import App from './App.svelte';
 
 const blogData = window.BLOG_DATA || {
-  siteTitle: 'Its Go Time',
+  siteTitle: 'Didactic Musings',
   menu: [],
   socials: [],
   description: '',
-  author: 'Mike'
+  author: 'Mike',
+  isPage: false,
+  section: ''
 };
 
 const target = document.getElementById('app') as HTMLElement;
@@ -28,12 +30,18 @@ if (source) {
   source.remove();
 }
 
-const app = mount(App as any, {
+const app = mount(App, {
   target: target,
   props: {
-    ...blogData,
+    siteTitle: blogData.siteTitle,
+    menu: blogData.menu,
+    socials: blogData.socials,
     content: initialContent,
-    tocHtml: tocHtml
+    description: blogData.description,
+    author: blogData.author,
+    tocHtml,
+    isPage: blogData.isPage ?? false,
+    section: blogData.section ?? ''
   }
 });
 

@@ -6,13 +6,22 @@ tags = ['html', 'go', 'htmx', 'templating', 'templ', 'webdev']
 featured_image = "/images/gophers/go-trending.svg"
 +++
 
-I've been working on a handful of personal webdev Go projects, and the one thing I could never wrap my head around was [Templ](https://github.com/a-h/templ). I would start the project and go, "Oh no. I need a UI for this. Not everything can be made into a TUI... or can it..". This would lead me to looking at the Templ docs, not understanding how to implement it, and either use the embed package (I LOVE [embed](https://pkg.go.dev/embed)!) or starting a TypeScript frontend, creating a bunch of tsx files and coming to the sudden realization that I gave in to React.
+I've been working on a handful of personal webdev Go projects, and the one thing I could never wrap
+my head around was [Templ](https://github.com/a-h/templ). I would start the project and go, "Oh no.
+I need a UI for this. Not everything can be made into a TUI... or can it..". This would lead me to
+looking at the Templ docs, not understanding how to implement it, and either use the embed package
+(I LOVE [embed](https://pkg.go.dev/embed)!) or starting a TypeScript frontend, creating a bunch of
+tsx files and coming to the sudden realization that I gave in to React.
 
 ![tech debt](/images/2025/03/20250322-meme1.png)
 
-Templ brings type-safe, component-based HTML templating to the Go ecosystem. When paired with [HTMX](https://htmx.org/) (Yes, I did try the GoTH stack sans Templ and thoroughly enjoyed it), it creates a powerful combination for building interactive web applications with minimal JavaScript.
+Templ brings type-safe, component-based HTML templating to the Go ecosystem. When paired with
+[HTMX](https://htmx.org/) (Yes, I did try the GoTH stack sans Templ and thoroughly enjoyed it), it
+creates a powerful combination for building interactive web applications with minimal JavaScript.
 
-For those of us who appreciate Go's simplicity and performance but struggle with the frontend story, Templ represents something of a holy grail. It's the missing puzzle piece that completes the picture of what modern Go web development can be.
+For those of us who appreciate Go's simplicity and performance but struggle with the frontend story,
+Templ represents something of a holy grail. It's the missing puzzle piece that completes the picture
+of what modern Go web development can be.
 
 Before discovering Templ, I bounced between various unsatisfying options:
 
@@ -20,21 +29,30 @@ Before discovering Templ, I bounced between various unsatisfying options:
 2. Pure JavaScript frontends: "Two applications" syndrome
 3. Embedding HTML (and raw handcrafted artisan JS): Simple but not scalable or maintainable
 
-Each approach left me feeling like I was making a compromise. Templ finally offered a path that felt aligned with Go's philosophy – strong typing, compile-time validation, and composition over inheritance.
+Each approach left me feeling like I was making a compromise. Templ finally offered a path that felt
+aligned with Go's philosophy – strong typing, compile-time validation, and composition over
+inheritance.
 
-I'm still early in my journey with Templ, but for the first time, I feel like I'm building web UIs the "Go way" instead of fighting against the language or surrendering to the JavaScript ecosystem. And that feels right.
+I'm still early in my journey with Templ, but for the first time, I feel like I'm building web UIs
+the "Go way" instead of fighting against the language or surrendering to the JavaScript ecosystem.
+And that feels right.
 
 ## What is Templ?
 
-Templ is a templating language and compiler for Go that focuses on type safety and composition. Unlike traditional templating engines that rely on string-based templates, Templ treats templates as first-class Go code.
+Templ is a templating language and compiler for Go that focuses on type safety and composition.
+Unlike traditional templating engines that rely on string-based templates, Templ treats templates as
+first-class Go code.
 
 Here's what makes Templ stand out from the crowd:
 
-- **Type Safety**: Templ templates are compiled to Go code, which means type errors are caught at compile-time, not runtime.
-- **Component-Based**: If you're used to the whole component structure, you'll love this. Build reusable components that compose together naturally.
+- **Type Safety**: Templ templates are compiled to Go code, which means type errors are caught at
+  compile-time, not runtime.
+- **Component-Based**: If you're used to the whole component structure, you'll love this. Build
+  reusable components that compose together naturally.
 - **Go Integration**: Seamlessly integrate with your existing Go code and ecosystem.
 - **Performance**: Templates compile down to efficient Go code that renders the HTML.
-- **HTMX-Friendly**: Pairs perfectly with HTMX for building interactive interfaces with minimal JavaScript.
+- **HTMX-Friendly**: Pairs perfectly with HTMX for building interactive interfaces with minimal
+  JavaScript.
 
 ## Installation and Project Setup
 
@@ -55,7 +73,8 @@ go get github.com/a-h/templ
 
 ### Project Structure
 
-From a high-level, our Templ project structure will look similar to this (sans the actual completed server for this blog post):
+From a high-level, our Templ project structure will look similar to this (sans the actual completed
+server for this blog post):
 
 ```
 example-templ-project/
@@ -93,9 +112,9 @@ example-templ-project/
 └── Makefile
 ```
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}}
-Keep your `.templ` files and their generated `.go` files in separate packages to avoid circular dependencies. The generated code should be in a different package from your application code.
-{{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Keep your `.templ` files and their generated
+`.go` files in separate packages to avoid circular dependencies. The generated code should be in a
+different package from your application code. {{</admonition>}}
 
 In a Go + Templ project, it's important to follow these principles:
 
@@ -106,7 +125,8 @@ In a Go + Templ project, it's important to follow these principles:
 
 To make this process easier, let's create the following:
 
-- A `generate-templ.sh` for generating `.templ` files and putting our templated `_templ.go` files under our `internal/` directory.
+- A `generate-templ.sh` for generating `.templ` files and putting our templated `_templ.go` files
+  under our `internal/` directory.
 - A `Makefile` to simplify our all our commands.
 - A `.air.toml` for using Air to hot reload our app as we work on it.
 
@@ -145,7 +165,8 @@ This simple script will make it easy to generate the files from `templates/` to 
 
 #### Setting up the Makefile
 
-Now you'll want to add the compilation step to your build process. Let's create a `Makefile` under the root of the directory. A good Makefile might look like this:
+Now you'll want to add the compilation step to your build process. Let's create a `Makefile` under
+the root of the directory. A good Makefile might look like this:
 
 ```makefile
 .PHONY: generate build run clean dev
@@ -172,13 +193,14 @@ clean:
 
 ```
 
-Now we can run `make generate` over and over and over. Although, this next step will make it unnecessary with the use of Air.
+Now we can run `make generate` over and over and over. Although, this next step will make it
+unnecessary with the use of Air.
 
 #### Setup Air TOML
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}}
-Many developers use [Air](https://github.com/cosmtrek/air) for hot reloading during development. It can be configured to recompile your Templ files and restart your server when changes are detected.
-{{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Many developers use
+[Air](https://github.com/cosmtrek/air) for hot reloading during development. It can be configured to
+recompile your Templ files and restart your server when changes are detected. {{</admonition>}}
 
 First we want to install Air.
 
@@ -204,11 +226,13 @@ tmp_dir = "tmp"
   clear_on_rebuild = true
 ```
 
-This config will let us generate and build every time the files are modified. It leverages our bash script and makes it dynamic for the multiple commands that we will be creating under `cmd/`.
+This config will let us generate and build every time the files are modified. It leverages our bash
+script and makes it dynamic for the multiple commands that we will be creating under `cmd/`.
 
 ## Coding the Project
 
-Let's start with some basic examples to get a feel for how Templ works with some cat-themed examples.
+Let's start with some basic examples to get a feel for how Templ works with some cat-themed
+examples.
 
 ![cat memes](/images/2025/03/20250322-meme2.png)
 
@@ -241,9 +265,11 @@ Run the Templ compiler to generate Go code:
 make generate
 ```
 
-This will create a file called `greeting_templ.go` (found under `internal/views/`) that contains the compiled Go code for your template.
+This will create a file called `greeting_templ.go` (found under `internal/views/`) that contains the
+compiled Go code for your template.
 
-Now you can use your template in a Go HTTP handler. Let's create a `main.go` to test our code. Let's do some setup.
+Now you can use your template in a Go HTTP handler. Let's create a `main.go` to test our code. Let's
+do some setup.
 
 ```bash
 mkdir -p cmd/greeting-example
@@ -280,14 +306,16 @@ Visiting `localhost:8080` in your browser will show off our example!
 
 ### Component Composition
 
-One of Templ's strengths is composition. Here's how you can compose templates. First let's create a component:
+One of Templ's strengths is composition. Here's how you can compose templates. First let's create a
+component:
 
 ```bash
 mkdir -p templates/components
 touch templates/components/layout.templ
 ```
 
-Add the following content to create our reusable component under `templates/components/layout.templ`:
+Add the following content to create our reusable component under
+`templates/components/layout.templ`:
 
 ```go
 package components
@@ -333,7 +361,8 @@ templ CatLayout(title string) {
 }
 ```
 
-This will allow us to add HTMX and a simple box. Now let's use our component in a view! Create `templates/views/composition.templ`:
+This will allow us to add HTMX and a simple box. Now let's use our component in a view! Create
+`templates/views/composition.templ`:
 
 ```go
 package views
@@ -353,7 +382,8 @@ templ CatContent(title string) {
 
 ```
 
-Now let's test it all with an example command. Create the following `cmd/composition-example/main.go` with the following content:
+Now let's test it all with an example command. Create the following
+`cmd/composition-example/main.go` with the following content:
 
 ```go
 package main
@@ -397,7 +427,8 @@ graph TD
 
 ### Conditional Rendering
 
-Templ supports conditional rendering using Go's own control structures. For this, let's make use of our compositional to load htmx and let's create a `templates/views/conditional.templ`:
+Templ supports conditional rendering using Go's own control structures. For this, let's make use of
+our compositional to load htmx and let's create a `templates/views/conditional.templ`:
 
 ```go
 package views
@@ -433,7 +464,8 @@ templ CatTreatingPage(catName string, hasTreats bool) {
 
 ```
 
-Next we need to create the example command for this. Setup `cmd/iteration-example/main.go` to have the following contents:
+Next we need to create the example command for this. Setup `cmd/iteration-example/main.go` to have
+the following contents:
 
 ```go
 package main
@@ -470,13 +502,14 @@ Remember to change the `CMD_DIR` for testing this.
 make dev CMD_DIR=conditional-example
 ```
 
-{{<admonition title="📝 Note" bg-color="#283593">}}
-Notice how we've added an HTMX-powered button that makes a POST request to `/conditional` and will swap its own HTML with the server response. This is how HTMX enables interactivity without writing JavaScript.
-{{</admonition>}}
+{{<admonition title="📝 Note" bg-color="#283593">}} Notice how we've added an HTMX-powered button
+that makes a POST request to `/conditional` and will swap its own HTML with the server response.
+This is how HTMX enables interactivity without writing JavaScript. {{</admonition>}}
 
 ### Iteration
 
-Iterating over collections is just as intuitive, although this example has quite a bit going on. Let's create `templates/views/iteration.templ`:
+Iterating over collections is just as intuitive, although this example has quite a bit going on.
+Let's create `templates/views/iteration.templ`:
 
 ```go
 package views
@@ -666,9 +699,12 @@ make dev CMD_DIR=iteration-example
 
 ## Wrap Up
 
-Templ represents a significant step forward for Go web development. By bringing a component-based approach with full type safety to Go templates, it addresses many of the pain points developers have faced with traditional templating solutions.
+Templ represents a significant step forward for Go web development. By bringing a component-based
+approach with full type safety to Go templates, it addresses many of the pain points developers have
+faced with traditional templating solutions.
 
-When combined with HTMX, it creates a powerful stack for building interactive web applications with minimal JavaScript.
+When combined with HTMX, it creates a powerful stack for building interactive web applications with
+minimal JavaScript.
 
 Here's why you should consider Templ and HTMX for your next Go web project:
 
@@ -677,8 +713,14 @@ Here's why you should consider Templ and HTMX for your next Go web project:
 3. **Integration**: Works seamlessly with the standard Go HTTP stack.
 4. **Interactivity**: HTMX enables dynamic interfaces without complex JavaScript frameworks.
 
-Whether you're building a simple website or a complex web application, Templ's approach to templating aligns perfectly with Go's philosophy of simplicity, type safety, and performance. The idiomatic project structure ensures your code remains maintainable as it grows, while the combination with HTMX lets you create rich, interactive experiences without the complexity of a full JavaScript framework.
+Whether you're building a simple website or a complex web application, Templ's approach to
+templating aligns perfectly with Go's philosophy of simplicity, type safety, and performance. The
+idiomatic project structure ensures your code remains maintainable as it grows, while the
+combination with HTMX lets you create rich, interactive experiences without the complexity of a full
+JavaScript framework.
 
-Checkout the entire project code in my [github repo](https://github.com/catpaladin/example-templ-project).
+Checkout the entire project code in my
+[github repo](https://github.com/catpaladin/example-templ-project).
 
-Give Templ and HTMX a try for your next Go web project - I think you'll find it's the templating solution you've been waiting for!
+Give Templ and HTMX a try for your next Go web project - I think you'll find it's the templating
+solution you've been waiting for!
