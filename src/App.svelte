@@ -33,15 +33,22 @@
     $props();
 
   let mermaidBusy = false;
-  let currentTheme = $state<'dark' | 'light'>('dark');
 
-  const renderMermaid = async () => {
+  type ThemeMode = 'dark' | 'light';
+
+  const getTheme = (): ThemeMode =>
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+
+  const renderMermaid = async (themeMode?: ThemeMode) => {
     const elements = document.querySelectorAll('.mermaid');
     if (elements.length === 0) return;
 
+    // Use passed theme mode or capture current DOM state immediately
+    const currentMode: ThemeMode = themeMode ?? getTheme();
+    const isDark = currentMode === 'dark';
+
     mermaidBusy = true;
 
-    const isDark = document.documentElement.classList.contains('dark');
     mermaid.initialize({
       startOnLoad: false,
       theme: 'base',
@@ -153,7 +160,6 @@
   $effect(() => {
     void content;
     void tocHtml;
-    void document.documentElement.classList.contains('dark');
 
     // Handle initial page load with hash in URL
     if (window.location.hash) {
@@ -178,7 +184,8 @@
     const rafId = requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (!mermaidBusy) {
-          setTimeout(renderMermaid, 200);
+          const theme = getTheme();
+          setTimeout(() => renderMermaid(theme), 200);
         }
       });
     });
@@ -190,16 +197,13 @@
   });
 
   onMount(() => {
-    currentTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-          const newTheme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-          if (newTheme !== currentTheme) {
-            currentTheme = newTheme;
-            setTimeout(renderMermaid, 100);
-          }
+          // Capture the theme immediately when mutation is detected
+          const newTheme: ThemeMode = getTheme();
+          // Render with captured theme, not re-reading DOM later
+          setTimeout(() => renderMermaid(newTheme), 100);
         }
       }
     });
