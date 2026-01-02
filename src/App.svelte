@@ -100,11 +100,11 @@
             }
           : {
               darkMode: false,
-              background: '#f8fafc',
+              background: '#ffffff',
               primaryColor: '#3b82f6',
               primaryTextColor: '#1e293b',
               primaryBorderColor: '#2563eb',
-              lineColor: '#475569',
+              lineColor: '#4b5563',
               secondaryColor: '#e2e8f0',
               tertiaryColor: '#cbd5e1',
               fontFamily: 'inherit',
@@ -116,10 +116,10 @@
               },
               sequence: {
                 actorTextColor: '#1e293b',
-                actorBkg: '#3b82f6',
+                actorBkg: '#e0f2fe',
                 actorBorder: '#2563eb',
-                actorLineColor: '#475569',
-                signalColor: '#475569',
+                actorLineColor: '#4b5563',
+                signalColor: '#4b5563',
                 signalTextColor: '#1e293b'
               }
             },
