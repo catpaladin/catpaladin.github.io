@@ -6,38 +6,34 @@ tags = ["go", "programming", "data-structures", "algorithms", "big-o", "performa
 featured_image = "/images/gophers/go-learn.svg" 
 +++
 
-Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you've missed
-Part 1 on Big O, you can read it
-[here](https://blog.mikesahari.com/posts/dsa-part1-big-o/).
+Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you've missed Part 1 on Big
+O, you can read it [here](https://blog.mikesahari.com/posts/dsa-part1-big-o/).
 
-Data structures form the foundation of computer science—they're how we organize, store,
-and manipulate information in ways that mirror how we think and solve problems. Far
-beyond mere implementation details, these abstractions shape how we conceptualize
-computational challenges. Whether you're building a search engine indexing billions of
-webpages, an operating system managing memory resources, or a mobile app tracking user
-interactions, choosing the right data structure can mean the difference between a
-solution that scales gracefully and one that becomes that legacy tech debt app that
-engineers share stories about, blaming the original designer (you know who you are).
+Data structures form the foundation of computer science—they're how we organize, store, and
+manipulate information in ways that mirror how we think and solve problems. Far beyond mere
+implementation details, these abstractions shape how we conceptualize computational challenges.
+Whether you're building a search engine indexing billions of webpages, an operating system managing
+memory resources, or a mobile app tracking user interactions, choosing the right data structure can
+mean the difference between a solution that scales gracefully and one that becomes that legacy tech
+debt app that engineers share stories about, blaming the original designer (you know who you are).
 
-Across every programming language and problem domain, the core principles of data
-organization remain the same: we seek the optimal balance between time efficiency,
-memory usage, and conceptual clarity. Master these fundamentals, and you gain the power
-to solve problems not just in Go, but in any computational context.
+Across every programming language and problem domain, the core principles of data organization
+remain the same: we seek the optimal balance between time efficiency, memory usage, and conceptual
+clarity. Master these fundamentals, and you gain the power to solve problems not just in Go, but in
+any computational context.
 
-Let's explore the essential data structures (in Go), to understand their inner workings,
-and learn exactly when to use each one to enhance your code. Please note that code
-examples are meant for readability and not the most optimized leetcode examples.
+Let's explore the essential data structures (in Go), to understand their inner workings, and learn
+exactly when to use each one to enhance your code. Please note that code examples are meant for
+readability and not the most optimized leetcode examples.
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} This guide assumes you're familiar
-with Go basics and looking to level up your data structure knowledge. If you're new to
-Go, check out the [official Go tour](https://tour.golang.org/) first! In addition, check
-out my blogs on [Go Fundamentals](https://blog.mikesahari.com/tags/fundamentals/).
-{{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} This guide assumes you're familiar with Go basics
+and looking to level up your data structure knowledge. If you're new to Go, check out the
+[official Go tour](https://tour.golang.org/) first! In addition, check out my blogs on
+[Go Fundamentals](https://blog.mikesahari.com/tags/fundamentals/). {{</admonition>}}
 
 ## Understanding Big O: The Language of Performance
 
-Before we can dive into specific data structures, we need to review what we know of Big
-O.
+Before we can dive into specific data structures, we need to review what we know of Big O.
 
 At its core, Big O measures how operation count scales as data size increases:
 
@@ -68,19 +64,18 @@ Here's what these notations mean in practical terms:
 | O(n²)      | Quadratic    | Operation count increases with the square of data size  |
 | O(2^n)     | Exponential  | Operation count doubles with each new element           |
 
-Now that we have our performance vocabulary sorted out, let's see how these concepts
-apply to real Go data structures!
+Now that we have our performance vocabulary sorted out, let's see how these concepts apply to real
+Go data structures!
 
 ## Arrays and Slices: The Foundation of Sequential Data
 
-Our first stop in the Go data structure tour is the humble array and its flexible
-cousin, the slice. These are the workhorses of Go programming, and understanding their
-little nuances are essential for writing performant code.
+Our first stop in the Go data structure tour is the humble array and its flexible cousin, the slice.
+These are the workhorses of Go programming, and understanding their little nuances are essential for
+writing performant code.
 
-In Go, arrays and slices represent contiguous memory blocks that enable extremely fast
-indexed access. While arrays have fixed sizes determined at compile time, slices provide
-dynamic sizing with three key components: a pointer to the underlying array, a length,
-and a capacity.
+In Go, arrays and slices represent contiguous memory blocks that enable extremely fast indexed
+access. While arrays have fixed sizes determined at compile time, slices provide dynamic sizing with
+three key components: a pointer to the underlying array, a length, and a capacity.
 
 Here's how to declare them:
 
@@ -186,8 +181,7 @@ func (st *ScoreTracker) AddScore(score int) {
 
 #### Example 2: Fixed-Size Collection with Insertions
 
-For contrast, here's an example that uses a fixed-size array and requires element
-shifting:
+For contrast, here's an example that uses a fixed-size array and requires element shifting:
 
 ```go
 // TopScores maintains a fixed-size sorted list of the highest scores
@@ -247,11 +241,11 @@ func main() {
 }
 ```
 
-{{<admonition title="📌 Important" bg-color="#01579B">}} The amortized O(1) complexity
-of append() comes from the reallocation strategy. When capacity is exceeded, Go
-allocates a new underlying array with approximately double the capacity. This O(n)
-operation happens infrequently enough that when averaged across many append operations,
-the effective cost approaches O(1) per operation. {{</admonition>}}
+{{<admonition title="📌 Important" bg-color="#01579B">}} The amortized O(1) complexity of append()
+comes from the reallocation strategy. When capacity is exceeded, Go allocates a new underlying array
+with approximately double the capacity. This O(n) operation happens infrequently enough that when
+averaged across many append operations, the effective cost approaches O(1) per operation.
+{{</admonition>}}
 
 ### Optimal Usage Scenarios
 
@@ -262,19 +256,18 @@ Arrays and slices are ideal when:
 - Cache locality provides performance benefits
 - Insertion and deletion operations at the middle are infrequent
 
-But what if you need frequent insertions and deletions at arbitrary positions? That's
-where our next data structure comes into play..
+But what if you need frequent insertions and deletions at arbitrary positions? That's where our next
+data structure comes into play..
 
 ## Linked Lists: The Chain of Nodes
 
-So arrays and slices are great when you need fast random access, but they fall apart
-when you're constantly inserting and removing elements in the middle. Enter linked
-lists - the data structure that laughs in the face of insertion complexity (hue hue
-hue).
+So arrays and slices are great when you need fast random access, but they fall apart when you're
+constantly inserting and removing elements in the middle. Enter linked lists - the data structure
+that laughs in the face of insertion complexity (hue hue hue).
 
-Linked lists represent a fundamental departure from array-based structures. Instead of
-contiguous memory, linked lists consist of individual nodes where each node contains
-both data and a reference to the next node in the sequence.
+Linked lists represent a fundamental departure from array-based structures. Instead of contiguous
+memory, linked lists consist of individual nodes where each node contains both data and a reference
+to the next node in the sequence.
 
 ```go
 type Node struct {
@@ -431,8 +424,7 @@ func main() {
 }
 ```
 
-Let's examine the insert at beginning operation, which showcases the linked list's
-strength:
+Let's examine the insert at beginning operation, which showcases the linked list's strength:
 
 ```go
 // Insert at beginning - O(1) time complexity
@@ -446,8 +438,8 @@ func (l *LinkedList) InsertAtBeginning(val int) {
 }
 ```
 
-This operation is constant time (O(1)) because it requires only a fixed number of steps
-regardless of the list size:
+This operation is constant time (O(1)) because it requires only a fixed number of steps regardless
+of the list size:
 
 1. Create a new node
 2. Point the new node's Next to the current head
@@ -456,8 +448,8 @@ regardless of the list size:
 
 ### Real-world application: Transaction History
 
-To see how linked lists can be useful in practical applications, let's look at a
-transaction history implementation:
+To see how linked lists can be useful in practical applications, let's look at a transaction history
+implementation:
 
 ```go
 // Transaction represents a single financial transaction
@@ -502,39 +494,37 @@ func generateID() string {
 }
 ```
 
-Notice that the `AddTransaction` method follows the exact same pattern as our
-`InsertAtBeginning` method from the generic linked list - it's an O(1) operation that
-makes linked lists particularly well-suited for this kind of application.
+Notice that the `AddTransaction` method follows the exact same pattern as our `InsertAtBeginning`
+method from the generic linked list - it's an O(1) operation that makes linked lists particularly
+well-suited for this kind of application.
 
 ### Technical Implementation Considerations
 
 When implementing linked lists in Go, consider these technical aspects:
 
-1. **Memory Management**: Each node requires additional memory for pointers (8 bytes per
-   pointer on 64-bit systems)
-2. **Cache Locality**: Nodes can be scattered throughout memory, reducing cache
-   efficiency
+1. **Memory Management**: Each node requires additional memory for pointers (8 bytes per pointer on
+   64-bit systems)
+2. **Cache Locality**: Nodes can be scattered throughout memory, reducing cache efficiency
 3. **Tail Pointers**: Adding a tail pointer transforms end insertions from O(n) to O(1)
-4. **Doubly-Linked Variants**: Adding previous pointers enables backwards traversal at
-   the cost of additional memory
+4. **Doubly-Linked Variants**: Adding previous pointers enables backwards traversal at the cost of
+   additional memory
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} For specialized linked list needs,
-consider using the container/list package from the standard library, which provides a
-doubly-linked list implementation with constant-time insertions and deletions.
-{{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} For specialized linked list needs, consider using
+the container/list package from the standard library, which provides a doubly-linked list
+implementation with constant-time insertions and deletions. {{</admonition>}}
 
-But wait, what if we need fast lookups by a specific identifier rather than by position?
-That's when we need to reach for a different tool.
+But wait, what if we need fast lookups by a specific identifier rather than by position? That's when
+we need to reach for a different tool.
 
 ## Hash Tables (Maps in Go): Key-Value Access Masters
 
-When you need lightning-fast lookups by key, hash tables are your best friend. Forget
-about traversing through elements one by one - hash tables use mathematical magic to
-zoom directly to the value you need.
+When you need lightning-fast lookups by key, hash tables are your best friend. Forget about
+traversing through elements one by one - hash tables use mathematical magic to zoom directly to the
+value you need.
 
-Hash tables provide exceptional key-value lookup performance through a clever
-mathematical trick: they convert keys into array indices using a hash function. Go
-implements hash tables as the built-in `map` type.
+Hash tables provide exceptional key-value lookup performance through a clever mathematical trick:
+they convert keys into array indices using a hash function. Go implements hash tables as the
+built-in `map` type.
 
 ```go
 // Creating an empty map
@@ -548,8 +538,7 @@ ages := map[string]int{
 }
 ```
 
-Hash tables achieve their speed through a clever combination of arrays and hash
-functions:
+Hash tables achieve their speed through a clever combination of arrays and hash functions:
 
 1. A hash function converts your key into a number (the hash code)
 2. This hash code is used to determine the index in an underlying array (the bucket)
@@ -649,31 +638,28 @@ delete(userAges, "Cassandra")
 
 Go's map implementation includes several sophisticated features:
 
-1. **Dynamic Resizing**: Maps automatically grow when they become too full, keeping
-   operations fast
-2. **Good Hash Distribution**: Go uses high-quality hash functions to minimize
-   collisions
+1. **Dynamic Resizing**: Maps automatically grow when they become too full, keeping operations fast
+2. **Good Hash Distribution**: Go uses high-quality hash functions to minimize collisions
 3. **Memory Efficiency**: The implementation balances memory usage with performance
 4. **Zero Values**: Accessing a non-existent key returns the zero value for that type
 
-{{<admonition title="📝 Note" bg-color="`#283593`">}} Maps in Go are unordered
-collections. When you iterate through a map using a for-range loop, the elements appear
-in a random order. This randomization is deliberate to prevent developers from relying
-on any specific order. If you need ordered elements, you'll need to pair your map with a
-separate slice to track insertion order. {{</admonition>}}
+{{<admonition title="📝 Note" bg-color="`#283593`">}} Maps in Go are unordered collections. When you
+iterate through a map using a for-range loop, the elements appear in a random order. This
+randomization is deliberate to prevent developers from relying on any specific order. If you need
+ordered elements, you'll need to pair your map with a separate slice to track insertion order.
+{{</admonition>}}
 
-Maps excel at key-based lookups, but what if we need both fast lookups and a specific
-ordering? That's where our next data structure comes in.
+Maps excel at key-based lookups, but what if we need both fast lookups and a specific ordering?
+That's where our next data structure comes in.
 
 ## Binary Trees: Hierarchical Ordered Data
 
-Have you ever needed to both lookup data quickly AND maintain a specific order? Enter
-binary trees - the elegant data structure that lets you have your cake and eat it too
-(at least most of the time).
+Have you ever needed to both lookup data quickly AND maintain a specific order? Enter binary trees -
+the elegant data structure that lets you have your cake and eat it too (at least most of the time).
 
-Binary trees organize data in a hierarchical structure where each node has at most two
-children. Binary Search Trees (BSTs) enforce an ordering: values in left subtrees are
-smaller than the node's value, while values in right subtrees are larger.
+Binary trees organize data in a hierarchical structure where each node has at most two children.
+Binary Search Trees (BSTs) enforce an ordering: values in left subtrees are smaller than the node's
+value, while values in right subtrees are larger.
 
 ```go
 type TreeNode struct {
@@ -709,8 +695,7 @@ graph TD
 
 ### Technical Performance Analysis
 
-The performance characteristics of binary search trees depend critically on their
-balance:
+The performance characteristics of binary search trees depend critically on their balance:
 
 | Operation | Balanced Tree | Unbalanced Tree | Technical Explanation                                          |
 | --------- | ------------- | --------------- | -------------------------------------------------------------- |
@@ -867,13 +852,13 @@ func (bst *BinarySearchTree) SearchIterative(value int) *TreeNode {
 }
 ```
 
-Each comparison eliminates roughly half of the remaining nodes from consideration,
-giving us the O(log n) complexity for balanced trees.
+Each comparison eliminates roughly half of the remaining nodes from consideration, giving us the
+O(log n) complexity for balanced trees.
 
 ### Real-World Application: Word Frequency Counter
 
-Binary search trees can be adapted for specialized use cases. Here's an example of using
-a BST to count and sort word frequencies in text:
+Binary search trees can be adapted for specialized use cases. Here's an example of using a BST to
+count and sort word frequencies in text:
 
 ```go
 // A specialized tree for counting word occurrences
@@ -942,29 +927,28 @@ func (t *WordCountTree) PrintSorted() {
 }
 ```
 
-Notice how this specialized implementation follows the same principles as our generic
-BST, but adapts the tree for a specific use case:
+Notice how this specialized implementation follows the same principles as our generic BST, but
+adapts the tree for a specific use case:
 
 1. The comparison is based on string values instead of integers
 2. The nodes store both a word and its count
 3. Duplicate words increment the count rather than adding a new node
 4. The tree remains ordered alphabetically, allowing for sorted output
 
-We've covered data structures that manage their elements in different ways, but what
-about when we need strict control over the order of additions and removals? Let's look
-at two specialized structures designed for exactly that.
+We've covered data structures that manage their elements in different ways, but what about when we
+need strict control over the order of additions and removals? Let's look at two specialized
+structures designed for exactly that.
 
 ## Stacks and Queues: Sequential Access Patterns
 
-Sometimes we need strict control over the order of processing elements. When I'm
-debugging a complex algorithm or implementing a breadth-first search, two data
-structures consistently save my bacon: stacks and queues.
+Sometimes we need strict control over the order of processing elements. When I'm debugging a complex
+algorithm or implementing a breadth-first search, two data structures consistently save my bacon:
+stacks and queues.
 
-Stacks and queues implement specific access patterns that model many real-world
-scenarios:
+Stacks and queues implement specific access patterns that model many real-world scenarios:
 
-- **Stacks**: LIFO (Last In, First Out) - like a stack of plates where you can only take
-  from the top
+- **Stacks**: LIFO (Last In, First Out) - like a stack of plates where you can only take from the
+  top
 - **Queues**: FIFO (First In, First Out) - like people waiting in line at a coffee shop
 
 Both are easily implemented using slices in Go:
@@ -1109,8 +1093,7 @@ graph TD
 
 ### Practical Example: Postfix Expression Evaluator
 
-Here's our `Stack` in action for evaluating a postfix (Reverse Polish Notation)
-expression:
+Here's our `Stack` in action for evaluating a postfix (Reverse Polish Notation) expression:
 
 ```go
 // EvaluatePostfix evaluates a postfix expression like "3 4 + 5 *"
@@ -1170,10 +1153,9 @@ func EvaluatePostfix(expression string) (int, error) {
 // result, _ := EvaluatePostfix("3 4 + 5 *") // (3 + 4) * 5 = 35
 ```
 
-This example demonstrates how a stack is perfect for expression evaluation because of
-its LIFO nature. When we see a number, we push it onto the stack. When we see an
-operator, we pop the required operands, perform the calculation, and push the result
-back.
+This example demonstrates how a stack is perfect for expression evaluation because of its LIFO
+nature. When we see a number, we push it onto the stack. When we see an operator, we pop the
+required operands, perform the calculation, and push the result back.
 
 ### Practical Example: Simple Task Queue
 
@@ -1254,13 +1236,13 @@ func main() {
 }
 ```
 
-In this example, the queue ensures that tasks are processed in the exact order they were
-added - a classic FIFO operation.
+In this example, the queue ensures that tasks are processed in the exact order they were added - a
+classic FIFO operation.
 
 ### Implementation Alternatives for Efficient Queues
 
-The slice-based queue implementation above has a significant limitation: O(n) dequeue
-operations. More efficient alternatives include:
+The slice-based queue implementation above has a significant limitation: O(n) dequeue operations.
+More efficient alternatives include:
 
 1. **Circular Buffer**: Using an array with head and tail pointers that wrap around
 2. **Linked List Queue**: Using a linked list with head and tail pointers
@@ -1314,19 +1296,17 @@ func (q *CircularQueue) Dequeue() (int, error) {
 }
 ```
 
-This circular queue implementation gives us O(1) operations for both enqueue and
-dequeue, eliminating the need to shift elements.
+This circular queue implementation gives us O(1) operations for both enqueue and dequeue,
+eliminating the need to shift elements.
 
-{{<admonition title="📝 Note" bg-color="#283593">}} The standard library's
-container/list provides a generic doubly-linked list implementation that can efficiently
-serve as a queue with O(1) operations for both insertions and removals from either end.
-{{</admonition>}}
+{{<admonition title="📝 Note" bg-color="#283593">}} The standard library's container/list provides a
+generic doubly-linked list implementation that can efficiently serve as a queue with O(1) operations
+for both insertions and removals from either end. {{</admonition>}}
 
 ## Practical Comparisons: Choosing the Right Tool
 
-Alright, so you've got a toolbox full of data structures, but which one should you reach
-for? Let's break down exactly when to use each one - just practical advice for
-real-world Go code.
+Alright, so you've got a toolbox full of data structures, but which one should you reach for? Let's
+break down exactly when to use each one - just practical advice for real-world Go code.
 
 Here's a cheat sheet comparing our data structures side-by-side:
 
@@ -1341,18 +1321,15 @@ Here's a cheat sheet comparing our data structures side-by-side:
 
 ### Common Use Case Examples
 
-I can't count how many times I've seen engineers, who know just enough to be dangerous,
-reach for the wrong data structure and then wonder why their code crawls when given more
-than a hundred elements! Here are some example problems matched with their ideal data
-structure:
+I can't count how many times I've seen engineers, who know just enough to be dangerous, reach for
+the wrong data structure and then wonder why their code crawls when given more than a hundred
+elements! Here are some example problems matched with their ideal data structure:
 
 1. **Login system with username lookups**: Hash map - `map[string]UserData`
 2. **Undo functionality in a text editor**: Stack - push state changes, pop to undo
-3. **Account metadata with prefix search**: Trie (specialized tree) - efficient prefix
-   matching
+3. **Account metadata with prefix search**: Trie (specialized tree) - efficient prefix matching
 4. **Graph traversal with BFS**: Queue - keeps track of the "frontier" nodes
-5. **Task scheduling by priority**: Heap (priority queue) - O(log n) for
-   highest-priority extraction
+5. **Task scheduling by priority**: Heap (priority queue) - O(log n) for highest-priority extraction
 
 Let's visualize the decision process:
 
@@ -1377,9 +1354,8 @@ flowchart TD
 
 ## Space Complexity: Memory Matters Too
 
-Time complexity gets all the glory, but space complexity can make or break your
-application, especially in constrained environments. Here's how our data structures
-stack up:
+Time complexity gets all the glory, but space complexity can make or break your application,
+especially in constrained environments. Here's how our data structures stack up:
 
 | Data Structure | Space Complexity | Memory Overhead           | Technical Details                                                                     |
 | -------------- | ---------------- | ------------------------- | ------------------------------------------------------------------------------------- |
@@ -1395,20 +1371,19 @@ When memory becomes a bottleneck, consider these technical approaches:
 
 1. **Custom allocators**: Implement arena allocation for many small objects
 2. **Bit packing**: Use bit fields to compress data when working with small values
-3. **Immutable data structures**: Share memory between instances using structural
-   sharing
+3. **Immutable data structures**: Share memory between instances using structural sharing
 4. **Lazy loading**: Only load data when needed, especially for tree structures
 5. **Memory pools**: Pre-allocate fixed-size blocks to reduce allocation overhead
 
-{{<admonition title="📌 Important" bg-color="#01579B">}} When implementing recursive
-algorithms, be mindful of stack space. Each recursive call consumes additional stack
-frames, which can lead to stack overflow for deep recursion. Consider iterative
-alternatives using an explicit stack when processing large datasets. {{</admonition>}}
+{{<admonition title="📌 Important" bg-color="#01579B">}} When implementing recursive algorithms, be
+mindful of stack space. Each recursive call consumes additional stack frames, which can lead to
+stack overflow for deep recursion. Consider iterative alternatives using an explicit stack when
+processing large datasets. {{</admonition>}}
 
 ## Decision Framework for Data Structure Selection
 
-When you're staring at a new problem and trying to decide which data structure to use,
-ask yourself these questions:
+When you're staring at a new problem and trying to decide which data structure to use, ask yourself
+these questions:
 
 1. **Access pattern**: How will the data be accessed? (randomly, sequentially, by key)
 2. **Modification frequency**: Is the data mostly static or frequently modified?
@@ -1417,29 +1392,27 @@ ask yourself these questions:
 5. **Operation frequency**: Which operations will be performed most often?
 6. **Memory constraints**: Are there limitations on memory usage?
 
-These questions form a decision tree that can guide you to the optimal data structure
-for your specific scenario.
+These questions form a decision tree that can guide you to the optimal data structure for your
+specific scenario.
 
 ## Conclusion
 
-By understanding data structures and their characteristics, strengths, and limitations
-at a deep technical level, you can make informed decisions that dramatically impact your
-application's performance.
+By understanding data structures and their characteristics, strengths, and limitations at a deep
+technical level, you can make informed decisions that dramatically impact your application's
+performance.
 
-The Go standard library provides excellent implementations of the most commonly used
-data structures, with well-defined performance characteristics. For specialized needs,
-there are plenty of third-party packages offering advanced implementations.
+The Go standard library provides excellent implementations of the most commonly used data
+structures, with well-defined performance characteristics. For specialized needs, there are plenty
+of third-party packages offering advanced implementations.
 
-Remember that theoretical performance is just one factor in the decision. Practical
-considerations like readability, maintainability, and the specific patterns of your data
-are equally important for building efficient systems.
+Remember that theoretical performance is just one factor in the decision. Practical considerations
+like readability, maintainability, and the specific patterns of your data are equally important for
+building efficient systems.
 
-Now get out there and crush those performance bottlenecks with the right data structure
-for the job!
+Now get out there and crush those performance bottlenecks with the right data structure for the job!
 
 ## References
 
 - [Go Standard Library](https://golang.org/pkg/)
-- [The Go Programming Language](https://www.gopl.io/) by Alan A. A. Donovan and Brian W.
-  Kernighan
+- [The Go Programming Language](https://www.gopl.io/) by Alan A. A. Donovan and Brian W. Kernighan
 - [Big O Cheat Sheet](https://www.bigocheatsheet.com/)

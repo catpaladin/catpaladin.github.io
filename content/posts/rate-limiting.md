@@ -6,13 +6,19 @@ tags = ["go", "api", "reverse-proxy", "rate-limiting"]
 featured_image = "/images/gophers/go-magic.svg"
 +++
 
-Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This is where rate limiting comes in to save the day!
+Here is a fun project to get you GO-ing! Imagine, your API is humming along nicely until that one
+client (a complete savage) decides to hammer it with requests, bringing everything to a crawl. This
+is where rate limiting comes in to save the day!
 
-In this post, we're building a configurable rate-limiting reverse proxy. And by the end of this blog, you'll have a lightweight, performant service that sits in front of your APIs and protects them from traffic spikes.
+In this post, we're building a configurable rate-limiting reverse proxy. And by the end of this
+blog, you'll have a lightweight, performant service that sits in front of your APIs and protects
+them from traffic spikes.
 
 ## What Exactly Are We Building?
 
-A reverse proxy acts as a middleman between clients and your actual service. Our proxy will add a critical feature: **rate limiting** to control how many requests per second (RPS) each client can make.
+A reverse proxy acts as a middleman between clients and your actual service. Our proxy will add a
+critical feature: **rate limiting** to control how many requests per second (RPS) each client can
+make.
 
 ```mermaid
 flowchart LR
@@ -36,9 +42,12 @@ Our proxy will be configurable via environment variables:
 - `RPS`: Requests per second allowed
 - `BURST`: Maximum capacity and how many requests can temporarily exceed the rate limit
 
-For this example, we will be building our rate-limiting reverse proxy using the [Token Bucket Algorithm](https://en.wikipedia.org/wiki/Token_bucket). But before we jump into things, I wanted to break down the concepts.
+For this example, we will be building our rate-limiting reverse proxy using the
+[Token Bucket Algorithm](https://en.wikipedia.org/wiki/Token_bucket). But before we jump into
+things, I wanted to break down the concepts.
 
-The Token Bucket Algorithm is fundamentally a traffic cop for your API. It works on a deceptively simple principle:
+The Token Bucket Algorithm is fundamentally a traffic cop for your API. It works on a deceptively
+simple principle:
 
 1. You have a bucket that holds tokens
 2. Tokens are added to the bucket at a constant rate
@@ -46,15 +55,14 @@ The Token Bucket Algorithm is fundamentally a traffic cop for your API. It works
 4. If there are enough tokens, the request goes through and tokens are consumed
 5. If not, the request is rejected (usually with a 429 Too Many Requests)
 
-RPS (Requests Per Second) is your token generation rate - it defines how many new request permits you're issuing every second. This is your system's sustainable throughput.
+RPS (Requests Per Second) is your token generation rate - it defines how many new request permits
+you're issuing every second. This is your system's sustainable throughput.
 
-{{<admonition title="🗨️ Example" bg-color="#69F0AE">}}
-If your RPS is set to 10:
+{{<admonition title="🗨️ Example" bg-color="#69F0AE">}} If your RPS is set to 10:
 
 - Your bucket gets 10 new tokens every second
 - That's one new token every 0.1 seconds
-- This is your long-term, guaranteed throughput capacity
-  {{</admonition>}}
+- This is your long-term, guaranteed throughput capacity {{</admonition>}}
 
 The following charts visualize this:
 
@@ -78,15 +86,14 @@ graph LR
     end
 ```
 
-Burst capacity is like your API's turbo button - the maximum number of requests you'll allow all at once, even if it exceeds your sustainable rate. It's your buffer against traffic spikes.
+Burst capacity is like your API's turbo button - the maximum number of requests you'll allow all at
+once, even if it exceeds your sustainable rate. It's your buffer against traffic spikes.
 
-{{<admonition title="🗨️ Example" bg-color="#69F0AE">}}
-If your burst is 30:
+{{<admonition title="🗨️ Example" bg-color="#69F0AE">}} If your burst is 30:
 
 - Your bucket has a maximum capacity of 30 tokens
 - A client can make up to 30 requests immediately
-- After burst capacity is exhausted, they're throttled to your RPS
-  {{</admonition>}}
+- After burst capacity is exhausted, they're throttled to your RPS {{</admonition>}}
 
 The following visualization describes this:
 
@@ -275,21 +282,26 @@ func cleanupOldClients() {
 Let's break down what's happening in this code:
 
 1. We set up a reverse proxy using Go's `httputil` package
-2. For each client (identified by IP), we create a rate limiter using Go's token bucket implementation
+2. For each client (identified by IP), we create a rate limiter using Go's token bucket
+   implementation
 3. When a request comes in, we check if the client has exceeded their rate limit
 4. If they have, we return a 429 Too Many Requests status
 5. If not, we forward the request to the target service
-6. We also have a background goroutine that cleans up rate limiters for clients that haven't been seen in a while
+6. We also have a background goroutine that cleans up rate limiters for clients that haven't been
+   seen in a while
 
-{{<admonition title="📝 NOTE" bg-color="#283593">}}
-The token bucket algorithm allows for brief bursts of traffic while still maintaining a consistent average rate limit. This makes it more forgiving than strict per-second limits.
+{{<admonition title="📝 NOTE" bg-color="#283593">}} The token bucket algorithm allows for brief
+bursts of traffic while still maintaining a consistent average rate limit. This makes it more
+forgiving than strict per-second limits.
 
-The `rate.Limiter.Allow()` method consumes a single token when it's called, but it doesn't actually block or delay execution! It simply returns `false` if no tokens are available.
-{{</admonition>}}
+The `rate.Limiter.Allow()` method consumes a single token when it's called, but it doesn't actually
+block or delay execution! It simply returns `false` if no tokens are available. {{</admonition>}}
 
 ## Handling X-Forwarded-For Headers
 
-One issue with our current implementation is that it uses `RemoteAddr` to identify clients. In production environments with load balancers, you'll typically want to respect the `X-Forwarded-For` header. Let's enhance our code:
+One issue with our current implementation is that it uses `RemoteAddr` to identify clients. In
+production environments with load balancers, you'll typically want to respect the `X-Forwarded-For`
+header. Let's enhance our code:
 
 ```go
 // Get client's real IP, respecting X-Forwarded-For header
@@ -316,9 +328,8 @@ func getRealIP(r *http.Request) string {
 }
 ```
 
-{{<admonition title="📌 IMPORTANT" bg-color="#01579B">}}
-Don't forget to add `strings` and `net` to your imports!
-{{</admonition>}}
+{{<admonition title="📌 IMPORTANT" bg-color="#01579B">}} Don't forget to add `strings` and `net` to
+your imports! {{</admonition>}}
 
 Now, update the `createRateLimitHandler` function to use this instead:
 
@@ -337,7 +348,9 @@ func createRateLimitHandler(proxy *httputil.ReverseProxy, rps float64, burst int
 
 ## Testing Our Rate Limiter
 
-Now that we have our rate-limiting proxy, let's test it. First, make sure you have a test service running. For this example, I'll use a simple echo server. We can create this under `cmd/echo-server/main.go`
+Now that we have our rate-limiting proxy, let's test it. First, make sure you have a test service
+running. For this example, I'll use a simple echo server. We can create this under
+`cmd/echo-server/main.go`
 
 ```go
 package main
@@ -376,7 +389,8 @@ go run cmd/rate-limit-proxy/main.go
 
 This configures our proxy to allow an average of 2 requests per second, with a burst of 3 at most.
 
-Let's test it with a more aggressive approach - we'll use Go itself to hammer the endpoint with concurrent requests!
+Let's test it with a more aggressive approach - we'll use Go itself to hammer the endpoint with
+concurrent requests!
 
 We'll create a simple go script under `cmd/test-rate-limit/main.go`
 
@@ -500,7 +514,8 @@ Average RPS attempted: 1757.1
 
 {{</admonition>}}
 
-The first nine requests should succeed and then you'll start seeing 429 errors as the rate limit kicks in.
+The first nine requests should succeed and then you'll start seeing 429 errors as the rate limit
+kicks in.
 
 ![rate limiting](/images/2025/03/20250308-meme1.png)
 
@@ -556,9 +571,9 @@ Average RPS attempted: 100.1
 
 </br>
 
-{{<admonition title="💡 TIP" bg-color="#004D40">}}
-In production, you might want to add headers like `X-RateLimit-Limit` and `X-RateLimit-Remaining` to give clients more information about their rate limit status.
-{{</admonition>}}
+{{<admonition title="💡 TIP" bg-color="#004D40">}} In production, you might want to add headers like
+`X-RateLimit-Limit` and `X-RateLimit-Remaining` to give clients more information about their rate
+limit status. {{</admonition>}}
 
 ## Rate Limiting Visualization
 
@@ -606,7 +621,8 @@ sequenceDiagram
 
 ## Wrap Up
 
-We've built a configurable, efficient rate-limiting reverse proxy in Go. This proxy can protect your services from traffic spikes, malicious clients, or simply overzealous integrations.
+We've built a configurable, efficient rate-limiting reverse proxy in Go. This proxy can protect your
+services from traffic spikes, malicious clients, or simply overzealous integrations.
 
 Some key points about our implementation:
 
@@ -616,7 +632,9 @@ Some key points about our implementation:
 4. **Real IP detection**: Works correctly even behind load balancers
 5. **Memory efficient**: Automatically cleans up inactive client limiters
 
-With minimal code, we've created a powerful piece of infrastructure that can be deployed in front of any HTTP service. This is the beauty of Go - it comes with so many useful packages out of the box that you can build production-ready components with very little code.
+With minimal code, we've created a powerful piece of infrastructure that can be deployed in front of
+any HTTP service. This is the beauty of Go - it comes with so many useful packages out of the box
+that you can build production-ready components with very little code.
 
 The full source code is available [here](https://github.com/catpaladin/rate-limit-proxy).
 

@@ -6,15 +6,23 @@ tags = ["go", "commandline", "cli", "charmbracelet"]
 featured_image = "/images/gophers/go-fish.svg"
 +++
 
-_Hey there, fellow Go enthusiasts! Today, I'm going to share something that completely changed my CLI development game. Buckle up – we're diving deep into making CLIs that users will actually enjoy using!_
+_Hey there, fellow Go enthusiasts! Today, I'm going to share something that completely changed my
+CLI development game. Buckle up – we're diving deep into making CLIs that users will actually enjoy
+using!_
 
 ## The CLI Development Evolution
 
-You know how we all instinctively reach for [cobra](https://github.com/spf13/cobra) when building command-line tools in Go? Well, here is the perfect companion that's transformed how I think about CLI interactions: [huh](https://github.com/charmbracelet/huh) by Charmbracelet.
+You know how we all instinctively reach for [cobra](https://github.com/spf13/cobra) when building
+command-line tools in Go? Well, here is the perfect companion that's transformed how I think about
+CLI interactions: [huh](https://github.com/charmbracelet/huh) by Charmbracelet.
 
 ![huh](/images/gifs/huh-cat.gif 'huh')
 
-_Here's the thing that got me excited:_ While `cobra` handles all the heavy lifting of command structure and flags (and does it beautifully, I might add), `huh` brings something entirely different to the table. It's all about creating those smooth, interactive forms and prompts that make your CLIs feel professional and polished. Think of it as the difference between a bare-bones terminal app and something that feels like it belongs in 2025.
+_Here's the thing that got me excited:_ While `cobra` handles all the heavy lifting of command
+structure and flags (and does it beautifully, I might add), `huh` brings something entirely
+different to the table. It's all about creating those smooth, interactive forms and prompts that
+make your CLIs feel professional and polished. Think of it as the difference between a bare-bones
+terminal app and something that feels like it belongs in 2025.
 
 ## Getting Started with huh
 
@@ -37,11 +45,15 @@ huh.NewInput().
 fmt.Printf("Hey, %s!\n", name)
 ```
 
-If you're already using `cobra`'s `StringVarP` for flags, you can create this sweet fallback system. When a flag isn't provided, your CLI smoothly transitions to an interactive prompt. It's like having the best of both worlds!
+If you're already using `cobra`'s `StringVarP` for flags, you can create this sweet fallback system.
+When a flag isn't provided, your CLI smoothly transitions to an interactive prompt. It's like having
+the best of both worlds!
 
 ## The Real MVP: Select Prompts
 
-_Okay, this is where things get really interesting._ Remember struggling with [promptui](https://github.com/manifoldco/promptui) for selection menus? (I sure do, and let me tell you, it wasn't pretty.) Check this out:
+_Okay, this is where things get really interesting._ Remember struggling with
+[promptui](https://github.com/manifoldco/promptui) for selection menus? (I sure do, and let me tell
+you, it wasn't pretty.) Check this out:
 
 ```go
 huh.NewSelect[string]().
@@ -55,11 +67,15 @@ huh.NewSelect[string]().
     Value(&country)
 ```
 
-Not only is it clean and intuitive, but it comes with built-in navigation, filtering, and selection handling. No more wrestling with keyboard events and terminal codes!
+Not only is it clean and intuitive, but it comes with built-in navigation, filtering, and selection
+handling. No more wrestling with keyboard events and terminal codes!
 
 ## Real-World Implementation: `net-tools` Deep Dive
 
-Let me walk you through a real-world project where I put all this into practice. I built this network troubleshooting toolkit called [net-tools](https://github.com/catpaladin/net-tools) that combines everything we've talked about. It's my Swiss Army knife for network diagnostics, built with Go.
+Let me walk you through a real-world project where I put all this into practice. I built this
+network troubleshooting toolkit called [net-tools](https://github.com/catpaladin/net-tools) that
+combines everything we've talked about. It's my Swiss Army knife for network diagnostics, built with
+Go.
 
 ### The Dig Command: Simple but Powerful
 
@@ -84,9 +100,8 @@ func interactiveDig() {
 }
 ```
 
-{{<admonition title="📝 NOTE" bg-color="#283593">}}
-That validation function isn't just error checking - it's about guiding users to success.
-{{</admonition>}}
+{{<admonition title="📝 NOTE" bg-color="#283593">}} That validation function isn't just error
+checking - it's about guiding users to success. {{</admonition>}}
 
 ### The IP Command: Elegant Selection
 
@@ -113,11 +128,14 @@ func interactiveIP() {
 
 ![you hardcoded..](/images/2025/02/20250207-meme1.png)
 
-{{<admonition title="📝 NOTE" bg-color="#283593">}}
-This section is a little advanced and requires some knowledge on generics. I thought I would share because I couldn't find much documentation online about this.
-{{</admonition>}}
+{{<admonition title="📝 NOTE" bg-color="#283593">}} This section is a little advanced and requires
+some knowledge on generics. I thought I would share because I couldn't find much documentation
+online about this. {{</admonition>}}
 
-My example above is simple and hardcoded. Let's face it; not every situation can handle the options being known and hardcoded. Let's make our forms more dynamic and reusable. I've developed a couple of utility functions (outside this project) that have saved me countless hours when dealing with dynamic select options.
+My example above is simple and hardcoded. Let's face it; not every situation can handle the options
+being known and hardcoded. Let's make our forms more dynamic and reusable. I've developed a couple
+of utility functions (outside this project) that have saved me countless hours when dealing with
+dynamic select options.
 
 ```go
 // NewSelectForm creates a new select form
@@ -155,7 +173,8 @@ func GenerateGenericOptions[T comparable](items []T) []huh.Option[T] {
 
 Let me break down why these functions are game-changers:
 
-- **Type-Safe Generics**: The `[T comparable]` constraint ensures our functions work with any comparable type (This means you can use it with strings, ints, or even custom types!)
+- **Type-Safe Generics**: The `[T comparable]` constraint ensures our functions work with any
+  comparable type (This means you can use it with strings, ints, or even custom types!)
 - **Simplified Form Creation**: Using the above, we can do the following:
 
 ```go
@@ -165,7 +184,9 @@ options := GenerateGenericOptions(protocols)
 selectedProtocol, err := NewSelectForm(options, "Select Protocol")
 ```
 
-- **Dynamic Option Generation**: You can feed it any slice of comparable items. This will automatically generate the display keys and values (Remember, the Key is what users see, Value is what your code gets!).
+- **Dynamic Option Generation**: You can feed it any slice of comparable items. This will
+  automatically generate the display keys and values (Remember, the Key is what users see, Value is
+  what your code gets!).
 
 ### The Netcat Command: Advanced Form Handling
 
@@ -245,7 +266,9 @@ Let's break down what makes this netcat implementation special:
 
 ## Taking It to the Next Level: Visual Polish ✨
 
-Want to make your CLI even more professional? Meet [lipgloss](https://github.com/charmbracelet/lipgloss) - think of it as CSS for your terminal apps. It works seamlessly with `huh`!
+Want to make your CLI even more professional? Meet
+[lipgloss](https://github.com/charmbracelet/lipgloss) - think of it as CSS for your terminal apps.
+It works seamlessly with `huh`!
 
 Here's some suggestions on using `lipgloss`:
 
@@ -255,7 +278,8 @@ Here's some suggestions on using `lipgloss`:
 
 ## Why This Matters
 
-Remember: great CLIs aren't just about functionality - they're about creating an experience that makes users actually want to use your tools. With `huh`, you're:
+Remember: great CLIs aren't just about functionality - they're about creating an experience that
+makes users actually want to use your tools. With `huh`, you're:
 
 - Reducing user errors through validation
 - Providing intuitive interfaces
@@ -271,10 +295,14 @@ Ready to build something amazing? Here's your quick start guide:
 3. Consider `lipgloss` for styling
 4. Check out [net-tools](https://github.com/catpaladin/net-tools) for implementation examples
 
-Start simple with basic prompts, then gradually add validation and complexity as you get comfortable with the library.
+Start simple with basic prompts, then gradually add validation and complexity as you get comfortable
+with the library.
 
 ## Wrapping Up
 
-The combination of `cobra` for structure and `huh` for interaction is powerful stuff. Whether you're building developer tools, system utilities, or anything in between, these libraries give you the building blocks for creating CLIs that users will love.
+The combination of `cobra` for structure and `huh` for interaction is powerful stuff. Whether you're
+building developer tools, system utilities, or anything in between, these libraries give you the
+building blocks for creating CLIs that users will love.
 
-Remember: the best tools aren't just functional - they're a joy to use. Now go forth and build something awesome!
+Remember: the best tools aren't just functional - they're a joy to use. Now go forth and build
+something awesome!

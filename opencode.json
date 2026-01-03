@@ -1,0 +1,21 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "mcp-go": {
+      "type": "local",
+      "command": ["mcp-go-assistant"],
+      "enabled": false
+    },
+    "svelte": {
+      "type": "local",
+      "command": ["npx", "-y", "@sveltejs/mcp"],
+      "enabled": true
+    },
+    "astro-docs": {
+      "type": "remote",
+      "url": "https://mcp.docs.astro.build/mcp",
+      "enabled": false
+    }
+  },
+  "instructions": ["docs/*.md"]
+}

@@ -6,7 +6,9 @@ tags = ["go", "python", "typescript", "generics"]
 featured_image = "/images/gophers/go-generics.svg"
 +++
 
-After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something that I have to say is exciting! Let's break down exactly what this means, how it works, and how it compares to other languages.
+After spending years writing Go, the introduction of generic type aliases in Go 1.24 is something
+that I have to say is exciting! Let's break down exactly what this means, how it works, and how it
+compares to other languages.
 
 ## Understanding Go's Type System Evolution
 
@@ -71,8 +73,9 @@ graph TD
 
 <!-- ![Type Aliases](/images/2025/02/20250215-mermaid1.png) -->
 
-Generic type aliases allow us to create type synonyms that can work with different data types while maintaining Go's strong type safety.
-Think of it as creating flexible building blocks that can adapt to different data types without sacrificing compile-time safety.
+Generic type aliases allow us to create type synonyms that can work with different data types while
+maintaining Go's strong type safety. Think of it as creating flexible building blocks that can adapt
+to different data types without sacrificing compile-time safety.
 
 ### Basic Examples: Result and Set Types
 
@@ -130,7 +133,8 @@ func main() {
 
 ### Advanced Use Cases: Building Robust Data Structures
 
-Now let's look at some more sophisticated patterns that showcase the full power of generic type aliases:
+Now let's look at some more sophisticated patterns that showcase the full power of generic type
+aliases:
 
 ```go
 import "sync"
@@ -229,11 +233,15 @@ func main() {
 
 ## Language Comparison: Generic Type Aliases Across Other Languages
 
-Let's explore how TypeScript and Python handle generic type aliases compared to Go 1.24. This should help those of you reading who are familiar with other languages, but have never touched type aliases (_let alone generics!_).
+Let's explore how TypeScript and Python handle generic type aliases compared to Go 1.24. This should
+help those of you reading who are familiar with other languages, but have never touched type aliases
+(_let alone generics!_).
 
 ### TypeScript: Type Aliases
 
-TypeScript's type system is like that overachieving friend who always does extra credit - it comes with a rich set of features for type manipulation. Here's how TypeScript approaches generic type aliases:
+TypeScript's type system is like that overachieving friend who always does extra credit - it comes
+with a rich set of features for type manipulation. Here's how TypeScript approaches generic type
+aliases:
 
 ```typescript
 // The classic Result type - TypeScript style
@@ -283,7 +291,9 @@ What makes TypeScript special:
 
 ### Python: Type Hints with a Twist
 
-Type aliases are interesting in Python. While there is no way to enforce typing, with the exception of some strong mypy type checking (or some custom decorators), generics and type aliases are done through typing hinting. Here's how Python 3.13 handles generic type aliases:
+Type aliases are interesting in Python. While there is no way to enforce typing, with the exception
+of some strong mypy type checking (or some custom decorators), generics and type aliases are done
+through typing hinting. Here's how Python 3.13 handles generic type aliases:
 
 ```python
 from typing import TypeVar, Generic, TypeAlias
@@ -389,7 +399,8 @@ class Result(Generic[T]):
     error: Exception | None
 ```
 
-The syntax might be different, but the goal is the same: creating reusable, type-safe code. Each language just takes its own path to get there!
+The syntax might be different, but the goal is the same: creating reusable, type-safe code. Each
+language just takes its own path to get there!
 
 ## Best Practices for Go Generic Type Aliases
 
@@ -416,7 +427,8 @@ type JsonResponse[T any, E comparable, M ~string] = struct {
 
 ### 2. Use Meaningful Constraints
 
-It is too easy to just say "any". Unless you really don't plan on refactoring your code, try to constrain the generics to expected types.
+It is too easy to just say "any". Unless you really don't plan on refactoring your code, try to
+constrain the generics to expected types.
 
 ```go
 // Good - Clear constraint usage
@@ -448,4 +460,6 @@ type UserResult[T any] = struct {
 
 ## Closing
 
-Remember: Generic type aliases in Go provide a powerful way to create reusable, type-safe code while maintaining Go's simplicity and explicitness. Choose them when they make your code clearer and more maintainable.
+Remember: Generic type aliases in Go provide a powerful way to create reusable, type-safe code while
+maintaining Go's simplicity and explicitness. Choose them when they make your code clearer and more
+maintainable.

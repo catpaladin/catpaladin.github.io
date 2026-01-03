@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "convert-svg": "node scripts/convert-svg.js",
+    "convert-svg": "bun scripts/convert-svg.js",
     "preview": "vite preview",
     "test": "vitest run",
     "check": "svelte-check --tsconfig ./tsconfig.json",

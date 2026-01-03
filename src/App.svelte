@@ -4,6 +4,7 @@
   import ScrollIndicator from './ScrollIndicator.svelte';
   import TableOfContents from './TableOfContents.svelte';
   import mermaid from 'mermaid';
+  import { onMount } from 'svelte';
 
   interface MenuItem {
     name: string;
@@ -33,10 +34,132 @@
 
   let mermaidBusy = false;
 
+  type ThemeMode = 'dark' | 'light';
+
+  const getTheme = (): ThemeMode =>
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+
+  const renderMermaid = async (themeMode?: ThemeMode) => {
+    const elements = document.querySelectorAll('.mermaid');
+    if (elements.length === 0) return;
+
+    // Use passed theme mode or capture current DOM state immediately
+    const currentMode: ThemeMode = themeMode ?? getTheme();
+    const isDark = currentMode === 'dark';
+
+    mermaidBusy = true;
+
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'base',
+      themeVariables: isDark
+        ? {
+            darkMode: true,
+            background: '#1e293b',
+            primaryColor: '#3b82f6',
+            primaryTextColor: '#f1f5f9',
+            primaryBorderColor: '#60a5fa',
+            lineColor: '#94a3b8',
+            secondaryColor: '#475569',
+            tertiaryColor: '#334155',
+            fontFamily: 'inherit',
+            fontSize: '16px',
+            flowchart: {
+              nodeTextColor: '#f1f5f9',
+              nodeBorder: '#60a5fa',
+              curve: 'basis'
+            },
+            sequence: {
+              actorTextColor: '#f1f5f9',
+              actorBkg: '#3b82f6',
+              actorBorder: '#60a5fa',
+              actorLineColor: '#94a3b8',
+              signalColor: '#94a3b8',
+              signalTextColor: '#f1f5f9'
+            }
+          }
+        : {
+            darkMode: false,
+            background: '#ffffff',
+            primaryColor: '#3b82f6',
+            primaryTextColor: '#1e293b',
+            primaryBorderColor: '#2563eb',
+            lineColor: '#4b5563',
+            secondaryColor: '#e2e8f0',
+            tertiaryColor: '#cbd5e1',
+            fontFamily: 'inherit',
+            fontSize: '16px',
+            flowchart: {
+              nodeTextColor: '#1e293b',
+              nodeBorder: '#2563eb',
+              curve: 'basis'
+            },
+            sequence: {
+              actorTextColor: '#1e293b',
+              actorBkg: '#e0f2fe',
+              actorBorder: '#2563eb',
+              actorLineColor: '#4b5563',
+              signalColor: '#4b5563',
+              signalTextColor: '#1e293b'
+            }
+          },
+      securityLevel: 'loose',
+      fontFamily: 'inherit',
+      htmlLabels: true,
+      flowchart: {
+        htmlLabels: true,
+        useMaxWidth: false,
+        curve: 'basis'
+      },
+      sequence: { useMaxWidth: false }
+    });
+
+    for (const el of Array.from(elements)) {
+      try {
+        if (!(el instanceof HTMLElement)) continue;
+        const rawCode = el.getAttribute('data-mermaid');
+        if (!rawCode) continue;
+
+        const rect = el.getBoundingClientRect();
+        if (rect.width === 0 || rect.height === 0) continue;
+
+        const style = window.getComputedStyle(el);
+        if (style.display === 'none' || style.visibility === 'hidden') continue;
+
+        let decodedCode = '';
+        try {
+          const binString = atob(rawCode);
+          const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0)!);
+          decodedCode = new TextDecoder().decode(bytes);
+        } catch {
+          const decoder = document.createElement('div');
+          decoder.innerHTML = rawCode;
+          decodedCode = decoder.textContent || decoder.innerText || rawCode;
+        }
+
+        decodedCode = decodedCode.replace(/\\n/g, '\n').replace(/\r/g, '').trim();
+
+        el.innerHTML = decodedCode;
+        el.removeAttribute('data-processed');
+
+        const id = 'mermaid-' + Math.random().toString(36).substring(2, 11);
+        const { svg } = await mermaid.render(id, decodedCode);
+        el.innerHTML = svg;
+        el.setAttribute('data-processed', 'true');
+      } catch (err) {
+        if (err instanceof Error && err.message.includes('suitable point')) {
+          continue;
+        }
+        console.error('Mermaid individual render error:', err);
+      }
+    }
+
+    mermaidBusy = false;
+  };
+
   $effect(() => {
     void content;
     void tocHtml;
-    void document.documentElement.classList.contains('dark');
 
     // Handle initial page load with hash in URL
     if (window.location.hash) {
@@ -45,91 +168,24 @@
         const element = document.getElementById(id);
 
         if (element) {
-          // Check if element has dimensions
           const rect = element.getBoundingClientRect();
 
           if (rect.height > 0) {
-            // Element is rendered, scroll to it
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
           } else {
-            // Element not ready, try again
             setTimeout(scrollToHash, 100);
           }
         }
       };
 
-      // Wait for content to render
       setTimeout(scrollToHash, 300);
     }
-
-    const renderMermaid = async () => {
-      const elements = document.querySelectorAll('.mermaid');
-      if (elements.length === 0) return;
-
-      mermaidBusy = true;
-
-      const isDark = document.documentElement.classList.contains('dark');
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: isDark ? 'dark' : 'default',
-        securityLevel: 'loose',
-        fontFamily: 'inherit',
-        htmlLabels: true,
-        flowchart: {
-          htmlLabels: true,
-          useMaxWidth: false,
-          curve: 'basis'
-        },
-        sequence: { useMaxWidth: false }
-      });
-
-      for (const el of Array.from(elements)) {
-        try {
-          if (!(el instanceof HTMLElement)) continue;
-          const rawCode = el.getAttribute('data-mermaid');
-          if (!rawCode) continue;
-
-          const rect = el.getBoundingClientRect();
-          if (rect.width === 0 || rect.height === 0) continue;
-
-          const style = window.getComputedStyle(el);
-          if (style.display === 'none' || style.visibility === 'hidden') continue;
-
-          let decodedCode = '';
-          try {
-            const binString = atob(rawCode);
-            const bytes = Uint8Array.from(binString, (m) => m.codePointAt(0)!);
-            decodedCode = new TextDecoder().decode(bytes);
-          } catch {
-            const decoder = document.createElement('div');
-            decoder.innerHTML = rawCode;
-            decodedCode = decoder.textContent || decoder.innerText || rawCode;
-          }
-
-          decodedCode = decodedCode.replace(/\\n/g, '\n').replace(/\r/g, '').trim();
-
-          el.innerHTML = decodedCode;
-          el.removeAttribute('data-processed');
-
-          const id = 'mermaid-' + Math.random().toString(36).substring(2, 11);
-          const { svg } = await mermaid.render(id, decodedCode);
-          el.innerHTML = svg;
-          el.setAttribute('data-processed', 'true');
-        } catch (err) {
-          if (err instanceof Error && err.message.includes('suitable point')) {
-            continue;
-          }
-          console.error('Mermaid individual render error:', err);
-        }
-      }
-
-      mermaidBusy = false;
-    };
 
     const rafId = requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         if (!mermaidBusy) {
-          setTimeout(renderMermaid, 200);
+          const theme = getTheme();
+          setTimeout(() => renderMermaid(theme), 200);
         }
       });
     });
@@ -137,6 +193,28 @@
     return () => {
       cancelAnimationFrame(rafId);
       mermaidBusy = false;
+    };
+  });
+
+  onMount(() => {
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          // Capture the theme immediately when mutation is detected
+          const newTheme: ThemeMode = getTheme();
+          // Render with captured theme, not re-reading DOM later
+          setTimeout(() => renderMermaid(newTheme), 100);
+        }
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => {
+      observer.disconnect();
     };
   });
 </script>
@@ -168,7 +246,6 @@
     overflow-y: auto;
   }
 
-  /* Force proper layout for injected content */
   :global(.content-wrapper) {
     display: block;
     position: relative;
@@ -176,7 +253,6 @@
     min-height: 100px;
   }
 
-  /* Ensure all headers have proper dimensions and scroll offset */
   :global(.content-wrapper h1),
   :global(.content-wrapper h2),
   :global(.content-wrapper h3),
@@ -192,7 +268,6 @@
     line-height: 1.4 !important;
   }
 
-  /* Ensure anchor links within headers work */
   :global(.content-wrapper h1 a),
   :global(.content-wrapper h2 a),
   :global(.content-wrapper h3 a),
@@ -204,7 +279,6 @@
     text-decoration: none;
   }
 
-  /* Ensure all content has proper flow */
   :global(.content-wrapper p),
   :global(.content-wrapper ul),
   :global(.content-wrapper ol),

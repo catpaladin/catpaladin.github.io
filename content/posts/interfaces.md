@@ -6,19 +6,32 @@ tags = ["go", "interfaces", "python", "typescript", "mocks", "aws", "fundamental
 featured_image = "/images/gophers/go-learn.svg"
 +++
 
-I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (_weekend project_) for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 – the elegance of Go's interface system hit me like a revelation.
+I still remember the moment it clicked. I was knee-deep in refactoring a Go CLI (_weekend project_)
+for unit testing with mocks, which had become a tangled mess of dependencies when suddenly – 🤯 –
+the elegance of Go's interface system hit me like a revelation.
 
-It has been many years, but I remember programming in C#; where interfaces were verbose constructs that required explicit declarations and implementation hierarchies. But here was Go, silently composing functionality in a way that felt almost magical.
+It has been many years, but I remember programming in C#; where interfaces were verbose constructs
+that required explicit declarations and implementation hierarchies. But here was Go, silently
+composing functionality in a way that felt almost magical.
 
 ![interfaces](/images/2025/03/20250315-meme1.png)
 
-If you're coming from other languages, Go's interfaces might seem too simple to be powerful. Trust me, that simplicity is deceptive. It's like discovering that the unassuming Swiss Army knife in your pocket can also transform into a top of the line commercial espresso grinder (_I wish this was possible_).
+If you're coming from other languages, Go's interfaces might seem too simple to be powerful. Trust
+me, that simplicity is deceptive. It's like discovering that the unassuming Swiss Army knife in your
+pocket can also transform into a top of the line commercial espresso grinder (_I wish this was
+possible_).
 
-It can be a hard concept for folks. I still remember at a previous job, a couple of coworkers were complaining to me about another coworker saying, "BlahBlah doesn't understand interfaces. Just look at the codebase." My opinion on this is that interfaces should be implemented the way they are designed for their language, and not some anti-pattern. Oh, and yes, BlahBlah did not understand interfaces for the language. They were using an anti-pattern. 😆
+It can be a hard concept for folks. I still remember at a previous job, a couple of coworkers were
+complaining to me about another coworker saying, "BlahBlah doesn't understand interfaces. Just look
+at the codebase." My opinion on this is that interfaces should be implemented the way they are
+designed for their language, and not some anti-pattern. Oh, and yes, BlahBlah did not understand
+interfaces for the language. They were using an anti-pattern. 😆
 
 ## Interfaces Across Languages: A Tale of Three Approaches
 
-Let's look at how interfaces work across TypeScript, Python, and Go. This should help show the different ways to implement them. For these examples, I'll use a common thing that engineers will try to interface; a logger!
+Let's look at how interfaces work across TypeScript, Python, and Go. This should help show the
+different ways to implement them. For these examples, I'll use a common thing that engineers will
+try to interface; a logger!
 
 ### TypeScript: Interfaces as Contracts
 
@@ -64,7 +77,9 @@ In TypeScript land, you're constantly dealing with:
 - Type annotations everywhere
 - A whole inheritance hierarchy to maintain
 
-This explicitness creates tight coupling between your interfaces and implementations. Want to adapt an existing class to work with your interface? Too bad – you'll need to either modify it to explicitly implement your interface or create a wrapper class.
+This explicitness creates tight coupling between your interfaces and implementations. Want to adapt
+an existing class to work with your interface? Too bad – you'll need to either modify it to
+explicitly implement your interface or create a wrapper class.
 
 You basically get the following:
 
@@ -144,7 +159,8 @@ flowchart TD
 
 ### Python: Duck Typing with Protocols
 
-Python traditionally relies on duck typing ("if it walks like a duck and quacks like a duck..."), but in Python, Protocols are there for type checking and the closest thing to interfaces:
+Python traditionally relies on duck typing ("if it walks like a duck and quacks like a duck..."),
+but in Python, Protocols are there for type checking and the closest thing to interfaces:
 
 ```python
 from typing import Protocol
@@ -182,7 +198,11 @@ Python's approach is:
 - No enforcement at runtime
 - Protocols are primarily for documentation and tooling
 
-The Protocol system is similar to Go's interfaces but lives primarily in the type checking realm – your code will run even if types don't match, potentially leading to runtime errors. Of course it's totally possible you're working on a cloud team using Python that doesn't understand interfaces, and simply write Python like scripts or commit full AI generated code. In that case, you're less likely to see use of interfaces benefiting the codebase. Let it languish.
+The Protocol system is similar to Go's interfaces but lives primarily in the type checking realm –
+your code will run even if types don't match, potentially leading to runtime errors. Of course it's
+totally possible you're working on a cloud team using Python that doesn't understand interfaces, and
+simply write Python like scripts or commit full AI generated code. In that case, you're less likely
+to see use of interfaces benefiting the codebase. Let it languish.
 
 Let's visualize Protocol use:
 
@@ -295,29 +315,35 @@ flowchart TD
     style GO_COM fill:#00ADD8,stroke:#00758D,color:#FFFFFF
 ```
 
-The fundamental difference is in who defines the interfaces and how they're connected to implementations:
+The fundamental difference is in who defines the interfaces and how they're connected to
+implementations:
 
-1. **TypeScript**: Library authors define interfaces, application developers implement them. Alternatively, you can use satisfies for looser coupling. ↔️ _Flexibe coupling_
-2. **Python**: Library authors expect method signatures, application developers provide matching objects. Type checkers optionally verify. ↔️ _Loose coupling with optional checking_
-3. **Go**: Application developers define interfaces based on what they need, and any library that happens to have matching methods automatically works. ↔️ _Perfect decoupling_
+1. **TypeScript**: Library authors define interfaces, application developers implement them.
+   Alternatively, you can use satisfies for looser coupling. ↔️ _Flexibe coupling_
+2. **Python**: Library authors expect method signatures, application developers provide matching
+   objects. Type checkers optionally verify. ↔️ _Loose coupling with optional checking_
+3. **Go**: Application developers define interfaces based on what they need, and any library that
+   happens to have matching methods automatically works. ↔️ _Perfect decoupling_
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}}
-Go's approach inverts the dependency relationship!
-Instead of libraries dictating interfaces that your code must implement, your code defines interfaces that any library can satisfy without modification.
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Go's approach inverts the dependency
+relationship! Instead of libraries dictating interfaces that your code must implement, your code
+defines interfaces that any library can satisfy without modification.
 
 This design means:
 
 - You can create interfaces for third-party code you don't control
 - Interfaces can be added to existing code without modifying it
 - Dependencies flow in the direction you want (toward interfaces, not implementations)
-- Your code becomes naturally more testable and modular (HUGE!)
-  {{</admonition>}}
+- Your code becomes naturally more testable and modular (HUGE!) {{</admonition>}}
 
-Let's dive deeper into why Go's interfaces are so incredible and how you can leverage their full power.
+Let's dive deeper into why Go's interfaces are so incredible and how you can leverage their full
+power.
 
 ## What Makes Go Interfaces Special?
 
-Unlike languages, like C#, where interfaces are explicitly implemented, Go takes a completely different approach: **implicit implementation**. This seemingly small design decision has massive implications for how we structure our code.
+Unlike languages, like C#, where interfaces are explicitly implemented, Go takes a completely
+different approach: **implicit implementation**. This seemingly small design decision has massive
+implications for how we structure our code.
 
 ```go
 // This is all it takes to define an interface in Go
@@ -336,11 +362,14 @@ func (p Person) String() string {
 }
 ```
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}}
-Think of Go interfaces as describing what a type can _do_, not what a type _is_. This subtle shift will change how you design your code.
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Think of Go interfaces as describing what a type
+can _do_, not what a type _is_. This subtle shift will change how you design your code.
 {{</admonition>}}
 
-As Rob Pike, one of Go's creators, famously said: "The bigger the interface, the weaker the abstraction" [\[1\]](https://go-proverbs.github.io/). This wasn't immediately intuitive to me, and I've made mistakes of creating big interfaces with the aws sdk in the past, but it's become my guiding principle when designing Go code now.
+As Rob Pike, one of Go's creators, famously said: "The bigger the interface, the weaker the
+abstraction" [\[1\]](https://go-proverbs.github.io/). This wasn't immediately intuitive to me, and
+I've made mistakes of creating big interfaces with the aws sdk in the past, but it's become my
+guiding principle when designing Go code now.
 
 ![Now I know](/images/2025/03/20250315-meme2.png)
 
@@ -379,7 +408,9 @@ graph TD
     style D fill:#2D3748,stroke:#4A5568,color:#E2E8F0
 ```
 
-As explained in the Go documentation [\[2\]](https://golang.org/doc/effective_go#interfaces), one of Go's most distinctive features is that interfaces are satisfied implicitly. This means there's no "implements" keyword like in Java or C#.
+As explained in the Go documentation [\[2\]](https://golang.org/doc/effective_go#interfaces), one of
+Go's most distinctive features is that interfaces are satisfied implicitly. This means there's no
+"implements" keyword like in Java or C#.
 
 ## Idiomatic Interface Usage in Go
 
@@ -387,7 +418,9 @@ There are several patterns that have emerged as idiomatic ways to use interfaces
 
 ### 1. Accept Interfaces, Return Concrete Types
 
-Functions should accept interfaces but return concrete types. Not only does it make your code more flexible, but its this form of abstract thinking that enables your tech debt – I mean functions become more robust with their dependency injection.
+Functions should accept interfaces but return concrete types. Not only does it make your code more
+flexible, but its this form of abstract thinking that enables your tech debt – I mean functions
+become more robust with their dependency injection.
 
 Here's a comparison:
 
@@ -408,7 +441,9 @@ func ProcessFile(fileName *os.File) *Result {
 
 ### 2. Define Interfaces at the Point of Use
 
-Unlike other languages where interfaces are defined by the implementor, in Go, interfaces are typically defined by the consumer, as outlined in Effective Go [\[3\]](https://golang.org/doc/effective_go):
+Unlike other languages where interfaces are defined by the implementor, in Go, interfaces are
+typically defined by the consumer, as outlined in Effective Go
+[\[3\]](https://golang.org/doc/effective_go):
 
 ```go
 // In a client package that needs to store users
@@ -450,17 +485,23 @@ type Interface interface {
 }
 ```
 
-As explained in Effective Go [\[3\]](https://golang.org/doc/effective_go): "interfaces with only one or two methods are common in Go code, and are usually given names ending in -er, such as Reader, Writer, Formatter, etc." It is an idiomatic style choice for the language, that I mostly follow. Just like those of us who follow the PEP 8 style guide for Python, unlike `somePeople` (YOU KNOW WHO YOU ARE!).
+As explained in Effective Go [\[3\]](https://golang.org/doc/effective_go): "interfaces with only one
+or two methods are common in Go code, and are usually given names ending in -er, such as Reader,
+Writer, Formatter, etc." It is an idiomatic style choice for the language, that I mostly follow.
+Just like those of us who follow the PEP 8 style guide for Python, unlike `somePeople` (YOU KNOW WHO
+YOU ARE!).
 
 ![These people](/images/2025/03/20250315-meme3.png)
 
 ## Consuming Standard Library Interfaces
 
-One of the most powerful aspects of Go is how the standard library uses interfaces extensively. Let's see some examples of how to effectively work with these:
+One of the most powerful aspects of Go is how the standard library uses interfaces extensively.
+Let's see some examples of how to effectively work with these:
 
 ### Working with the Database/SQL Package
 
-The database/sql package is a masterclass in interface usage. Let's look at how we can leverage its interfaces:
+The database/sql package is a masterclass in interface usage. Let's look at how we can leverage its
+interfaces:
 
 ```go
 import (
@@ -502,7 +543,8 @@ func ProcessUserData(repo UserRepository, userID int) error {
 }
 ```
 
-The beauty here is that `sql.DB` itself uses interfaces internally (like `driver.Conn`, `driver.Stmt`), allowing different database drivers to work with the same API.
+The beauty here is that `sql.DB` itself uses interfaces internally (like `driver.Conn`,
+`driver.Stmt`), allowing different database drivers to work with the same API.
 
 ### HTTP Handlers and Middleware
 
@@ -561,7 +603,8 @@ func main() {
 
 ### 1. Interface Composition
 
-You can compose interfaces by embedding them, as shown in the Go documentation [\[2\]](https://golang.org/doc/effective_go#interfaces):
+You can compose interfaces by embedding them, as shown in the Go documentation
+[\[2\]](https://golang.org/doc/effective_go#interfaces):
 
 ```go
 type ReadWriter interface {
@@ -580,7 +623,9 @@ This is how the standard library builds up more complex interfaces from simpler 
 
 ### 2. Optional Interface Implementation
 
-Sometimes you want to provide special behavior for types that implement a specific interface, but fall back to default behavior for those that don't. This pattern is explored in Ian Lance Taylor's article on Go interfaces [\[6\]](https://research.swtch.com/interfaces):
+Sometimes you want to provide special behavior for types that implement a specific interface, but
+fall back to default behavior for those that don't. This pattern is explored in Ian Lance Taylor's
+article on Go interfaces [\[6\]](https://research.swtch.com/interfaces):
 
 ```go
 // From the encoding/json package
@@ -622,7 +667,8 @@ func HandleData(data interface{}) {
 }
 ```
 
-The Go Blog's article on reflection [\[5\]](https://go.dev/blog/laws-of-reflection) provides deep insights into how these mechanisms work under the hood.
+The Go Blog's article on reflection [\[5\]](https://go.dev/blog/laws-of-reflection) provides deep
+insights into how these mechanisms work under the hood.
 
 ## Practical Interface Examples
 
@@ -630,7 +676,10 @@ The Go Blog's article on reflection [\[5\]](https://go.dev/blog/laws-of-reflecti
 
 ### Example 1: Creating Mock-Friendly Code
 
-Let's say we need to interact with a database. One day you could be using SQLite for a project and all of a sudden your friend, who is also working on the project, switches the database to MariaDB because the creator liked his comment on LinkedIn. Or maybe you get sick of relational databases and setup Couchbase (NoSQL, LETS GOOOOOOOO).
+Let's say we need to interact with a database. One day you could be using SQLite for a project and
+all of a sudden your friend, who is also working on the project, switches the database to MariaDB
+because the creator liked his comment on LinkedIn. Or maybe you get sick of relational databases and
+setup Couchbase (NoSQL, LETS GOOOOOOOO).
 
 Instead of directly using a specific database implementation, we can define an interface:
 
@@ -655,7 +704,8 @@ func ProcessUserData(store UserStore, userID string) error {
 }
 ```
 
-I got super excited when I learned about interfacing to create easier mock tests. Instead of spinning up a real database, I can create a simple mock the calls:
+I got super excited when I learned about interfacing to create easier mock tests. Instead of
+spinning up a real database, I can create a simple mock the calls:
 
 ```go
 type MockUserStore struct {
@@ -688,7 +738,8 @@ func TestProcessUserData(t *testing.T) {
 
 ### Example 2: Working with Third-Party Libraries Using AWS SDK v2
 
-Let's see how to effectively interface with the AWS SDK v2, which was designed with better testability in mind:
+Let's see how to effectively interface with the AWS SDK v2, which was designed with better
+testability in mind:
 
 ```go
 import (
@@ -791,20 +842,23 @@ func TestDownloadFile(t *testing.T) {
 
 And now with this, we mock the aws calls and let our `DownloadFile` do its thing.
 
-{{<admonition title="📝 Note" bg-color="#283593">}}
-The AWS SDK v2 was completely redesigned around interfaces, making it much more testable than v1. Notice how we define our own narrow interface that matches just the methods we actually use, rather than trying to implement the entire AWS API.
+{{<admonition title="📝 Note" bg-color="#283593">}} The AWS SDK v2 was completely redesigned around
+interfaces, making it much more testable than v1. Notice how we define our own narrow interface that
+matches just the methods we actually use, rather than trying to implement the entire AWS API.
 {{</admonition>}}
 
 This pattern gives us several advantages:
 
 1. We only depend on the specific methods we need, not the entire API
 2. It's clear from our interface what AWS functionality we're using
-3. We can easily mock the client for testing (which I find better than actually calling aws resources or using middleware for testing)
+3. We can easily mock the client for testing (which I find better than actually calling aws
+   resources or using middleware for testing)
 4. We can swap implementations for different environments (local dev, staging, production)
 
 ## The Empty Interface and Type Assertions
 
-Before we wrap up, let's talk about the empty interface: `interface{}` (or `any` in Go 1.18+). This interface has no methods, which means every type satisfies it.
+Before we wrap up, let's talk about the empty interface: `interface{}` (or `any` in Go 1.18+). This
+interface has no methods, which means every type satisfies it.
 
 ```go
 func PrintAnything(v interface{}) {
@@ -828,13 +882,14 @@ func PrintAnything(v interface{}) {
 }
 ```
 
-{{<admonition title="🚨 Caution" bg-color="#00E5FF">}}
-While the empty interface is powerful, use it sparingly. The more specific your interfaces, the more the compiler can help you catch errors early.
+{{<admonition title="🚨 Caution" bg-color="#00E5FF">}} While the empty interface is powerful, use it
+sparingly. The more specific your interfaces, the more the compiler can help you catch errors early.
 {{</admonition>}}
 
 ## Wrapping Up: The Interface Philosophy
 
-After years of working with Go interfaces, I've developed a simple philosophy that aligns with the Go documentation and community best practices:
+After years of working with Go interfaces, I've developed a simple philosophy that aligns with the
+Go documentation and community best practices:
 
 1. Start with concrete implementations
 2. Extract interfaces when you need abstraction

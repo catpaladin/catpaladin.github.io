@@ -6,42 +6,37 @@ tags = ["go", "algorithms", "performance", "big-o", "computer-science"]
 featured_image = "/images/gophers/go-grow.svg" 
 +++
 
-I've been really enjoying teaching fundamentals in Go, recently. If you haven't read any
-of my other blogs or are new to go, I strongly recommend checking out my
-[fundamentals](https://blog.mikesahari.com/tags/fundamentals/) posts. I started this
-blog as a next step, and before I knew it I was writing something way too long to share.
-This will be the first part of a blog series on data structures and algorithms; and of
-course, in Go!
+I've been really enjoying teaching fundamentals in Go, recently. If you haven't read any of my other
+blogs or are new to go, I strongly recommend checking out my
+[fundamentals](https://blog.mikesahari.com/tags/fundamentals/) posts. I started this blog as a next
+step, and before I knew it I was writing something way too long to share. This will be the first
+part of a blog series on data structures and algorithms; and of course, in Go!
 
-In my opinion, understanding algorithm complexity is non-negotiable for writing
-efficient code. But let's face it, you're not always going to work on a team where
-engineers write efficient code (let alone an algorithm!). Even worse, you may work in a
-larger team with tech leads that don't understand algorithms; resulting in your newer
-engineers missing out on the chance for proper mentorship in coding (or be taught bad
-practices!).
+In my opinion, understanding algorithm complexity is non-negotiable for writing efficient code. But
+let's face it, you're not always going to work on a team where engineers write efficient code (let
+alone an algorithm!). Even worse, you may work in a larger team with tech leads that don't
+understand algorithms; resulting in your newer engineers missing out on the chance for proper
+mentorship in coding (or be taught bad practices!).
 
 ![think mark think](/images/2025/04/20250405-meme1.png)
 
-Big-O isn't just academic theory—it's a practical tool that determines whether your
-application will handle 10,000 users or crash when the 101st person logs in. Whether
-you're new to Big-O or interested in learning it in Go, this blog will help teach you
-about these algorithms.
+Big-O isn't just academic theory—it's a practical tool that determines whether your application will
+handle 10,000 users or crash when the 101st person logs in. Whether you're new to Big-O or
+interested in learning it in Go, this blog will help teach you about these algorithms.
 
 ## What is Big-O Notation?
 
-Big-O notation is how we describe an algorithm's efficiency as input size grows. It's
-like a speed limit sign for your code—telling you not how fast your algorithm runs on
-your M2 MacBook Pro, but how it will perform when your data grows from kilobytes to
-gigabytes.
+Big-O notation is how we describe an algorithm's efficiency as input size grows. It's like a speed
+limit sign for your code—telling you not how fast your algorithm runs on your M2 MacBook Pro, but
+how it will perform when your data grows from kilobytes to gigabytes.
 
-{{<admonition title="📝 Note" bg-color="#283593">}} Big-O notation describes the
-worst-case scenario for your algorithm's time or space complexity. It answers: "How does
-my algorithm's performance scale?" rather than "How fast is my function right now?"
-{{</admonition>}}
+{{<admonition title="📝 Note" bg-color="#283593">}} Big-O notation describes the worst-case scenario
+for your algorithm's time or space complexity. It answers: "How does my algorithm's performance
+scale?" rather than "How fast is my function right now?" {{</admonition>}}
 
-In essence, Big-O focuses on the growth rate of time or space requirements as the input
-size increases toward infinity, ignoring constants and lower-order terms that become
-insignificant with large inputs.
+In essence, Big-O focuses on the growth rate of time or space requirements as the input size
+increases toward infinity, ignoring constants and lower-order terms that become insignificant with
+large inputs.
 
 ```mermaid
 flowchart LR
@@ -70,15 +65,15 @@ flowchart LR
 
 ## Understanding Complexity Classes in Practice
 
-Let's explore these complexity classes with practical Go implementations and see exactly
-what happens as our inputs grow.
+Let's explore these complexity classes with practical Go implementations and see exactly what
+happens as our inputs grow.
 
 ### O(1) - Constant Time: The Speed Champion
 
 ![speed champion](/images/2025/04/20250405-meme2.png)
 
-Operations that execute in the same time regardless of input size. This is the gold
-standard we strive for.
+Operations that execute in the same time regardless of input size. This is the gold standard we
+strive for.
 
 ```go
 // GetMapValue is an example of Constant Time
@@ -88,9 +83,9 @@ func GetMapValue(m map[string]int, key string) (int, bool) {
 }
 ```
 
-This function performs a hash table lookup which takes the same amount of time whether
-your map has 10 entries or 10 million. Go's maps are implemented as hash tables, giving
-us O(1) average-case access time.
+This function performs a hash table lookup which takes the same amount of time whether your map has
+10 entries or 10 million. Go's maps are implemented as hash tables, giving us O(1) average-case
+access time.
 
 Here's what happens behind the scenes:
 
@@ -121,20 +116,20 @@ flowchart TD
     style K fill:#4a148c,stroke:#7b1fa2,color:#f3e5f5
 ```
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} While Go maps provide O(1) lookups on
-average, their worst-case performance can degrade to O(n) under pathological hash
-collision cases. In practice, Go's implementation mitigates this by using a good hash
-function and automatically growing the hash table when needed. {{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} While Go maps provide O(1) lookups on average,
+their worst-case performance can degrade to O(n) under pathological hash collision cases. In
+practice, Go's implementation mitigates this by using a good hash function and automatically growing
+the hash table when needed. {{</admonition>}}
 
-The beauty of O(1) operations is their predictability—they'll perform the same whether
-your app has 10 users or 10 million. This is why we love them for hot paths in our code.
+The beauty of O(1) operations is their predictability—they'll perform the same whether your app has
+10 users or 10 million. This is why we love them for hot paths in our code.
 
 ### O(log n) - Logarithmic Time: The Efficient Divider
 
 ![binary search](/images/2025/04/20250405-meme3.png)
 
-Algorithms that reduce the problem size by a fraction (typically half) with each step.
-The binary search is the poster child here.
+Algorithms that reduce the problem size by a fraction (typically half) with each step. The binary
+search is the poster child here.
 
 ```go
 // BinarySearch is an example of Logarithmic Time
@@ -172,8 +167,8 @@ target = 23
 5. New state: `left=5, right=6, mid=5, sorted[mid]=23`
 6. 23 == 23, return 5
 
-With just 3 comparisons, we found our target in a list of 10 elements. If we had a
-million elements? It would take around 20 comparisons. That's the power of O(log n).
+With just 3 comparisons, we found our target in a list of 10 elements. If we had a million elements?
+It would take around 20 comparisons. That's the power of O(log n).
 
 ```mermaid
 flowchart TD
@@ -213,9 +208,9 @@ flowchart TD
     style P fill:#3e2723,stroke:#6d4c41,color:#efebe9
 ```
 
-{{<admonition title="🗨️ Example" bg-color="#69F0AE">}} The Go standard library uses
-binary search in several places, like the `sort.Search` function. Here's how you'd use
-it to find the position to insert a new element while maintaining order:
+{{<admonition title="🗨️ Example" bg-color="#69F0AE">}} The Go standard library uses binary search in
+several places, like the `sort.Search` function. Here's how you'd use it to find the position to
+insert a new element while maintaining order:
 
 ```go
 import "sort"
@@ -229,16 +224,16 @@ func FindInsertPosition(sorted []int, value int) int {
 
 {{</admonition>}}
 
-Remember that binary search requires sorted data, which is a crucial prerequisite. If
-your data isn't sorted, you'll need to sort it first (typically an O(n log n)
-operation), which changes the overall performance characteristics.
+Remember that binary search requires sorted data, which is a crucial prerequisite. If your data
+isn't sorted, you'll need to sort it first (typically an O(n log n) operation), which changes the
+overall performance characteristics.
 
 ### O(n) - Linear Time: The Honest Worker
 
 ![honest worker](/images/2025/04/20250405-meme4.png)
 
-Operations where execution time grows in direct proportion to input size. Every element
-gets processed exactly once.
+Operations where execution time grows in direct proportion to input size. Every element gets
+processed exactly once.
 
 ```go
 // ContainsElement is an example of Linear Time
@@ -252,9 +247,9 @@ func ContainsElement(slice []int, target int) bool {
 }
 ```
 
-This might look simple, but don't underestimate it. Linear algorithms are often the best
-you can do for unsorted data, and they're predictable and cache-friendly. The time
-required scales directly with the input size.
+This might look simple, but don't underestimate it. Linear algorithms are often the best you can do
+for unsorted data, and they're predictable and cache-friendly. The time required scales directly
+with the input size.
 
 ```mermaid
 flowchart TD
@@ -287,24 +282,23 @@ flowchart TD
     style P fill:#3e2723,stroke:#6d4c41,color:#efebe9
 ```
 
-{{<admonition title="📌 Important" bg-color="#01579B">}} Go's slice iteration with
-`range` is highly optimized. The compiler can eliminate bounds checking in many
-situations, making linear scans extremely efficient—sometimes approaching the
-theoretical memory bandwidth limit of your hardware. {{</admonition>}}
+{{<admonition title="📌 Important" bg-color="#01579B">}} Go's slice iteration with `range` is highly
+optimized. The compiler can eliminate bounds checking in many situations, making linear scans
+extremely efficient—sometimes approaching the theoretical memory bandwidth limit of your hardware.
+{{</admonition>}}
 
-Linear algorithms are often unavoidable when you need to process all elements at least
-once, such as when calculating sums, finding maximum values, or checking if all elements
-meet a condition.
+Linear algorithms are often unavoidable when you need to process all elements at least once, such as
+when calculating sums, finding maximum values, or checking if all elements meet a condition.
 
 ### O(n log n) - Linearithmic Time: The Practical Sorter
 
 ![comparison sorter](/images/2025/04/20250405-meme5.png)
 
-Found in efficient sorting algorithms and divide-and-conquer approaches, O(n log n)
-represents the best possible time complexity for comparison-based sorting.
+Found in efficient sorting algorithms and divide-and-conquer approaches, O(n log n) represents the
+best possible time complexity for comparison-based sorting.
 
-Go's standard library sort package implements an optimized version of quicksort (with
-insertion sort for small slices) that achieves O(n log n) average-case performance:
+Go's standard library sort package implements an optimized version of quicksort (with insertion sort
+for small slices) that achieves O(n log n) average-case performance:
 
 ```go
 // QuickSort is an example of Linearithmic Time
@@ -353,13 +347,12 @@ func partition(arr []int, low, high int) int {
 }
 ```
 
-{{<admonition title="🗨️ Example" bg-color="#69F0AE">}} In this example, we used `copy`.
-If you are not familiar with how this works, it accepts a destination slice type and a
-source slice type.
+{{<admonition title="🗨️ Example" bg-color="#69F0AE">}} In this example, we used `copy`. If you are
+not familiar with how this works, it accepts a destination slice type and a source slice type.
 
-So in our use above, we copied all the values from `arr` into `result`. Without this
-copy step, you'd be modifying the original slice that was passed in, which could lead to
-unexpected side effects. {{</admonition>}}
+So in our use above, we copied all the values from `arr` into `result`. Without this copy step,
+you'd be modifying the original slice that was passed in, which could lead to unexpected side
+effects. {{</admonition>}}
 
 Now let's analyze what happens during a quicksort with a small example:
 
@@ -409,9 +402,9 @@ flowchart TD
     style Q fill:#3e2723,stroke:#6d4c41,color:#efebe9
 ```
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} In Go, prefer using the standard
-library's `sort` package for sorting needs rather than implementing your own. It's
-well-optimized and handles edge cases properly:
+{{<admonition title="💡 Tip" bg-color="#004D40">}} In Go, prefer using the standard library's `sort`
+package for sorting needs rather than implementing your own. It's well-optimized and handles edge
+cases properly:
 
 ```go
 import "sort"
@@ -433,23 +426,22 @@ The O(n log n) complexity comes from:
 - The recursive partitioning creates a tree of height log n (divide)
 - At each level, we do about n work comparing elements (conquer)
 
-This makes it much more efficient than quadratic algorithms for large datasets. When
-sorting a million elements, quicksort would perform about 20 million operations compared
-to a trillion for bubble sort!
+This makes it much more efficient than quadratic algorithms for large datasets. When sorting a
+million elements, quicksort would perform about 20 million operations compared to a trillion for
+bubble sort!
 
 ### O(n²) - Quadratic Time: The Brute-Force Approach
 
 ![savages](/images/2025/04/20250405-meme6.png)
 
-Characterized by nested loops, quadratic algorithms quickly become impractical as data
-size grows.
+Characterized by nested loops, quadratic algorithms quickly become impractical as data size grows.
 
-I once had an engineer message me on Slack, asking how I was able to retrieve a ton of
-data so fast. He asked if it was because I was using Go and because he was using Python.
-When I told him that was part of the reason, he said he was just going to use AI to
-rewrite it in Go; but before he went down the vibe coding route with his Cursor setup, I
-asked a bunch of leading questions about how he was processing the data. Turns out, he
-had vibe coded a very poor implementation of bubble sort (without understanding it)!
+I once had an engineer message me on Slack, asking how I was able to retrieve a ton of data so fast.
+He asked if it was because I was using Go and because he was using Python. When I told him that was
+part of the reason, he said he was just going to use AI to rewrite it in Go; but before he went down
+the vibe coding route with his Cursor setup, I asked a bunch of leading questions about how he was
+processing the data. Turns out, he had vibe coded a very poor implementation of bubble sort (without
+understanding it)!
 
 Let's take a look at a cleaner implementation of bubble sort.
 
@@ -473,8 +465,8 @@ func BubbleSort(arr []int) {
 }
 ```
 
-Bubble sort performs comparisons and swaps between adjacent elements, gradually
-"bubbling" the largest elements to their correct positions. Let's walk through it:
+Bubble sort performs comparisons and swaps between adjacent elements, gradually "bubbling" the
+largest elements to their correct positions. Let's walk through it:
 
 ```
 arr = [5, 3, 8, 4, 2]
@@ -550,28 +542,27 @@ flowchart TD
     style U fill:#3e2723,stroke:#6d4c41,color:#efebe9
 ```
 
-{{<admonition title="🚨 Caution" bg-color="#00E5FF">}} Quadratic algorithms become
-impractical very quickly. For n = 1,000, a bubble sort performs nearly 500,000
-comparisons. For n = 1,000,000, it would require about 500 billion comparisons! This is
-why we almost never use bubble sort in production code (or do we?).
+{{<admonition title="🚨 Caution" bg-color="#00E5FF">}} Quadratic algorithms become impractical very
+quickly. For n = 1,000, a bubble sort performs nearly 500,000 comparisons. For n = 1,000,000, it
+would require about 500 billion comparisons! This is why we almost never use bubble sort in
+production code (or do we?).
 
 ![bubble sort 2 prod](/images/2025/04/20250405-meme7.png) {{</admonition>}}
 
 Despite their inefficiency, quadratic algorithms sometimes appear in code bases:
 
-1. When processing small datasets where the simplicity of implementation outweighs
-   performance concerns
-2. When the nested loops perform constant-time operations, making the code appear
-   simpler
+1. When processing small datasets where the simplicity of implementation outweighs performance
+   concerns
+2. When the nested loops perform constant-time operations, making the code appear simpler
 3. In legacy code (languishing) that hasn't been optimized
 
-Always be suspicious of nested loops in performance-critical code paths, as they often
-indicate O(n²) complexity.
+Always be suspicious of nested loops in performance-critical code paths, as they often indicate
+O(n²) complexity.
 
 ## Practical Performance Comparison
 
-To drive home the dramatic differences between these complexity classes, let's look at
-how they scale with input size:
+To drive home the dramatic differences between these complexity classes, let's look at how they
+scale with input size:
 
 | Input Size | O(1) | O(log n) | O(n)      | O(n log n) | O(n²)             |
 | ---------- | ---- | -------- | --------- | ---------- | ----------------- |
@@ -580,21 +571,20 @@ how they scale with input size:
 | 1,000      | 1    | 10       | 1,000     | 10,000     | 1,000,000         |
 | 1,000,000  | 1    | 20       | 1,000,000 | 20,000,000 | 1,000,000,000,000 |
 
-Notice how the O(n²) algorithm becomes completely impractical for large inputs, while
-O(log n) barely increases as the input size explodes. This is why binary search on a
-sorted array of 1 billion items still completes almost instantly, while a bubble sort
-would take years on the same data.
+Notice how the O(n²) algorithm becomes completely impractical for large inputs, while O(log n)
+barely increases as the input size explodes. This is why binary search on a sorted array of 1
+billion items still completes almost instantly, while a bubble sort would take years on the same
+data.
 
 ## Go Standard Library Performance Tips
 
-The Go standard library was designed with performance in mind, and its implementations
-often use clever optimizations to achieve better-than-expected performance:
+The Go standard library was designed with performance in mind, and its implementations often use
+clever optimizations to achieve better-than-expected performance:
 
-{{<admonition title="📌 Important" bg-color="#01579B">}} Go's slice and map operations
-have specific performance characteristics you should know:
+{{<admonition title="📌 Important" bg-color="#01579B">}} Go's slice and map operations have specific
+performance characteristics you should know:
 
-- `append()` is amortized O(1) per element, though occasionally it requires O(n) work
-  for resizing
+- `append()` is amortized O(1) per element, though occasionally it requires O(n) work for resizing
 - Map iterations with `range` are O(n) but in random order by design
 - `sort.Sort()` uses introsort, a hybrid algorithm with O(n log n) complexity
 - `copy()` is O(n) where n is the minimum of the destination and source slice lengths
@@ -604,23 +594,21 @@ have specific performance characteristics you should know:
 
 While Big-O notation is crucial, it doesn't tell the whole story:
 
-1. **Constants matter**: An O(n) algorithm with a high constant factor might be slower
-   than an O(n log n) algorithm for practical input sizes
-2. **Memory access patterns**: Go's slice operations are efficient partly because they
-   leverage CPU cache locality
-3. **Best/average/worst case**: Some algorithms have different complexity in different
-   scenarios
+1. **Constants matter**: An O(n) algorithm with a high constant factor might be slower than an O(n
+   log n) algorithm for practical input sizes
+2. **Memory access patterns**: Go's slice operations are efficient partly because they leverage CPU
+   cache locality
+3. **Best/average/worst case**: Some algorithms have different complexity in different scenarios
 
-For example, Go's map lookup is O(1) on average but could degrade to O(n) in the worst
-case with pathological hash collisions. In practice, this almost never happens due to
-Go's implementation details.
+For example, Go's map lookup is O(1) on average but could degrade to O(n) in the worst case with
+pathological hash collisions. In practice, this almost never happens due to Go's implementation
+details.
 
 ## When to Optimize?
 
-{{<admonition title="💡 Tip" bg-color="#004D40">}} Choosing the right algorithm from the
-start isn't premature optimization—it's good engineering. You can refactor inefficient
-code, but you can't refactor a crashed production system while it's broken!
-{{</admonition>}}
+{{<admonition title="💡 Tip" bg-color="#004D40">}} Choosing the right algorithm from the start isn't
+premature optimization—it's good engineering. You can refactor inefficient code, but you can't
+refactor a crashed production system while it's broken! {{</admonition>}}
 
 In Go, the general approach should be:
 
@@ -631,15 +619,14 @@ In Go, the general approach should be:
 
 ## Conclusion
 
-Understanding Big-O notation is a foundational skill for every Go developer. It helps
-you make informed decisions about algorithm selection and predict how your application
-will scale as data grows.
+Understanding Big-O notation is a foundational skill for every Go developer. It helps you make
+informed decisions about algorithm selection and predict how your application will scale as data
+grows.
 
-In the next part of this series, we'll dive deeper into data structures and algorithms
-in Go!
+In the next part of this series, we'll dive deeper into data structures and algorithms in Go!
 
-Until then, remember: the difference between O(n) and O(n²) might be the difference
-between a system that scales smoothly and one that collapses under load.
+Until then, remember: the difference between O(n) and O(n²) might be the difference between a system
+that scales smoothly and one that collapses under load.
 
 ## References
 
