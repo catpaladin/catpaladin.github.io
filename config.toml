@@ -1,6 +1,6 @@
 baseURL = "https://blog.mikesahari.com/"
 languageCode = "en-us"
-title = "It's Go time!"
+title = "Didactic Musings"
 
 [pagination]
   pagerSize = 8

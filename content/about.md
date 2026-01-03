@@ -21,13 +21,13 @@ toc = false
   </div>
 </div>
 
-{{<admonition title="📚 Greetings!" >}} Hi, I'm Mike! Welcome to my digital garden. I'm
-a Senior Staff SRE with a Software Engineering background. I specializing in **Go**,
-**Platform Infrastructure**, and **DevOps**.
+{{<admonition title="📚 Greetings!" >}} Hi, I'm Mike! Welcome to my digital garden. I'm a Senior
+Staff SRE with a Software Engineering background. I specializing in **Go**, **Platform
+Infrastructure**, and **DevOps**.
 
-This blog serves as my technical journal where I distill complex topics into digestible
-guides. Whether it's deep-diving into Go internals or exploring Kubernetes patterns, I
-aim to help other developers level up while I document my own journey. {{</admonition>}}
+This blog serves as my technical journal where I distill complex topics into digestible guides.
+Whether it's deep-diving into Go internals or exploring Kubernetes patterns, I aim to help other
+developers level up while I document my own journey. {{</admonition>}}
 
 ---
 

@@ -1,8 +1,8 @@
 +++
-date = '2026-01-01T12:35:32-08:00'
+date = '2026-01-02T08:35:32-08:00'
 draft = false
 title = 'Coding With Opencode'
-tags = ["go", "ai", "opencode", "neovim"]
+tags = ["go", "ai", "opencode", "neovim", "documentation", "agents"]
 +++
 
 Coding assistants are all over the place; at least at the time of writing this. Some of them require
@@ -11,6 +11,8 @@ VSCode... just kidding, it's alright, but I prefer Neovim (I use neovim btw). La
 to the time of writing this), I was intrigued and reading into improvements in local LLMs; big
 improvements to tiny and small models! That led me on a search for a coding assistant that supported
 running local LLMs, but in Neovim. Enter, OpenCode.
+
+![shots fired](/images/2026/01/20260102-meme3.png)
 
 OpenCode is an AI-powered coding assistant that runs in your terminal, helping you write code by
 delegating tasks to specialized agents. Even better, they have a
@@ -32,7 +34,13 @@ This blog is less of a technical tutorial, and more of how some configurations t
 OpenCode helped me speed up development with some personal projects. Agents can be very helpful when
 used correctly. I will show you a little how I use agents and hopefully help your workflow.
 
+If you're interested in installing and setting up OpenCode, even before I you read everything I
+said, then I recommend following the instructions on their
+[page](https://opencode.ai/docs/#install)!
+
 ## What Do You Mean By.. Agents
+
+![not that kind of an agent](/images/2026/01/20260102-meme1.png)
 
 Agents, in the context of this blog, are software components to your AI coding assistant (i.e.
 OpenCode). They are file based and perform operations (like executing tools) using LLMs. An agent
@@ -52,6 +60,25 @@ First, let me explain agents and subagents for context:
 - Agents: the primary chat tool that takes instructions, can call tools, and do work
 - Subagents: the same as an Agent, but are started by the Agent (ranging from general skills to
   customized specialist skills)
+
+Here is a high-level of a user prompt to chat with an agent and use a specialized agent to perform
+the work:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Agent
+    participant LLM
+    participant Subagent
+
+    User->>Agent: Prompt sent<br>referencing<br>@doc-generator
+    Agent->>LLM: Process task request<br>and create prompt
+    LLM->>Agent: Return formatted prompt<br>for subagent
+    Agent->>Subagent: Call task tool<br>with generated prompt
+    Subagent->>Subagent: Execute task<br>(e.g., create README.md)
+    Subagent-->>Agent: Return task results
+    Agent-->>User: Show<br>completion<br>summary
+```
 
 ### The Task Tool
 
@@ -78,6 +105,9 @@ saying: "Hey, I need you to handle this specific task, and you can work on it in
 | `description`   | Yes      | Short summary shown in logs and UI             |
 | `prompt`        | Yes      | Detailed instructions for the subagent         |
 | `subagent_type` | No       | Type of agent to spawn (defaults to `general`) |
+
+You don't really need to know how to form the task. This is just to give you an idea of what the
+structure of the tool call looks like.
 
 ### The `subagent_type` Parameter
 
@@ -210,6 +240,8 @@ If I wanted to use this review agent, I could either save it:
 I'll talk more on these files in examples below.
 
 ### Model Selection (Right Tool vs Golden Hammer)
+
+![what llm you using](/images/2026/01/20260102-meme2.png)
 
 There are sites, tech influencers, and AI companies that will tell you to use some model. I don't
 think it is even worth mentioning what models I prefer. Today's preferred LLM is replaced with the
@@ -398,8 +430,9 @@ Brief introduction to configuration management in Kubernetes...
 A subagent for working go projects. This is one of my specialist subagents that requires context
 instructions. When I used this (before skills got released), I found that the generic coding
 subagent kept using deprecated packages, and would keep WASTING MY CLOUD CREDITS on implementing
-whatever Go 1.15 code the model had been trained on (SWE benchmarks should be mandated to show what
-languages those scores support. I'm sure the majority of them are only python).
+whatever Go 1.15 code the model had been trained on...
+
+![not just python, right?](/images/2026/01/20260102-meme4.png)
 
 #### Agent Definition
 
@@ -793,22 +826,6 @@ Constraints:
 
 #### Example Usage
 
-```mermaid
-sequenceDiagram
-    participant User
-    participant Agent
-    participant LLM
-    participant Subagent
-
-    User->>Agent: "Use the task tool with subagent @doc-generator..."
-    Agent->>LLM: Process task request and create prompt
-    LLM->>Agent: Return formatted prompt for subagent
-    Agent->>Subagent: Call task tool with generated prompt
-    Subagent->>Subagent: Execute task (e.g., create README.md)
-    Subagent-->>Agent: Return task results
-    Agent-->>User: Show completion summary
-```
-
 Direct Prompt:
 
 ```prompt
@@ -915,3 +932,10 @@ used it for doing spellchecking and basic grammar analysis, assuring it, "No, do
 That is intended." I have spent HOURS artisian handcraft editing, adding supplimentary text,
 creating memes, pulling snippets, and inserting content into finishing the blog. Do with that what
 you will. {{</admonition>}}
+
+### References
+
+- [OpenCode docs](https://opencode.ai/docs/)
+- [OpenCode neovim](https://github.com/NickvanDyke/opencode.nvim)
+- [My Neovim Config](https://github.com/catpaladin/nvim-config)
+- [Models.Dev](https://models.dev/)
