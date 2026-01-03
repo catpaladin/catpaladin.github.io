@@ -1,15 +1,25 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Parallelism on It's Go time!</title><link>https://blog.mikesahari.com/tags/parallelism/</link><description>Recent content in Parallelism on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>It's Go time!</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Fri, 21 Feb 2025 21:43:05 -0800</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/parallelism/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Channels: A Concurrency Guide</title><link>https://blog.mikesahari.com/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-channels/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-learn.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Parallelism on Didactic Musings</title><link>https://blog.mikesahari.com/tags/parallelism/</link><description>Recent content in Parallelism on Didactic Musings</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>Didactic Musings</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Fri, 21 Feb 2025 21:43:05 -0800</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/parallelism/index.xml" rel="self" type="application/rss+xml"/><item><title>Go Channels: A Concurrency Guide</title><link>https://blog.mikesahari.com/posts/go-channels/</link><pubDate>Fri, 21 Feb 2025 21:43:05 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/go-channels/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-learn.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
         <p>Hello fellow Gophers!</p>
-<p>I&rsquo;m absolutely thrilled to dive deep into one of Go&rsquo;s most elegant features: <strong>Channels</strong>! If you&rsquo;re just starting your Go journey or looking to level up your concurrency game, you&rsquo;re in for a treat.</p>
-<p>Channels are the communication mechanism that makes goroutines work together efficiently and safely. They enable goroutines to exchange data without shared memory, reducing the risk of race conditions.</p>
-<p>I hate to use an analogy here, but imagine you have a team of engineers working on some big company project.. let&rsquo;s call it Kilonova.</p>
+<p>I&rsquo;m absolutely thrilled to dive deep into one of Go&rsquo;s most elegant features: <strong>Channels</strong>! If you&rsquo;re
+just starting your Go journey or looking to level up your concurrency game, you&rsquo;re in for a treat.</p>
+<p>Channels are the communication mechanism that makes goroutines work together efficiently and safely.
+They enable goroutines to exchange data without shared memory, reducing the risk of race conditions.</p>
+<p>I hate to use an analogy here, but imagine you have a team of engineers working on some big company
+project.. let&rsquo;s call it Kilonova.</p>
       ]]></description></item><item><title>Go vs Python for Parallel Processing</title><link>https://blog.mikesahari.com/posts/parallel-processing/</link><pubDate>Sat, 01 Feb 2025 10:00:12 -0800</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/parallel-processing/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-connect.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
-        <p>I was inspired to write this article after a recent discussion about programming language preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&rsquo;s strengths - it excels in machine learning and generative AI applications. However, I <strong>prefer</strong> Go for several compelling reasons:</p>
+        <p>I was inspired to write this article after a recent discussion about programming language
+preferences, specifically questioning my stance on Python. Let me start by acknowledging Python&rsquo;s
+strengths - it excels in machine learning and generative AI applications. However, I <strong>prefer</strong> Go
+for several compelling reasons:</p>
 <ul>
 <li>Memory management with pointers</li>
 <li>Elegant concurrency using channels and goroutines</li>
 <li>Straightforward cross-compilation of binaries</li>
 <li>Clean implementation of interfaces and structs</li>
 </ul>
-<p>But preferences often face challenges. Some argue, &ldquo;Python now has concurrency, so you should switch to Python.&rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages they enjoy and find productive. In professional settings, use your preferred language until organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of the team).</p>
+<p>But preferences often face challenges. Some argue, &ldquo;Python now has concurrency, so you should switch
+to Python.&rdquo; I fundamentally disagree with this reasoning. Developers should write code in languages
+they enjoy and find productive. In professional settings, use your preferred language until
+organizational standards dictate otherwise (i.e. Thou shalt use only thy golden hammer language of
+the team).</p>
       ]]></description></item></channel></rss>

@@ -1,6 +1,7 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Allow: /
+Allow: /posts/
+Allow: /index.html
 Disallow: /about/
 Disallow: /tags/
 Sitemap: https://blog.mikesahari.com/sitemap.xml

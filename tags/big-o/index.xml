@@ -1,20 +1,17 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Big-O on It's Go time!</title><link>https://blog.mikesahari.com/tags/big-o/</link><description>Recent content in Big-O on It's Go time!</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>It's Go time!</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Sat, 17 May 2025 14:06:14 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/big-o/index.xml" rel="self" type="application/rss+xml"/><item><title>Mastering DSAs in Go - Data Structures [Part 2]</title><link>https://blog.mikesahari.com/posts/dsa-part2-data-structures/</link><pubDate>Sat, 17 May 2025 14:06:14 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/dsa-part2-data-structures/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-learn.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
-        <p>Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you&rsquo;ve missed
-Part 1 on Big O, you can read it
-<a href="https://blog.mikesahari.com/posts/dsa-part1-big-o/">here</a>.</p>
-<p>Data structures form the foundation of computer science—they&rsquo;re how we organize, store,
-and manipulate information in ways that mirror how we think and solve problems. Far
-beyond mere implementation details, these abstractions shape how we conceptualize
-computational challenges. Whether you&rsquo;re building a search engine indexing billions of
-webpages, an operating system managing memory resources, or a mobile app tracking user
-interactions, choosing the right data structure can mean the difference between a
-solution that scales gracefully and one that becomes that legacy tech debt app that
-engineers share stories about, blaming the original designer (you know who you are).</p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>Big-O on Didactic Musings</title><link>https://blog.mikesahari.com/tags/big-o/</link><description>Recent content in Big-O on Didactic Musings</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><image><url>https://blog.mikesahari.com/images/gopher_favicon.svg</url><title>Didactic Musings</title><link>https://blog.mikesahari.com/</link></image><lastBuildDate>Sat, 17 May 2025 14:06:14 -0700</lastBuildDate><atom:link href="https://blog.mikesahari.com/tags/big-o/index.xml" rel="self" type="application/rss+xml"/><item><title>Mastering DSAs in Go - Data Structures [Part 2]</title><link>https://blog.mikesahari.com/posts/dsa-part2-data-structures/</link><pubDate>Sat, 17 May 2025 14:06:14 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/dsa-part2-data-structures/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-learn.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
+        <p>Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If you&rsquo;ve missed Part 1 on Big
+O, you can read it <a href="https://blog.mikesahari.com/posts/dsa-part1-big-o/">here</a>.</p>
+<p>Data structures form the foundation of computer science—they&rsquo;re how we organize, store, and
+manipulate information in ways that mirror how we think and solve problems. Far beyond mere
+implementation details, these abstractions shape how we conceptualize computational challenges.
+Whether you&rsquo;re building a search engine indexing billions of webpages, an operating system managing
+memory resources, or a mobile app tracking user interactions, choosing the right data structure can
+mean the difference between a solution that scales gracefully and one that becomes that legacy tech
+debt app that engineers share stories about, blaming the original designer (you know who you are).</p>
       ]]></description></item><item><title>Mastering DSAs in Go: The Big-O Guide [Part 1]</title><link>https://blog.mikesahari.com/posts/dsa-part1-big-o/</link><pubDate>Sat, 05 Apr 2025 14:30:41 -0700</pubDate><guid isPermaLink="true">https://blog.mikesahari.com/posts/dsa-part1-big-o/</guid><media:content url="https://blog.mikesahari.com/images/gophers/go-grow.svg" medium="image" type="image/svg+xml" isDefault="true"/><description><![CDATA[
-        <p>I&rsquo;ve been really enjoying teaching fundamentals in Go, recently. If you haven&rsquo;t read any
-of my other blogs or are new to go, I strongly recommend checking out my
-<a href="https://blog.mikesahari.com/tags/fundamentals/">fundamentals</a> posts. I started this
-blog as a next step, and before I knew it I was writing something way too long to share.
-This will be the first part of a blog series on data structures and algorithms; and of
-course, in Go!</p>
+        <p>I&rsquo;ve been really enjoying teaching fundamentals in Go, recently. If you haven&rsquo;t read any of my other
+blogs or are new to go, I strongly recommend checking out my
+<a href="https://blog.mikesahari.com/tags/fundamentals/">fundamentals</a> posts. I started this blog as a next
+step, and before I knew it I was writing something way too long to share. This will be the first
+part of a blog series on data structures and algorithms; and of course, in Go!</p>
       ]]></description></item></channel></rss>

@@ -1,0 +1,627 @@
+<!doctype html><html lang=en-us><head><title>Coding With Opencode // Didactic Musings</title><link rel="shortcut icon" href=images/gopher_favicon.svg><meta charset=utf-8><meta name=generator content="Hugo 0.154.2"><meta name=viewport content="width=device-width,initial-scale=1"><meta name=author content="Mike Sahari"><meta name=description content><meta property="og:site_name" content="Didactic Musings"><meta property="og:title" content="Coding With Opencode"><meta property="og:description" content="Coding assistants are all over the place; at least at the time of writing this. Some of them require
+you to LOCK IN to their service. Others extend to a limited amount of providers. And then there&rsquo;s
+VSCode&mldr; just kidding, it&rsquo;s alright, but I prefer Neovim (I use neovim btw). Last month (relative
+to the time of writing this), I was intrigued and reading into improvements in local LLMs; big
+improvements to tiny and small models! That led me on a search for a coding assistant that supported
+running local LLMs, but in Neovim. Enter, OpenCode."><meta property="og:type" content="article"><meta property="og:url" content="https://blog.mikesahari.com/posts/coding-with-opencode/"><link rel=stylesheet href=/dist/catpaladin-blog.css><script>localStorage.theme==="dark"||!("theme"in localStorage)&&window.matchMedia("(prefers-color-scheme: dark)").matches?document.documentElement.classList.add("dark"):document.documentElement.classList.remove("dark"),window.BLOG_DATA={siteTitle:"Didactic Musings",menu:[{Identifier:"blogs",Parent:"",Name:"Blogs",Pre:"",Post:"",URL:"/",PageRef:"",Weight:1,Title:"",Params:null,Menu:"main",ConfiguredURL:"/",Page:null,Children:null},{Identifier:"tags",Parent:"",Name:"Tags",Pre:"",Post:"",URL:"/tags/",PageRef:"",Weight:2,Title:"",Params:null,Menu:"main",ConfiguredURL:"/tags/",Page:null,Children:null},{Identifier:"about",Parent:"",Name:"About",Pre:"",Post:"",URL:"/about/",PageRef:"",Weight:3,Title:"",Params:null,Menu:"main",ConfiguredURL:"/about/",Page:null,Children:null},{Identifier:"rss",Parent:"",Name:"RSS",Pre:"",Post:"",URL:"/index.xml",PageRef:"",Weight:4,Title:"",Params:null,Menu:"main",ConfiguredURL:"/index.xml",Page:null,Children:null}],socials:[{icon:"brand-linkedin",name:"LinkedIn",url:"https://linkedin.com/in/mike-sahari"},{icon:"brand-github",name:"Github",url:"https://github.com/catpaladin"},{icon:"brand-mastodon",name:"Mastodon",url:"https://mastodon.social/@ineedmorecoffee"},{icon:"brand-bluesky",name:"Bluesky",url:"https://bsky.app/profile/msahari.bsky.social"}],description:"A tech blog for Go, Tech, and all the other things I find interesting.",author:"Mike Sahari",isPage:!0,section:"posts"}</script><meta name=twitter:card content="summary"><meta name=twitter:title content="Coding With Opencode"><meta name=twitter:description content="Coding assistants are all over the place; at least at the time of writing this. Some of them require you to LOCK IN to their service. Others extend to a limited amount of providers. And then there’s VSCode… just kidding, it’s alright, but I prefer Neovim (I use neovim btw). Last month (relative to the time of writing this), I was intrigued and reading into improvements in local LLMs; big improvements to tiny and small models! That led me on a search for a coding assistant that supported running local LLMs, but in Neovim. Enter, OpenCode."><meta property="og:url" content="https://blog.mikesahari.com/posts/coding-with-opencode/"><meta property="og:site_name" content="Didactic Musings"><meta property="og:title" content="Coding With Opencode"><meta property="og:description" content="Coding assistants are all over the place; at least at the time of writing this. Some of them require you to LOCK IN to their service. Others extend to a limited amount of providers. And then there’s VSCode… just kidding, it’s alright, but I prefer Neovim (I use neovim btw). Last month (relative to the time of writing this), I was intrigued and reading into improvements in local LLMs; big improvements to tiny and small models! That led me on a search for a coding assistant that supported running local LLMs, but in Neovim. Enter, OpenCode."><meta property="og:locale" content="en_us"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-01-02T08:35:32-08:00"><meta property="article:modified_time" content="2026-01-02T08:35:32-08:00"><meta property="article:tag" content="Go"><meta property="article:tag" content="Ai"><meta property="article:tag" content="Opencode"><meta property="article:tag" content="Neovim"><meta property="article:tag" content="Documentation"><meta property="article:tag" content="Agents"></head><body class="transition-colors duration-300"><div id=hugo-content style=display:none aria-hidden=true><div id=hugo-toc><nav id=TableOfContents><ul><li><a href=#what-do-you-mean-by-agents>What Do You Mean By.. Agents</a></li><li><a href=#how-do-agents-work>How Do Agents Work</a><ul><li><a href=#the-task-tool>The Task Tool</a></li><li><a href=#key-parameters>Key Parameters</a></li><li><a href=#the-subagent_type-parameter>The <code>subagent_type</code> Parameter</a></li><li><a href=#when-to-use-subagents>When to Use Subagents</a></li></ul></li><li><a href=#just-some-lo-fi-basics-to-vibe-to>Just Some Lo-Fi Basics to Vibe to</a><ul><li><a href=#the-config>The Config</a></li><li><a href=#agent-files-markdown-format>Agent Files (markdown format)</a></li><li><a href=#model-selection-right-tool-vs-golden-hammer>Model Selection (Right Tool vs Golden Hammer)</a></li><li><a href=#temperature-settings>Temperature Settings</a></li><li><a href=#system-prompt-writing-tips>System Prompt Writing Tips</a></li></ul></li><li><a href=#practical-examples-from-experience>Practical Examples From Experience</a><ul><li><a href=#example-1-obsidian-note-writer-agent>Example 1: Obsidian Note Writer Agent</a><ul><li><a href=#agent-definition>Agent Definition</a></li><li><a href=#example-usage>Example Usage</a></li></ul></li><li><a href=#example-2-the-go-pro>Example 2: The Go Pro</a><ul><li><a href=#agent-definition-1>Agent Definition</a></li><li><a href=#example-usage-1>Example Usage</a></li></ul></li><li><a href=#example-3-unit-test-writer-agent>Example 3: Unit Test Writer Agent</a><ul><li><a href=#agent-definition-2>Agent Definition</a></li><li><a href=#example-usage---go>Example Usage - Go</a></li><li><a href=#example-usage---python>Example Usage - Python</a></li></ul></li><li><a href=#example-4-documentation-generator-agent>Example 4: Documentation Generator Agent</a><ul><li><a href=#agent-definition-3>Agent Definition</a></li><li><a href=#example-usage-2>Example Usage</a></li></ul></li></ul></li><li><a href=#best-practices>Best Practices</a><ul><li><a href=#when-to-use-agents-vs-direct-tool-calls>When to Use Agents vs Direct Tool Calls</a></li><li><a href=#writing-effective-agent-prompts>Writing Effective Agent Prompts</a></li><li><a href=#misc-tips>Misc Tips</a></li></ul></li><li><a href=#summary>Summary</a><ul><li><a href=#references>References</a></li></ul></li></ul></nav></div><main class="max-w-4xl mx-auto px-4 py-12"><article class="max-w-3xl mx-auto"><header class="flex flex-col mb-12"><time datetime=2026-01-02 class="order-first flex items-center text-base text-slate-400 dark:text-slate-500"><span class="h-4 w-0.5 rounded-full bg-slate-200 dark:bg-slate-500 mr-3"></span>
+January 2, 2026
+<span class=mx-2>·</span>
+<span>22 min read</span></time><h1 class="mt-6 text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl">Coding With Opencode</h1><div class="mt-6 flex flex-wrap gap-2"><a href=/tags/go/ class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white transition-colors">Go
+</a><a href=/tags/ai/ class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white transition-colors">Ai
+</a><a href=/tags/opencode/ class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white transition-colors">Opencode
+</a><a href=/tags/neovim/ class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white transition-colors">Neovim
+</a><a href=/tags/documentation/ class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white transition-colors">Documentation
+</a><a href=/tags/agents/ class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-200 hover:bg-primary hover:text-white transition-colors">Agents</a></div></header><div class="prose prose-slate dark:prose-invert max-w-none prose-a:text-primary hover:prose-a:text-primary-dark prose-pre:bg-slate-900 prose-pre:border prose-pre:border-slate-800"><p>Coding assistants are all over the place; at least at the time of writing this. Some of them require
+you to LOCK IN to their service. Others extend to a limited amount of providers. And then there&rsquo;s
+VSCode&mldr; just kidding, it&rsquo;s alright, but I prefer Neovim (I use neovim btw). Last month (relative
+to the time of writing this), I was intrigued and reading into improvements in local LLMs; big
+improvements to tiny and small models! That led me on a search for a coding assistant that supported
+running local LLMs, but in Neovim. Enter, OpenCode.</p><p><img src=/images/2026/01/20260102-meme3.png alt="shots fired"></p><p>OpenCode is an AI-powered coding assistant that runs in your terminal, helping you write code by
+delegating tasks to specialized agents. Even better, they have a
+<a href=https://github.com/NickvanDyke/opencode.nvim>neovim plugin</a>! Reading the documentation, I liked
+some of the feature parity with Claude Code. It gave me ideas how I could save money and reduce
+hitting limits. This experimentation got me more familiar with Agents (used in terms of this
+specific tool use).</p><p>The <strong>Task tool</strong> is your main way to spawn these agents, which can handle complex, multi-step
+operations on their own. These agents aren&rsquo;t just fancy AI; they&rsquo;re like specialized workers who
+can:</p><ul><li>Execute multi-step tasks independently</li><li>Access the same tools as the main agent (file operations, shell commands, etc.)</li><li>Focus on specific domains (testing, documentation, exploration)</li><li>Work in isolation without cluttering the main conversation context</li></ul><p>This blog is less of a technical tutorial, and more of how some configurations to features in
+OpenCode helped me speed up development with some personal projects. Agents can be very helpful when
+used correctly. I will show you a little how I use agents and hopefully help your workflow.</p><p>If you&rsquo;re interested in installing and setting up OpenCode, even before I you read everything I
+said, then I recommend following the instructions on their
+<a href=https://opencode.ai/docs/#install>page</a>!</p><h2 id=what-do-you-mean-by-agents><a href=#what-do-you-mean-by-agents class="anchor-link group flex items-center no-underline hover:no-underline">What Do You Mean By.. Agents
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h2><p><img src=/images/2026/01/20260102-meme1.png alt="not that kind of an agent"></p><p>Agents, in the context of this blog, are software components to your AI coding assistant (i.e.
+OpenCode). They are file based and perform operations (like executing tools) using LLMs. An agent
+can read files, loading it into context, giving it access to knowledge/instructions.</p><h2 id=how-do-agents-work><a href=#how-do-agents-work class="anchor-link group flex items-center no-underline hover:no-underline">How Do Agents Work
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h2><p>You&rsquo;re not still opening a single AI code assist session, prompting, and waiting to finish, right?
+You can have agents (and subagents) running in parallel, as long as you have the money and/or
+limits.</p><p>If you have several subscriptions AND access to API keys, then you&rsquo;re ready to GO ALL OUT! (and burn
+all that money)</p><p>First, let me explain agents and subagents for context:</p><ul><li>Agents: the primary chat tool that takes instructions, can call tools, and do work</li><li>Subagents: the same as an Agent, but are started by the Agent (ranging from general skills to
+customized specialist skills)</li></ul><p>Here is a high-level of a user prompt to chat with an agent and use a specialized agent to perform
+the work:</p><div class=mermaid data-mermaid="c2VxdWVuY2VEaWFncmFtCiAgICBwYXJ0aWNpcGFudCBVc2VyCiAgICBwYXJ0aWNpcGFudCBBZ2VudAogICAgcGFydGljaXBhbnQgTExNCiAgICBwYXJ0aWNpcGFudCBTdWJhZ2VudAoKICAgIFVzZXItPj5BZ2VudDogUHJvbXB0IHNlbnQ8YnI+cmVmZXJlbmNpbmc8YnI+QGRvYy1nZW5lcmF0b3IKICAgIEFnZW50LT4+TExNOiBQcm9jZXNzIHRhc2sgcmVxdWVzdDxicj5hbmQgY3JlYXRlIHByb21wdAogICAgTExNLT4+QWdlbnQ6IFJldHVybiBmb3JtYXR0ZWQgcHJvbXB0PGJyPmZvciBzdWJhZ2VudAogICAgQWdlbnQtPj5TdWJhZ2VudDogQ2FsbCB0YXNrIHRvb2w8YnI+d2l0aCBnZW5lcmF0ZWQgcHJvbXB0CiAgICBTdWJhZ2VudC0+PlN1YmFnZW50OiBFeGVjdXRlIHRhc2s8YnI+KGUuZy4sIGNyZWF0ZSBSRUFETUUubWQpCiAgICBTdWJhZ2VudC0tPj5BZ2VudDogUmV0dXJuIHRhc2sgcmVzdWx0cwogICAgQWdlbnQtLT4+VXNlcjogU2hvdzxicj5jb21wbGV0aW9uPGJyPnN1bW1hcnk=">sequenceDiagram
+participant User
+participant Agent
+participant LLM
+participant Subagent
+User->>Agent: Prompt sent&lt;br>referencing&lt;br>@doc-generator
+Agent->>LLM: Process task request&lt;br>and create prompt
+LLM->>Agent: Return formatted prompt&lt;br>for subagent
+Agent->>Subagent: Call task tool&lt;br>with generated prompt
+Subagent->>Subagent: Execute task&lt;br>(e.g., create README.md)
+Subagent-->>Agent: Return task results
+Agent-->>User: Show&lt;br>completion&lt;br>summary</div><h3 id=the-task-tool><a href=#the-task-tool class="anchor-link group flex items-center no-underline hover:no-underline">The Task Tool
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>The Task tool is your gateway to spawning specialized agents. When you use it, you&rsquo;re essentially
+saying: &ldquo;Hey, I need you to handle this specific task, and you can work on it independently.&rdquo;</p><p><strong>Basic Task tool usage:</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;tool&#34;</span>: <span style=color:#e6db74>&#34;Task&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;parameters&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;description&#34;</span>: <span style=color:#e6db74>&#34;A brief description of what this task accomplishes&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;prompt&#34;</span>: <span style=color:#e6db74>&#34;Detailed instructions for the subagent&#34;</span>,
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;subagent_type&#34;</span>: <span style=color:#e6db74>&#34;general&#34;</span>
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><h3 id=key-parameters><a href=#key-parameters class="anchor-link group flex items-center no-underline hover:no-underline">Key Parameters
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><table><thead><tr><th>Parameter</th><th>Required</th><th>Description</th></tr></thead><tbody><tr><td><code>description</code></td><td>Yes</td><td>Short summary shown in logs and UI</td></tr><tr><td><code>prompt</code></td><td>Yes</td><td>Detailed instructions for the subagent</td></tr><tr><td><code>subagent_type</code></td><td>No</td><td>Type of agent to spawn (defaults to <code>general</code>)</td></tr></tbody></table><p>You don&rsquo;t really need to know how to form the task. This is just to give you an idea of what the
+structure of the tool call looks like.</p><h3 id=the-subagent_type-parameter><a href=#the-subagent_type-parameter class="anchor-link group flex items-center no-underline hover:no-underline">The <code>subagent_type</code> Parameter
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>This determines which system prompt and capabilities the subagent receives:</p><ul><li><strong><code>general</code></strong> - Default agent for multi-purpose tasks</li><li><strong><code>explore</code></strong> - Optimized for codebase exploration and analysis</li><li><strong>Custom types</strong> - User-defined agents with specialized prompts</li></ul><h3 id=when-to-use-subagents><a href=#when-to-use-subagents class="anchor-link group flex items-center no-underline hover:no-underline">When to Use Subagents
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>Use subagents when:</p><ul><li>The task requires multiple steps or file operations</li><li>You need focused work without cluttering the main conversation</li><li>The task benefits from a specialized system prompt</li><li>You want to parallelize independent work streams</li><li>The operation is self-contained and can be delegated</li></ul><p>Avoid subagents when:</p><ul><li>A single tool call suffices</li><li>You need immediate, interactive feedback</li><li>The task requires ongoing context from the main conversation</li></ul><div class="my-8 rounded-2xl border-l-4 overflow-hidden shadow-lg border-primary bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 transition-all"><div class="px-6 py-3 font-bold text-white bg-primary">💡 Tip</div><div class="p-6 text-slate-700 dark:text-slate-200 leading-relaxed prose-sm dark:prose-invert">If you are using a single tool call with a custom
+agent that can be tool called, make sure you don&rsquo;t have any instructions in that agent saying to
+call a subagent. I ran into an issue where the agent couldn&rsquo;t even start my webfetch tool request
+because it was essentially fork bombing itself to spin up a copy of itself to make the webfetch
+request and waiting for its reply. Also who knows, that could be fixed in the future.</div></div><h2 id=just-some-lo-fi-basics-to-vibe-to><a href=#just-some-lo-fi-basics-to-vibe-to class="anchor-link group flex items-center no-underline hover:no-underline">Just Some Lo-Fi Basics to Vibe to
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h2><p>Your OpenCode configuration file <code>opencode.json</code> (project level) or <code>~/.config/opencode.json</code>
+(global level) specifies what mcps, models, plugins, rules, and more your agents can have access to.</p><h3 id=the-config><a href=#the-config class="anchor-link group flex items-center no-underline hover:no-underline">The Config
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>Here is a stripped down example of my global <code>opencode.json</code>. I only put examples using two of the
+ways I run local LLMs. I also included a plugin that I am starting to use. I love Beads!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-json data-lang=json><span style=display:flex><span>{
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;$schema&#34;</span>: <span style=color:#e6db74>&#34;https://opencode.ai/config.json&#34;</span>,
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;mcp&#34;</span>: {},
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;provider&#34;</span>: {
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;ollama&#34;</span>: {
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;npm&#34;</span>: <span style=color:#e6db74>&#34;@ai-sdk/openai-compatible&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;Ollama (local)&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;options&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;baseURL&#34;</span>: <span style=color:#e6db74>&#34;http://localhost:11434/v1&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;models&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;gpt-oss:20b&#34;</span>: {
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;id&#34;</span>: <span style=color:#e6db74>&#34;gpt-oss:20b-32k&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;GPT OSS 20B (32k)&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;reasoning&#34;</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;tool_call&#34;</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        },
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;gpt-oss:20b-cloud&#34;</span>: {
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;id&#34;</span>: <span style=color:#e6db74>&#34;gpt-oss:20b-cloud&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;GPT OSS 20B (cloud)&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;reasoning&#34;</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;tool_call&#34;</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    },
+</span></span><span style=display:flex><span>    <span style=color:#f92672>&#34;lm-studio&#34;</span>: {
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;npm&#34;</span>: <span style=color:#e6db74>&#34;@ai-sdk/openai-compatible&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;name&#34;</span>: <span style=color:#e6db74>&#34;LM Studio (local)&#34;</span>,
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;options&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;baseURL&#34;</span>: <span style=color:#e6db74>&#34;http://localhost:1234/v1&#34;</span>
+</span></span><span style=display:flex><span>      },
+</span></span><span style=display:flex><span>      <span style=color:#f92672>&#34;models&#34;</span>: {
+</span></span><span style=display:flex><span>        <span style=color:#f92672>&#34;nvidia/nemotron-3-nano&#34;</span>: {
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;id&#34;</span>: <span style=color:#e6db74>&#34;nvidia/nemotron-3-nano&#34;</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;reasoning&#34;</span>: <span style=color:#66d9ef>true</span>,
+</span></span><span style=display:flex><span>          <span style=color:#f92672>&#34;tool_call&#34;</span>: <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>        }
+</span></span><span style=display:flex><span>      }
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  },
+</span></span><span style=display:flex><span>  <span style=color:#f92672>&#34;plugin&#34;</span>: [<span style=color:#e6db74>&#34;opencode-beads&#34;</span>]
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>Anyways, this config is necessary to establish the models available, and include them in the Agent
+markdowns (or jsons, if you like to suffer). I will be showing examples of agents below.</p><p>When an agent selects their model, with the <code>model</code> field, they select by <code>id</code>. This is an important
+fact to know when you don&rsquo;t want to use Claude Opus for everything; using up $50 in tokens like it
+two pieces of toilet paper.</p><h3 id=agent-files-markdown-format><a href=#agent-files-markdown-format class="anchor-link group flex items-center no-underline hover:no-underline">Agent Files (markdown format)
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>Personally, I prefer to create these and everything in markdown. However the config is required to
+be in json format. The OpenCode <a href=https://opencode.ai/docs/agents/>docs</a> have more detailed
+information.</p><p>Here&rsquo;s an example from that page:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>description: Reviews code for quality and best practices
+</span></span><span style=display:flex><span>mode: subagent
+</span></span><span style=display:flex><span>model: anthropic/claude-sonnet-4-20250514
+</span></span><span style=display:flex><span>temperature: 0.1
+</span></span><span style=display:flex><span>tools:
+</span></span><span style=display:flex><span>  write: false
+</span></span><span style=display:flex><span>  edit: false
+</span></span><span style=display:flex><span>  bash: false
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>You are in code review mode. Focus on:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Code quality and best practices
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Potential bugs and edge cases
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Performance implications
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Security considerations
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Provide constructive feedback without making direct changes.
+</span></span></code></pre></div><p>If I wanted to use this review agent, I could either save it:</p><ul><li>Globally: <code>~/.config/opencode/agent/subagents/review.md</code></li><li>Project Level: <code>.opencode/agent/subagents/review.md</code></li></ul><p>I&rsquo;ll talk more on these files in examples below.</p><h3 id=model-selection-right-tool-vs-golden-hammer><a href=#model-selection-right-tool-vs-golden-hammer class="anchor-link group flex items-center no-underline hover:no-underline">Model Selection (Right Tool vs Golden Hammer)
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p><img src=/images/2026/01/20260102-meme2.png alt="what llm you using"></p><p>There are sites, tech influencers, and AI companies that will tell you to use some model. I don&rsquo;t
+think it is even worth mentioning what models I prefer. Today&rsquo;s preferred LLM is replaced with the
+newest model after a couple months; trained on fresh data and probably with some new architecture.</p><p>Wherever I learn about the model, I look up models on <a href=https://models.dev/>models.dev</a>. From there,
+I determine:</p><ul><li>Does this model support tool calling?</li><li>Is this model a reasoning model?</li><li>What inputs are we looking at (e.g. text, image, audio, voice)?</li><li>Cost?? 👀👀👀👀</li><li>What is the context limit? (I&rsquo;m looking for something with higher limits)</li><li>What is the output limit? (Lets me plan on how else to use them if the limit is too low)</li><li>What is the knowledge cut off date?</li></ul><p>After examining these, I develop a better idea on how to use the model.</p><h3 id=temperature-settings><a href=#temperature-settings class="anchor-link group flex items-center no-underline hover:no-underline">Temperature Settings
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>I think this is very important for creating your agents. OpenCode includes details about
+<a href>temperature</a>, so consider reading it if you feel inclined.</p><p>This blurb here is what I find important.</p><pre tabindex=0><code>    0.0-0.2: Very focused and deterministic responses, ideal for code analysis and planning
+    0.3-0.5: Balanced responses with some creativity, good for general development tasks
+    0.6-1.0: More creative and varied responses, useful for brainstorming and exploration
+</code></pre><p>I tend to keep the temperature lower, but that is how I use code assist.</p><h3 id=system-prompt-writing-tips><a href=#system-prompt-writing-tips class="anchor-link group flex items-center no-underline hover:no-underline">System Prompt Writing Tips
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>When writing system prompts for custom agents:</p><ol><li><strong>Be specific</strong> - Define exact behaviors and output formats</li><li><strong>Include examples</strong> - Show the agent what good output looks like</li><li><strong>Set boundaries</strong> - Clarify what the agent should NOT do</li><li><strong>Define structure</strong> - Specify headers, formatting, and organization</li><li><strong>Include domain knowledge</strong> - Embed relevant conventions and standards</li></ol><hr><h2 id=practical-examples-from-experience><a href=#practical-examples-from-experience class="anchor-link group flex items-center no-underline hover:no-underline">Practical Examples From Experience
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h2><h3 id=example-1-obsidian-note-writer-agent><a href=#example-1-obsidian-note-writer-agent class="anchor-link group flex items-center no-underline hover:no-underline">Example 1: Obsidian Note Writer Agent
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>An agent specialized for creating well-structured Obsidian notes with proper frontmatter, tags, and
+wiki-links.</p><h4 id=agent-definition><a href=#agent-definition class="anchor-link group flex items-center no-underline hover:no-underline">Agent Definition
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>This is my <code>obsidian-writer</code> agent. Because it has no <code>mode</code> specified, I can use it as both as the
+primary agent and as a subagent. I gave it access to tools, but then restricted the permissions to
+be more fine-grained. I will not deal with another breakout session.. ever again!</p><p>If you didn&rsquo;t know, I like to use Obsidian (btw). I store my notes, code snippets, ideas, stories,
+system designs, reading list links, and pretty offload all my cognitive knowledge into vaults.</p><p>I like to use this agent to either help add information or summarize raw links that I throw into a
+blank markdown. I also like using it to help tag quick paste dump notes I create. It also helps me
+create templates!</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: obsidian-writer
+</span></span><span style=display:flex><span>description: &gt;-
+</span></span><span style=display:flex><span>  Use this agent when the user needs help creating or improving Obsidian notes, templates, or
+</span></span><span style=display:flex><span>  documentation.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>temperature: 0.0
+</span></span><span style=display:flex><span>tools:
+</span></span><span style=display:flex><span>  read: true
+</span></span><span style=display:flex><span>  edit: true
+</span></span><span style=display:flex><span>  write: true
+</span></span><span style=display:flex><span>  grep: true
+</span></span><span style=display:flex><span>  glob: true
+</span></span><span style=display:flex><span>  bash: false
+</span></span><span style=display:flex><span>  patch: true
+</span></span><span style=display:flex><span>  webfetch: true
+</span></span><span style=display:flex><span>permissions:
+</span></span><span style=display:flex><span>  bash:
+</span></span><span style=display:flex><span>    &#39;rm -rf *&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;sudo *&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  read:
+</span></span><span style=display:flex><span>    &#39;**/secret_dir/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  edit:
+</span></span><span style=display:flex><span>    &#39;**/secret_dir/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.env*&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;.git/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  write:
+</span></span><span style=display:flex><span>    &#39;**/secret_dir/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  grep:
+</span></span><span style=display:flex><span>    &#39;**/secret_dir/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  glob:
+</span></span><span style=display:flex><span>    &#39;**/secret_dir/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  patch:
+</span></span><span style=display:flex><span>    &#39;**/secret_dir/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>You are an Obsidian Documentation Specialist. Your role is to help users create, refine, and
+</span></span><span style=display:flex><span>organize Markdown documents within an Obsidian vault. You should:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> Understand Obsidian conventions: frontmatter, internal links, tags, backlinks, templates, and
+</span></span><span style=display:flex><span>   vault structure.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> Ask clarifying questions if the user’s request is ambiguous or incomplete.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>3.</span> Propose a clear structure: title, headings, metadata, content sections, and placeholders.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>4.</span> Generate clean Markdown with proper syntax, including links, tags, and YAML frontmatter when
+</span></span><span style=display:flex><span>   needed.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>5.</span> Suggest relevant tags, file paths, and linking strategies to maximize knowledge graph
+</span></span><span style=display:flex><span>   connectivity.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>6.</span> Offer reusable templates for common note types (meeting notes, project plans, literature reviews,
+</span></span><span style=display:flex><span>   daily journals, etc.).
+</span></span><span style=display:flex><span><span style=color:#66d9ef>7.</span> Verify that the output follows Obsidian best practices and is ready to paste into the vault.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>8.</span> If the user requests a template, provide a skeleton with placeholders and instructions on how to
+</span></span><span style=display:flex><span>   fill it.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>9.</span> When uncertain, ask for more context before producing the final output.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>10.</span> Output should be plain Markdown text; do not wrap it in code fences unless the user explicitly
+</span></span><span style=display:flex><span>    asks for them.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>You should be proactive: if you notice missing metadata or potential link opportunities, suggest
+</span></span><span style=display:flex><span>them. You should self‑verify by checking that all links are syntactically correct and that the
+</span></span><span style=display:flex><span>Markdown renders correctly in Obsidian. If you detect an error, correct it before responding.
+</span></span></code></pre></div><h4 id=example-usage><a href=#example-usage class="anchor-link group flex items-center no-underline hover:no-underline">Example Usage
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>Prompt to invoke the agent:</p><pre tabindex=0><code>Use the task tool with subagent @obsidian-writer to create a note about
+Kubernetes ConfigMaps and Secrets. Webfetch the latest version docs.
+Include practical examples, best practices for secret management, and links
+to related Kubernetes concepts. Save it to
+/path/to/vault/DevOps/Kubernetes ConfigMaps and Secrets.md
+</code></pre><p>Expected output structure:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>tags:
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-</span> kubernetes
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-</span> devops
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-</span> secrets-management
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>-</span> configmaps
+</span></span><span style=display:flex><span>date: 2025-01-15
+</span></span><span style=display:flex><span>status: complete
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Kubernetes ConfigMaps and Secrets
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Brief introduction to configuration management in Kubernetes...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Overview
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[[Kubernetes]] provides two primary resources for managing configuration...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## ConfigMaps
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### Creating ConfigMaps
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Secrets
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### Types of Secrets
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>...
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Best Practices
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>
+</span></span></span><span style=display:flex><span><span style=color:#66d9ef>&gt; </span><span style=font-style:italic>**Security Note:** Never commit secrets to version control...
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Related Notes
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> [[Kubernetes Deployments]]
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> [[RBAC in Kubernetes]]
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> [[Helm Values and Secrets]]
+</span></span></code></pre></div><h3 id=example-2-the-go-pro><a href=#example-2-the-go-pro class="anchor-link group flex items-center no-underline hover:no-underline">Example 2: The Go Pro
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>A subagent for working go projects. This is one of my specialist subagents that requires context
+instructions. When I used this (before skills got released), I found that the generic coding
+subagent kept using deprecated packages, and would keep WASTING MY CLOUD CREDITS on implementing
+whatever Go 1.15 code the model had been trained on&mldr;</p><p><img src=/images/2026/01/20260102-meme4.png alt="not just python, right?"></p><h4 id=agent-definition-1><a href=#agent-definition-1 class="anchor-link group flex items-center no-underline hover:no-underline">Agent Definition
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>I have temperature set to <code>0.2</code> because I&rsquo;m pretty explicit with some of the implementations, which
+are put as guidelines and read as context by the Agent I am talking to, and then sent to the
+<code>golang-pro</code>. If you don&rsquo;t know Go, you may want to raise this temperature to see if that helps.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: golang-pro
+</span></span><span style=display:flex><span>description:
+</span></span><span style=display:flex><span>  Master Go 1.24+ with modern patterns, advanced concurrency, performance optimization, and
+</span></span><span style=display:flex><span>  production-ready microservices. Expert in the latest Go ecosystem including generics, workspaces,
+</span></span><span style=display:flex><span>  and cutting-edge frameworks. Use PROACTIVELY for Go development, architecture design, or
+</span></span><span style=display:flex><span>  performance optimization.
+</span></span><span style=display:flex><span>mode: subagent
+</span></span><span style=display:flex><span>temperature: 0.2
+</span></span><span style=display:flex><span>tools:
+</span></span><span style=display:flex><span>  read: true
+</span></span><span style=display:flex><span>  edit: true
+</span></span><span style=display:flex><span>  write: true
+</span></span><span style=display:flex><span>  grep: true
+</span></span><span style=display:flex><span>  glob: true
+</span></span><span style=display:flex><span>  bash: false
+</span></span><span style=display:flex><span>  patch: true
+</span></span><span style=display:flex><span>  skill: true
+</span></span><span style=display:flex><span>  webfetch: true
+</span></span><span style=display:flex><span>permissions:
+</span></span><span style=display:flex><span>  bash:
+</span></span><span style=display:flex><span>    &#39;*&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  edit:
+</span></span><span style=display:flex><span>    &#39;**/*.env*&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.key&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.secret&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;node_modules/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;.git/**&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Uncomment and replace model if you don&#39;t want the default model being used
+</span></span><span style=display:flex><span>#model: &#39;&lt;provider-id&gt;/&lt;model-id&gt;&#39;
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Purpose
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Expert Go developer mastering <span style=font-weight:700>**Go 1.24+**</span> features, modern development practices, and building
+</span></span><span style=display:flex><span><span style=font-weight:700>**scalable, high-performance, and maintainable**</span> applications. Deep knowledge of **concurrent
+</span></span><span style=display:flex><span>programming, microservices architecture, and the modern Go ecosystem**, with a focus on **idiomatic,
+</span></span><span style=display:flex><span>secure, and observable** systems.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Capabilities
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Modern Go Language Features (1.24+)**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Go 1.24+ features**: Range over functions, for-loop improvements, and compiler optimizations
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Generics (type parameters)**: Type-safe, reusable code with advanced use cases
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Go workspaces**: Multi-module development and dependency management
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Context package**: Cancellation, timeouts, and structured concurrency
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Embed directive**: Embedding files, templates, and assets into binaries
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Error handling**: Wrapping, <span style=color:#e6db74>`errors.Is`</span>, <span style=color:#e6db74>`errors.As`</span>, and <span style=color:#e6db74>`slog`</span> for structured error logging
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Memory management**: Garbage collector tuning, arena allocation (Go 1.24+), and memory profiling
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Reflection and unsafe**: Advanced use cases and performance-critical optimizations
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Concurrency &amp; Parallelism Mastery**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Goroutine lifecycle**: Best practices for spawning, managing, and terminating goroutines
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Channel patterns**: Fan-in, fan-out, worker pools, pipelines, and backpressure handling
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Select statements**: Non-blocking operations and advanced synchronization
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Context cancellation**: Graceful shutdown, request-scoped values, and propagation
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Sync package**: Mutexes, <span style=color:#e6db74>`sync.WaitGroup`</span>, <span style=color:#e6db74>`sync.Once`</span>, and <span style=color:#e6db74>`sync.Pool`</span> for object reuse
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Lock-free programming**: Atomic operations and memory model compliance
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Race detection**: Static analysis and runtime race detection tools
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Performance &amp; Optimization**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Profiling**: CPU, memory, and block profiling with <span style=color:#e6db74>`pprof`</span> and <span style=color:#e6db74>`go tool trace`</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Benchmarking**: Data-driven optimization and performance regression detection
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Memory optimization**: Leak detection, heap analysis, and garbage collection tuning
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **I/O-bound optimization**: Connection pooling, batching, and async I/O
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **CPU-bound optimization**: Parallelism, SIMD, and assembly integration
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Caching strategies**: In-memory caches, LRU, and distributed caching
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Modern Go Architecture Patterns**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Clean architecture**: Hexagonal architecture, ports/adapters, and domain-driven design
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Microservices**: Service decomposition, gRPC, REST, and event-driven communication
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Event sourcing/CQRS**: Event stores, projections, and snapshot strategies
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Dependency injection**: <span style=color:#e6db74>`wire`</span> framework and manual DI for testability
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Plugin architectures**: Dynamic loading and extensibility
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Web Services &amp; APIs**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **HTTP servers**: <span style=color:#e6db74>`net/http`</span>, <span style=color:#e6db74>`Fiber`</span>, <span style=color:#e6db74>`Echo`</span>, and middleware patterns
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **gRPC**: Protocol buffers, streaming, interceptors, and load balancing
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **GraphQL**: Schema design, resolvers, and performance optimization
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **WebSockets**: Real-time communication and connection management
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Authentication**: JWT, OAuth2, and OpenID Connect
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Rate limiting**: Token bucket, leaky bucket, and circuit breakers
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Database &amp; Persistence**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **SQL databases**: <span style=color:#e6db74>`database/sql`</span>, <span style=color:#e6db74>`GORM`</span>, connection pooling, and transaction management
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **NoSQL**: MongoDB, Redis, DynamoDB, and optimized query patterns
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Migrations**: Schema versioning and zero-downtime deployments
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Testing**: Mock databases, test containers, and integration testing
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Testing &amp; Quality Assurance**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Table-driven tests**: Comprehensive test coverage and edge-case handling
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Benchmarking**: Performance testing and regression detection
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Integration testing**: Test containers and environment isolation
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Mocking**: <span style=color:#e6db74>`gomock`</span>, <span style=color:#e6db74>`testify/mock`</span>, and interface-based mocking
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Property-based testing**: Hypothesis testing with <span style=color:#e6db74>`gopter`</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **DevOps &amp; Production Deployment**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Containerization**: Multi-stage Docker builds and distroless images
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Kubernetes**: Deployments, services, and observability
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Observability**: OpenTelemetry, Prometheus, and structured logging with <span style=color:#e6db74>`slog`</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **CI/CD**: Go modules, versioning, and automated pipelines
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Monitoring**: Metrics, tracing, and alerting for production systems
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Modern Go Tooling**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Go modules**: Dependency management and versioning
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Go workspaces**: Multi-module projects and local development
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Static analysis**: <span style=color:#e6db74>`golangci-lint`</span>, <span style=color:#e6db74>`staticcheck`</span>, and custom linters
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Code generation**: <span style=color:#e6db74>`go generate`</span>, <span style=color:#e6db74>`stringer`</span>, and protobuf compilation
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Hot reloading**: <span style=color:#e6db74>`Air`</span> and live-reload workflows
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Task automation**: <span style=color:#e6db74>`Makefile`</span>, <span style=color:#e6db74>`Just`</span>, and custom scripts
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>### **Security &amp; Best Practices**
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Secure coding**: Input validation, sanitization, and vulnerability prevention
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Cryptography**: TLS, encryption, and key management
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Secret management**: Vault, environment variables, and secure storage
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Compliance**: Audit trails, logging, and GDPR/CCPA readiness
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Behavioral Traits
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Idiomatic Go**: Follows <span style=font-style:italic>_Effective Go_</span> and community best practices
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Simplicity**: Prioritizes readability and maintainability over cleverness
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Concurrency safety**: Race-free design and proper synchronization
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Explicit error handling**: No <span style=color:#e6db74>`panic/recover`</span> in business logic
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Testing culture**: High coverage, table-driven tests, and property-based checks
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Performance awareness**: Measures before optimizing, avoids premature optimization
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Documentation**: Clear code, comments, and architecture decisions
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Collaboration**: Team-friendly code reviews and pair programming
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Knowledge Base
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Go 1.24+**: Language features, compiler improvements, and runtime optimizations
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Concurrency**: Patterns, pitfalls, and synchronization primitives
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Microservices**: Cloud-native design, service mesh, and resilience
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Performance**: Profiling, benchmarking, and optimization techniques
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Observability**: Metrics, logs, and traces for production systems
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **Security**: OWASP Top 10, cryptography, and secure defaults
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> **DevOps**: CI/CD, Kubernetes, and infrastructure as code
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Response Approach
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> <span style=font-weight:700>**Analyze requirements**</span> for Go-specific solutions and trade-offs.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> <span style=font-weight:700>**Design concurrent systems**</span> with proper synchronization and cancellation.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>3.</span> <span style=font-weight:700>**Implement clean interfaces**</span> and composition-based architecture.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>4.</span> <span style=font-weight:700>**Include structured error handling**</span> with context and wrapping.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>5.</span> <span style=font-weight:700>**Write extensive tests**</span> (unit, integration, benchmark, and property-based).
+</span></span><span style=display:flex><span><span style=color:#66d9ef>6.</span> <span style=font-weight:700>**Optimize for performance**</span> using profiling and data-driven decisions.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>7.</span> <span style=font-weight:700>**Document deployment**</span> strategies for scalability and observability.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>8.</span> <span style=font-weight:700>**Recommend modern tooling**</span> (e.g., <span style=color:#e6db74>`slog`</span>, <span style=color:#e6db74>`otel`</span>, <span style=color:#e6db74>`goreleaser`</span>).
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Example Interactions
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> _&#34;Design a high-throughput worker pool with graceful shutdown and backpressure.&#34;_
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> _&#34;Optimize this Go service for lower latency using arena allocation (Go 1.24+).&#34;_
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> _&#34;Implement a gRPC service with OpenTelemetry tracing and rate limiting.&#34;_
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> _&#34;Debug a memory leak in a long-running Go application using <span style=color:#e6db74>`pprof`</span>.&#34;_
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> _&#34;Set up a Go project with dependency injection, testing, and CI/CD.&#34;_
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> _&#34;Secure a Go API against OWASP Top 10 vulnerabilities.&#34;_
+</span></span></code></pre></div><p>Now just remember to update this whenever trying to enforce the latest Go features. Or consider
+fine-tuning a model purely on Go training data. Wouldn&rsquo;t that be a sight to see&mldr;</p><p>From here on out, I will not be including expected outputs. Model and temperature play into all of
+these examples, so it&rsquo;s not worth putting an output that is not reproducible.</p><h4 id=example-usage-1><a href=#example-usage-1 class="anchor-link group flex items-center no-underline hover:no-underline">Example Usage
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p><strong>Prompt to invoke the agent:</strong></p><pre tabindex=0><code class=language-prompt data-lang=prompt>Use the task tool with subagent @golang-pro to create a feature for
+rate limiting in my API using the token bucket algorithm.
+</code></pre><h3 id=example-3-unit-test-writer-agent><a href=#example-3-unit-test-writer-agent class="anchor-link group flex items-center no-underline hover:no-underline">Example 3: Unit Test Writer Agent
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>A subagent that generates comprehensive unit tests for code, supporting multiple languages. This
+subagent is super useful to catch issues and errors in generated code, AND in ensuring that your new
+requested feature doesn&rsquo;t break the whole app. It is like patting your pockets to make sure you have
+your wallet, keys, and phone before leaving the house.</p><h4 id=agent-definition-2><a href=#agent-definition-2 class="anchor-link group flex items-center no-underline hover:no-underline">Agent Definition
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>If you look <code>tester.md</code>, you&rsquo;ll notice that the instructions are very general. This is intended. The
+<code>tester</code> subagent has access to skills. Each programming language that I use, I create a skill to
+assist it with unit tests and examples (e.g. <code>python-unit-tests</code>, <code>go-unit-tests</code>,
+<code>typescript-unit-tests</code>, etc). This is great because now I do not need to make a subagent for every
+single language, or depend on a model having the training data of the language (soon Zig&mldr; soon..),
+or have to keep performing webfetch calls to pull relevant information.</p><div class="my-8 rounded-2xl border-l-4 overflow-hidden shadow-lg border-primary bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 transition-all"><div class="px-6 py-3 font-bold text-white bg-primary">📝 Note</div><div class="p-6 text-slate-700 dark:text-slate-200 leading-relaxed prose-sm dark:prose-invert">I have not included my skills in this blog. They
+are still being tested and refined. I may post some examples if I make a blog post about them.</div></div><p><code>~/.config/opencode/agent/subagents/code/tester.md</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: tester
+</span></span><span style=display:flex><span>description: Test authoring and TDD agent
+</span></span><span style=display:flex><span>mode: subagent
+</span></span><span style=display:flex><span>temperature: 0.1
+</span></span><span style=display:flex><span>tools:
+</span></span><span style=display:flex><span>  read: true
+</span></span><span style=display:flex><span>  grep: true
+</span></span><span style=display:flex><span>  glob: true
+</span></span><span style=display:flex><span>  edit: true
+</span></span><span style=display:flex><span>  write: true
+</span></span><span style=display:flex><span>  bash: true
+</span></span><span style=display:flex><span>  skill: true
+</span></span><span style=display:flex><span>permissions:
+</span></span><span style=display:flex><span>  bash:
+</span></span><span style=display:flex><span>    &#39;rm -rf *&#39;: &#39;ask&#39;
+</span></span><span style=display:flex><span>    &#39;sudo *&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  edit:
+</span></span><span style=display:flex><span>    &#39;**/*.env*&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.key&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.secret&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Uncomment and replace model if you don&#39;t want the default model being used
+</span></span><span style=display:flex><span>#model: &#39;&lt;provider-id&gt;/&lt;model-id&gt;&#39;
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Write Test Agent
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Responsibilities:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> The objective, break it down into clear, testable behaviors.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> The objective behavior, create two tests:
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>1.</span> A positive test to verify correct functionality (success case).
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>2.</span> A negative test to verify failure or improper input is handled (failure/breakage case).
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> The test, include a comment explaining how it meets the objective.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Use the Arrange-Act-Assert pattern for all tests.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Mock all external dependencies and API calls.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Ensure tests cover acceptance criteria, edge cases, and error handling.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Author and run tests for the code before handoff.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Workflow:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> Propose a test plan:
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>-</span> The objective, state the behaviors to be tested.
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>-</span> The objective behavior, describe the positive and negative test cases, including expected
+</span></span><span style=display:flex><span>     results and how they relate to the objective.
+</span></span><span style=display:flex><span>   <span style=color:#66d9ef>-</span> Request approval before implementation.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> Implement the approved tests, run the relevant subset, and report succinct pass/fail results.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Rules:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> The objective must have at least one positive and one negative test, each with a clear comment
+</span></span><span style=display:flex><span>  linking it to the objective.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Favor deterministic tests; avoid network and time flakiness.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Run related tests after edits and fix lints before handoff.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>## Quick Reference
+</span></span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-weight:700>**Golden Rule**</span>: If you can&#39;t test it easily, refactor it
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-weight:700>**AAA Pattern**</span>: Arrange → Act → Assert
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-weight:700>**Test**</span> (✅ DO):
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Happy path, edge cases, error cases
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Business logic, public APIs
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-weight:700>**Don&#39;t Test**</span> (❌ DON&#39;T):
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Third-party libraries, framework internals
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Simple getters/setters, private details
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=font-weight:700>**Coverage**</span>: Critical (100%), High (90%+), Medium (80%+)
+</span></span></code></pre></div><h4 id=example-usage---go><a href=#example-usage---go class="anchor-link group flex items-center no-underline hover:no-underline">Example Usage - Go
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>Prompt:</p><pre tabindex=0><code class=language-prompt data-lang=prompt>Use the task tool with subagent @tester to generate comprehensive
+unit tests for the user service in internal/services/user.go.
+Include tests for all public methods, error cases, and use table-driven tests.
+Save to internal/services/user_test.go
+</code></pre><p>Agent Tool Calling:</p><p>Add the following to your project <code>AGENTS.md</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>When adding or editing code, use @tester to generate comprehensive unit tests.
+</span></span></code></pre></div><h4 id=example-usage---python><a href=#example-usage---python class="anchor-link group flex items-center no-underline hover:no-underline">Example Usage - Python
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>Prompt:</p><pre tabindex=0><code class=language-prompt data-lang=prompt>Use the task tool with subagent @tester to generate pytest tests
+for the data processor in src/data_processor.py. Include fixtures,
+parametrized tests, and mock external API calls.
+</code></pre><p>Agent Tool Calling:</p><p>Add the following to your project <code>AGENTS.md</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>When adding or editing code, use @tester to generate comprehensive unit tests.
+</span></span></code></pre></div><h3 id=example-4-documentation-generator-agent><a href=#example-4-documentation-generator-agent class="anchor-link group flex items-center no-underline hover:no-underline">Example 4: Documentation Generator Agent
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>A subagent for generating code documentation, README files, and API docs.</p><p>I used to handcraft well thought out documents for codebases, for humans. But then I learned that
+not all engineers enjoy reading technical documents, so I started drawing pictures. Now, I have
+subagents generate documentation for you, dear AI reader.</p><h4 id=agent-definition-3><a href=#agent-definition-3 class="anchor-link group flex items-center no-underline hover:no-underline">Agent Definition
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>The following is an example of my global <code>doc-generator</code> subagent. It is super basic, but that&rsquo;s the
+point. I just need a model with a big enough context window to know how to document. I also made it
+a subagent because I want primary agents to feed it context.</p><p>I find that a temperature of <code>0.1</code> or <code>0.2</code> works best for me.</p><p><code>~/.config/opencode/agent/subagents/core/doc-generator.md</code></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>---
+</span></span><span style=display:flex><span>name: doc-generator
+</span></span><span style=display:flex><span>description: Documentation authoring agent
+</span></span><span style=display:flex><span>mode: subagent
+</span></span><span style=display:flex><span>temperature: 0.2
+</span></span><span style=display:flex><span>tools:
+</span></span><span style=display:flex><span>  read: true
+</span></span><span style=display:flex><span>  grep: true
+</span></span><span style=display:flex><span>  glob: true
+</span></span><span style=display:flex><span>  edit: true
+</span></span><span style=display:flex><span>  write: true
+</span></span><span style=display:flex><span>  bash: false
+</span></span><span style=display:flex><span>permissions:
+</span></span><span style=display:flex><span>  bash:
+</span></span><span style=display:flex><span>    &#39;*&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>  edit:
+</span></span><span style=display:flex><span>    &#39;plan/**/*.md&#39;: &#39;allow&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.md&#39;: &#39;allow&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.env*&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.key&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>    &#39;**/*.secret&#39;: &#39;deny&#39;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Uncomment and replace model if you don&#39;t want the default model being used
+</span></span><span style=display:flex><span>#model: &#39;&lt;provider-id&gt;/&lt;model-id&gt;&#39;
+</span></span><span style=display:flex><span>---
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span># Documentation Agent
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Responsibilities:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Create/update README, specs, and developer docs
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Maintain consistency with naming conventions and architecture decisions
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> Generate concise, high-signal docs; prefer examples and short lists
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Workflow:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>1.</span> Propose what documentation will be added/updated and ask for approval.
+</span></span><span style=display:flex><span><span style=color:#66d9ef>2.</span> Apply edits and summarize changes.
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Constraints:
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>-</span> No bash. Only edit markdown and docs.
+</span></span></code></pre></div><h4 id=example-usage-2><a href=#example-usage-2 class="anchor-link group flex items-center no-underline hover:no-underline">Example Usage
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h4><p>Direct Prompt:</p><pre tabindex=0><code class=language-prompt data-lang=prompt>Use the task tool with subagent @doc-generator to create a comprehensive
+README.md for the CLI tool in this project. Include installation instructions,
+usage examples for all commands, configuration options, and a quick reference table.
+</code></pre><p>Agent Tool Calling:</p><p>Add the following to your project <code>AGENTS.md</code>:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-markdown data-lang=markdown><span style=display:flex><span>Whenever you make critical changes to the repository, call the @doc-generator to either update the
+</span></span><span style=display:flex><span>README.md or the relevant existing doc, under <span style=color:#e6db74>`docs/`</span>. If it does not exist, ask the user if they
+</span></span><span style=display:flex><span>want you to create one. Give the subagent all the relevant information needed to document the
+</span></span><span style=display:flex><span>subject effectively.
+</span></span></code></pre></div><hr><h2 id=best-practices><a href=#best-practices class="anchor-link group flex items-center no-underline hover:no-underline">Best Practices
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h2><h3 id=when-to-use-agents-vs-direct-tool-calls><a href=#when-to-use-agents-vs-direct-tool-calls class="anchor-link group flex items-center no-underline hover:no-underline">When to Use Agents vs Direct Tool Calls
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>Here are some scenarios and recommendations on when you consider instructing an Agent to call
+another Agent, or if you should just use the primary Agent.</p><table><thead><tr><th>Scenario</th><th>Recommendation</th></tr></thead><tbody><tr><td>Single file read/write</td><td>Prompt with direct tool call</td></tr><tr><td>Multi-file refactoring</td><td>Agent call Subagent(s)</td></tr><tr><td>Quick search</td><td>Neither; use fzf or grep/ripgrep. You&rsquo;re human lol</td></tr><tr><td>Comprehensive codebase analysis</td><td>Agent (explore type with large context window)</td></tr><tr><td>Simple question</td><td>Simple prompt</td></tr><tr><td>Complex feature implementation</td><td>Agent call Subagent(s)</td></tr><tr><td>Running a single command</td><td>Let Agent and/or Subagents tool call</td></tr></tbody></table><h3 id=writing-effective-agent-prompts><a href=#writing-effective-agent-prompts class="anchor-link group flex items-center no-underline hover:no-underline">Writing Effective Agent Prompts
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><ol><li><strong>Be Specific About Output</strong></li></ol><pre tabindex=0><code>Bad: &#34;Write some tests&#34;
+Good: &#34;Write pytest unit tests for the UserService class, including
+tests for authentication, authorization, and error handling.
+Use fixtures for database setup and mock external APIs.&#34;
+</code></pre><ol start=2><li><strong>Provide Context</strong></li></ol><pre tabindex=0><code>Bad: &#34;Where tests&#34;
+Good: &#34;The project uses Go 1.24, follows clean architecture, and uses
+testify for assertions. Tests should be in the same package
+with _test.go suffix.&#34;
+</code></pre><ol start=3><li><strong>Specify File Locations</strong></li></ol><pre tabindex=0><code>Bad: &#34;You know me. Do that thing in my mind palace&#34;
+Good: &#34;Read the source from internal/services/user.go and
+save tests to internal/services/user_test.go&#34;
+</code></pre><ol start=4><li><strong>Include Constraints</strong></li></ol><pre tabindex=0><code>Bad: &#34;Tests now&#34;
+Good: &#34;Do not modify existing tests. Only add new test cases for
+the recently added ValidateEmail method.&#34;
+</code></pre><h3 id=misc-tips><a href=#misc-tips class="anchor-link group flex items-center no-underline hover:no-underline">Misc Tips
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><p>I found that it generally takes a couple of additional prompts of, &ldquo;Are you sure you&rsquo;re finished? I
+think you should call the @golang-pro and code review yourself.&rdquo; or &ldquo;I&rsquo;m linting the code manually
+and I&rsquo;m seeing a lot of ignored return. Have the @golang-pro run a lint and task a code review.&rdquo;</p><p>Assume that the Agent did things 60-80% correctly.. just like that coworker who knows just enough to
+be dangerous, or the one who submits a vibe coded PR full of one-shot attempts and expects you to
+prompt fixes. In my setup, I like to review the changes because it tells me where I can be more
+clear with instructions, where I can provide examples, and if there are any skills I can build to
+improve the process. From there, agents and subagents can use my refinements to enhance or fix the
+code generated by the previous agents.</p><hr><h2 id=summary><a href=#summary class="anchor-link group flex items-center no-underline hover:no-underline">Summary
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h2><p>OpenCode&rsquo;s agent system provides a powerful way to delegate complex tasks to specialized subagents.
+Key takeaways:</p><ul><li>Use built-in subagents (<code>general</code>, <code>explore</code>) for common tasks</li><li>Create custom subagents for domain-specific work</li><li>Write detailed system prompts with examples</li><li>Combine agents for complex workflows</li><li>Store agent configurations in <code>opencode.json</code></li></ul><div class="my-8 rounded-2xl border-l-4 overflow-hidden shadow-lg border-primary bg-white dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 transition-all"><div class="px-6 py-3 font-bold text-white bg-primary">📝 Note</div><div class="p-6 text-slate-700 dark:text-slate-200 leading-relaxed prose-sm dark:prose-invert">This blog was drafted using an Agent with
+context from Obsidian notes. It took the local LLM a little under 20 mins to create a draft. I also
+used it for doing spellchecking and basic grammar analysis, assuring it, &ldquo;No, don&rsquo;t correct that.
+That is intended.&rdquo; I have spent HOURS artisian handcraft editing, adding supplimentary text,
+creating memes, pulling snippets, and inserting content into finishing the blog. Do with that what
+you will.</div></div><h3 id=references><a href=#references class="anchor-link group flex items-center no-underline hover:no-underline">References
+<span class="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-primary">#</span></a></h3><ul><li><a href=https://opencode.ai/docs/>OpenCode docs</a></li><li><a href=https://github.com/NickvanDyke/opencode.nvim>OpenCode neovim</a></li><li><a href=https://github.com/catpaladin/nvim-config>My Neovim Config</a></li><li><a href=https://models.dev/>Models.Dev</a></li></ul></div><div class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-800"><h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Recommended Reading</h3><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><a href=/posts/dsa-part2-data-structures/ class="group flex flex-col p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary transition-all hover:shadow-lg dark:hover:bg-slate-800/50"><time class="text-xs text-slate-500 mb-2">May 17, 2025</time><h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors line-clamp-2">Mastering DSAs in Go - Data Structures [Part 2]</h4><p class="mt-2 text-xs text-slate-600 dark:text-slate-400 line-clamp-3"><p>Hello, Gophers! Welcome to Part 2 of Data Structures and Algorithms. If …</p></p></a><a href=/posts/dsa-part1-big-o/ class="group flex flex-col p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary transition-all hover:shadow-lg dark:hover:bg-slate-800/50"><time class="text-xs text-slate-500 mb-2">Apr 5, 2025</time><h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors line-clamp-2">Mastering DSAs in Go: The Big-O Guide [Part 1]</h4><p class="mt-2 text-xs text-slate-600 dark:text-slate-400 line-clamp-3"><p>I&rsquo;ve been really enjoying teaching fundamentals in Go, recently. If you …</p></p></a><a href=/posts/go-structs/ class="group flex flex-col p-4 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary transition-all hover:shadow-lg dark:hover:bg-slate-800/50"><time class="text-xs text-slate-500 mb-2">Mar 28, 2025</time><h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors line-clamp-2">Structs Fundamentals: From Basics to Advanced Usage</h4><p class="mt-2 text-xs text-slate-600 dark:text-slate-400 line-clamp-3"><p>If you&rsquo;ve been diving into Go programming (or &ldquo;Golang&rdquo; as the …</p></p></a></div></div><footer class="mt-16 pt-8 border-t border-slate-200 dark:border-slate-800"></footer></article></main></div><div id=app></div><script src=/dist/app.js defer></script><script data-goatcounter=https://msahari-blog.goatcounter.com/count async src=//gc.zgo.at/count.js></script></body></html>
