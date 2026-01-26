@@ -50,7 +50,7 @@
     <!-- Source for Svelte content - hidden using hidden attribute to avoid style leakage -->
     <div id="hugo-content" style="display: none;" aria-hidden="true">
       <div id="hugo-toc">{{ .TableOfContents }}</div>
-      <main class="max-w-4xl mx-auto px-4 py-12">
+      <main class="max-w-4xl md:max-w-5xl lg:max-w-7xl mx-auto px-4 py-12">
         {{ block "main" . }}
           {{ .Content }}
         {{ end }}

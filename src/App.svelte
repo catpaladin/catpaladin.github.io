@@ -224,11 +224,15 @@
   <Navbar {siteTitle} {menu} />
 
   <main class="flex-1 w-full">
-    <div class="max-w-4xl mx-auto px-4 py-12">
+    <div
+      class="max-w-4xl md:max-w-5xl lg:max-w-7xl mx-auto px-4 py-12 {isPage && section === 'posts'
+        ? 'grid grid-cols-1 lg:grid-cols-[16rem_1fr] gap-8'
+        : ''}"
+    >
       {#if isPage && section === 'posts'}
         <TableOfContents {tocHtml} />
       {/if}
-      <div class="content-wrapper">
+      <div class="content-wrapper {isPage && section === 'posts' ? '' : 'w-full'}">
         {@html content}
       </div>
     </div>
