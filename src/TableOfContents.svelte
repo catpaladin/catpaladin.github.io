@@ -40,9 +40,7 @@
 
 {#if items.length > 0}
   <!-- Desktop Sidebar -->
-  <aside
-    class="hidden lg:block fixed left-[calc(50%-56rem)] top-32 w-64 max-h-[calc(100vh-10rem)] overflow-y-auto"
-  >
+  <aside class="hidden lg:block relative w-64 h-fit">
     <nav
       class="p-6 rounded-2xl bg-slate-50/50 dark:bg-dark-lighter/20 backdrop-blur-md border border-slate-200 dark:border-slate-800"
     >
